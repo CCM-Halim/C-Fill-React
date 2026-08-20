@@ -66,7 +66,12 @@ export default function ChecksheetForm() {
         petugas: petugas.trim(),
         answers: cleanAnswers
       });
-      showToast(`Checksheet "${category.short_name}" tersimpan ke slot yang sesuai di "${res.fileName}" ✅`);
+      showToast(
+        `Checksheet "${category.short_name}" tersimpan ke baris bulan ${BULAN[bulanIndex]} di "${res.fileName}" ✅`,
+        false,
+        res.sheetUrl,
+        'Buka & cek di Google Sheets →'
+      );
       navigate(`/peralatan/${buildingCategory}/${siteName}`);
     } catch (e) {
       showToast('Gagal menyimpan: ' + e.message, true);
