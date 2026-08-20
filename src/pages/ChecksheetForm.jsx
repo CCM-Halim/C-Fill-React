@@ -5,6 +5,7 @@ import { SITES } from '../config/sites';
 import { submitChecksheet, previewSlot } from '../lib/cfillService';
 import { useToast } from '../components/Toast';
 import BatteryTable from '../components/BatteryTable';
+import MeasurementInput, { serializeMeasurement } from '../components/MeasurementInput';
 
 const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
@@ -47,10 +48,15 @@ export default function ChecksheetForm() {
     setAnswers((prev) => ({ ...prev, [itemId]: value }));
   }
 
-  // Untuk item tabel baterai: simpan sebagai array "V:.. R:.." per baterai
+  function setMeasurementAnswer(itemId, rawValue, unit) {
+    setAnswers((prev) => ({ ...prev, [itemId]: serializeMeasurement(rawValue, unit), [itemId + '__raw']: rawValue }));
+  }
+
+  // Untuk item tabel baterai: simpan sebagai array "V:.. V R:.. mΩ" per baterai
   // (bukan 1 string gabungan) - supaya tiap nilai masuk ke kolomnya sendiri di sheet.
+  // Teknisi cuma perlu isi angkanya - satuan (V / mΩ) ditambahkan otomatis di sini.
   function setBatteryAnswer(itemId, rows) {
-    const values = rows.map((c) => (c.v || c.r) ? `V:${c.v || '-'} R:${c.r || '-'}` : '');
+    const values = rows.map((c) => (c.v || c.r) ? `V:${c.v || '-'} V  R:${c.r || '-'} mΩ` : '');
     setAnswers((prev) => ({ ...prev, [itemId]: values, [itemId + '__raw']: rows }));
   }
 
@@ -127,6 +133,15 @@ export default function ChecksheetForm() {
                 value={answers[it.id + '__raw']}
                 onChange={(rows) => setBatteryAnswer(it.id, rows)}
               />
+            ) : it.inputType === 'measurement_ohm' ? (
+              <>
+                <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
+                <MeasurementInput
+                  unit={it.unit || 'Ω'}
+                  value={answers[it.id + '__raw']}
+                  onChange={(val) => setMeasurementAnswer(it.id, val, it.unit || 'Ω')}
+                />
+              </>
             ) : (
               <>
                 <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
