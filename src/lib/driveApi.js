@@ -1,0 +1,158 @@
+/**
+ * driveApi.js
+ * Wrapper tipis di atas Google Drive API v3, dipanggil langsung dari browser
+ * pakai access token OAuth (lihat googleAuth.js).
+ */
+import { getValidAccessToken } from './googleAuth';
+
+const DRIVE_BASE = 'https://www.googleapis.com/drive/v3';
+const UPLOAD_BASE = 'https://www.googleapis.com/upload/drive/v3';
+
+async function authHeaders() {
+  const token = await getValidAccessToken();
+  return { Authorization: 'Bearer ' + token };
+}
+
+async function driveFetch(path, options = {}) {
+  const headers = { ...(options.headers || {}), ...(await authHeaders()) };
+  const res = await fetch(DRIVE_BASE + path, { ...options, headers });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error('Drive API error ' + res.status + ': ' + body);
+  }
+  return res.json();
+}
+
+/**
+ * Cari folder dengan nama tertentu di dalam parentId. Buat baru kalau belum ada.
+ */
+export async function getOrCreateSubfolder(parentId, name) {
+  const q = encodeURIComponent(
+    `'${parentId}' in parents and name = '${name.replace(/'/g, "\\'")}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`
+  );
+  const list = await driveFetch(`/files?q=${q}&fields=files(id,name)`);
+  if (list.files && list.files.length > 0) {
+    return list.files[0].id;
+  }
+  const created = await driveFetch('/files', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name,
+      mimeType: 'application/vnd.google-apps.folder',
+      parents: [parentId]
+    })
+  });
+  return created.id;
+}
+
+/**
+ * Cari file spreadsheet dengan nama tertentu di dalam folder. Return null kalau tidak ada.
+ */
+export async function findSpreadsheetInFolder(folderId, name) {
+  const q = encodeURIComponent(
+    `'${folderId}' in parents and name = '${name.replace(/'/g, "\\'")}' and mimeType = 'application/vnd.google-apps.spreadsheet' and trashed = false`
+  );
+  const list = await driveFetch(`/files?q=${q}&fields=files(id,name)`);
+  return list.files && list.files.length > 0 ? list.files[0].id : null;
+}
+
+/**
+ * Cari file dengan nama tertentu (tipe apapun) di dalam folder. Return null kalau tidak ada.
+ */
+export async function findFileByExactName(folderId, name, mimeType) {
+  const mimeFilter = mimeType ? ` and mimeType = '${mimeType}'` : '';
+  const q = encodeURIComponent(
+    `'${folderId}' in parents and name = '${name.replace(/'/g, "\\'")}'${mimeFilter} and trashed = false`
+  );
+  const list = await driveFetch(`/files?q=${q}&fields=files(id,name,mimeType)`);
+  return list.files && list.files.length > 0 ? list.files[0] : null;
+}
+
+/**
+ * Konversi file .xlsx yang sudah ada jadi Google Sheets (copy dengan mimeType baru),
+ * supaya bisa ditulisi lewat Sheets API sambil TETAP mempertahankan layout/format
+ * aslinya (baris "Tgl", kolom per item, dst - tidak dibuat dari nol).
+ *
+ * File asal (.xlsx) TIDAK dihapus/diubah - tetap ada sebagai arsip. Hasil konversi
+ * disimpan sebagai file baru bertipe Google Sheets, di folder yang sama, dengan nama
+ * yang sama persis (supaya gampang dicari lagi lain kali tanpa perlu convert ulang).
+ */
+export async function convertXlsxToSheets(xlsxFileId, folderId, targetName) {
+  const token = await getValidAccessToken();
+  const res = await fetch(`${DRIVE_BASE}/files/${xlsxFileId}/copy?fields=id,name,mimeType`, {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: targetName,
+      mimeType: 'application/vnd.google-apps.spreadsheet',
+      parents: [folderId]
+    })
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error('Gagal konversi xlsx ke Sheets (' + res.status + '): ' + body);
+  }
+  return res.json();
+}
+
+/**
+ * Cari/siapkan versi Google Sheets dari sebuah site: kalau sudah pernah dikonversi
+ * sebelumnya (ada file Sheets dengan nama tsb di folder), pakai itu. Kalau belum,
+ * cari file .xlsx aslinya (originalFileName), konversi sekali, lalu pakai hasilnya.
+ */
+export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {
+  const sheetsMime = 'application/vnd.google-apps.spreadsheet';
+
+  // 1. Sudah pernah dikonversi sebelumnya?
+  const existingSheets = await findFileByExactName(folderId, originalFileName, sheetsMime);
+  if (existingSheets) return existingSheets.id;
+
+  // 2. Cari file .xlsx aslinya di folder ini
+  const xlsxMime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+  const originalXlsx = await findFileByExactName(folderId, originalFileName, xlsxMime);
+  if (!originalXlsx) {
+    throw new Error(
+      `File asli "${originalFileName}" tidak ditemukan di folder site ini. ` +
+      `Pastikan file .xlsx checksheet asli sudah ada di folder Drive site tersebut.`
+    );
+  }
+
+  // 3. Konversi
+  const converted = await convertXlsxToSheets(originalXlsx.id, folderId, originalFileName);
+  return converted.id;
+}
+
+/**
+ * Upload 1 file (blob/File dari <input type="file">) ke folder tertentu.
+ */
+export async function uploadFileToFolder(folderId, file) {
+  const token = await getValidAccessToken();
+  const metadata = { name: file.name, parents: [folderId] };
+
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+  form.append('file', file);
+
+  const res = await fetch(UPLOAD_BASE + '/files?uploadType=multipart&fields=id,name,webViewLink', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + token },
+    body: form
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error('Upload gagal (' + res.status + '): ' + body);
+  }
+  return res.json();
+}
+
+/**
+ * List file di dalam sebuah folder (dipakai untuk riwayat dokumentasi).
+ */
+export async function listFilesInFolder(folderId) {
+  const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
+  const list = await driveFetch(
+    `/files?q=${q}&fields=files(id,name,webViewLink,modifiedTime,size)&orderBy=modifiedTime desc`
+  );
+  return list.files || [];
+}
