@@ -2,20 +2,34 @@
  * driveApi.js
  * Wrapper tipis di atas Google Drive API v3, dipanggil langsung dari browser
  * pakai access token OAuth (lihat googleAuth.js).
+ *
+ * PENTING: semua request menyertakan supportsAllDrives=true &
+ * includeItemsFromAllDrives=true. Tanpa ini, folder/file yang ada di dalam
+ * SHARED DRIVE (Drive Bersama) tidak akan pernah muncul di hasil pencarian
+ * sama sekali (bukan error - hasilnya cuma selalu kosong), meskipun copy/create
+ * filenya sendiri tetap berhasil. Ini penyebab paling umum kenapa aplikasi
+ * "selalu bikin file baru" - pencarian file yang sudah ada selalu gagal
+ * (dianggap tidak ada) padahal filenya betul-betul ada.
  */
 import { getValidAccessToken } from './googleAuth';
 
 const DRIVE_BASE = 'https://www.googleapis.com/drive/v3';
 const UPLOAD_BASE = 'https://www.googleapis.com/upload/drive/v3';
+const DRIVE_SUPPORT_PARAMS = 'supportsAllDrives=true&includeItemsFromAllDrives=true';
 
 async function authHeaders() {
   const token = await getValidAccessToken();
   return { Authorization: 'Bearer ' + token };
 }
 
+function withDriveParams(path) {
+  const sep = path.includes('?') ? '&' : '?';
+  return path + sep + DRIVE_SUPPORT_PARAMS;
+}
+
 async function driveFetch(path, options = {}) {
   const headers = { ...(options.headers || {}), ...(await authHeaders()) };
-  const res = await fetch(DRIVE_BASE + path, { ...options, headers });
+  const res = await fetch(DRIVE_BASE + withDriveParams(path), { ...options, headers });
   if (!res.ok) {
     const body = await res.text();
     throw new Error('Drive API error ' + res.status + ': ' + body);
@@ -30,7 +44,7 @@ export async function getOrCreateSubfolder(parentId, name) {
   const q = encodeURIComponent(
     `'${parentId}' in parents and name = '${name.replace(/'/g, "\\'")}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`
   );
-  const list = await driveFetch(`/files?q=${q}&fields=files(id,name)`);
+  const list = await driveFetch(`/files?q=${q}&fields=files(id,name)&corpora=allDrives`);
   if (list.files && list.files.length > 0) {
     return list.files[0].id;
   }
@@ -47,26 +61,27 @@ export async function getOrCreateSubfolder(parentId, name) {
 }
 
 /**
- * Cari file spreadsheet dengan nama tertentu di dalam folder. Return null kalau tidak ada.
+ * Cari semua file dengan nama tertentu di dalam folder (tipe apapun kalau
+ * mimeType tidak diisi). Return array (bisa lebih dari 1 kalau ada duplikat
+ * lama) - dipakai untuk deteksi & pembersihan duplikat.
  */
-export async function findSpreadsheetInFolder(folderId, name) {
-  const q = encodeURIComponent(
-    `'${folderId}' in parents and name = '${name.replace(/'/g, "\\'")}' and mimeType = 'application/vnd.google-apps.spreadsheet' and trashed = false`
-  );
-  const list = await driveFetch(`/files?q=${q}&fields=files(id,name)`);
-  return list.files && list.files.length > 0 ? list.files[0].id : null;
-}
-
-/**
- * Cari file dengan nama tertentu (tipe apapun) di dalam folder. Return null kalau tidak ada.
- */
-export async function findFileByExactName(folderId, name, mimeType) {
+export async function findAllFilesByName(folderId, name, mimeType) {
   const mimeFilter = mimeType ? ` and mimeType = '${mimeType}'` : '';
   const q = encodeURIComponent(
     `'${folderId}' in parents and name = '${name.replace(/'/g, "\\'")}'${mimeFilter} and trashed = false`
   );
-  const list = await driveFetch(`/files?q=${q}&fields=files(id,name,mimeType)`);
-  return list.files && list.files.length > 0 ? list.files[0] : null;
+  const list = await driveFetch(`/files?q=${q}&fields=files(id,name,mimeType,createdTime)&corpora=allDrives&orderBy=createdTime`);
+  return list.files || [];
+}
+
+/**
+ * Cari file dengan nama tertentu (tipe apapun) di dalam folder. Kalau ada
+ * lebih dari 1 (duplikat lama), ambil yang PALING LAMA dibuat (dianggap
+ * yang "asli"/pertama) supaya konsisten dipakai terus.
+ */
+export async function findFileByExactName(folderId, name, mimeType) {
+  const files = await findAllFilesByName(folderId, name, mimeType);
+  return files.length > 0 ? files[0] : null;
 }
 
 /**
@@ -80,15 +95,18 @@ export async function findFileByExactName(folderId, name, mimeType) {
  */
 export async function convertXlsxToSheets(xlsxFileId, folderId, targetName) {
   const token = await getValidAccessToken();
-  const res = await fetch(`${DRIVE_BASE}/files/${xlsxFileId}/copy?fields=id,name,mimeType`, {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      name: targetName,
-      mimeType: 'application/vnd.google-apps.spreadsheet',
-      parents: [folderId]
-    })
-  });
+  const res = await fetch(
+    `${DRIVE_BASE}/files/${xlsxFileId}/copy?fields=id,name,mimeType&${DRIVE_SUPPORT_PARAMS}`,
+    {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: targetName,
+        mimeType: 'application/vnd.google-apps.spreadsheet',
+        parents: [folderId]
+      })
+    }
+  );
   if (!res.ok) {
     const body = await res.text();
     throw new Error('Gagal konversi xlsx ke Sheets (' + res.status + '): ' + body);
@@ -102,9 +120,7 @@ export async function convertXlsxToSheets(xlsxFileId, folderId, targetName) {
  * cari file .xlsx aslinya (originalFileName), konversi sekali, lalu pakai hasilnya.
  *
  * Di-cache di memori (per sesi browser) supaya submit berikutnya untuk site yang
- * sama TIDAK cari ulang lewat Drive Search API - soalnya Drive Search punya jeda
- * index (file yang baru saja dibuat kadang belum langsung muncul di hasil search),
- * yang kalau tidak di-cache bisa bikin file baru berulang tiap kali submit.
+ * sama TIDAK cari ulang lewat Drive Search API.
  */
 const spreadsheetIdCache = new Map();
 
@@ -150,11 +166,14 @@ export async function uploadFileToFolder(folderId, file) {
   form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
   form.append('file', file);
 
-  const res = await fetch(UPLOAD_BASE + '/files?uploadType=multipart&fields=id,name,webViewLink', {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + token },
-    body: form
-  });
+  const res = await fetch(
+    `${UPLOAD_BASE}/files?uploadType=multipart&fields=id,name,webViewLink&${DRIVE_SUPPORT_PARAMS}`,
+    {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + token },
+      body: form
+    }
+  );
   if (!res.ok) {
     const body = await res.text();
     throw new Error('Upload gagal (' + res.status + '): ' + body);
@@ -168,7 +187,7 @@ export async function uploadFileToFolder(folderId, file) {
 export async function listFilesInFolder(folderId) {
   const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
   const list = await driveFetch(
-    `/files?q=${q}&fields=files(id,name,webViewLink,modifiedTime,size)&orderBy=modifiedTime desc`
+    `/files?q=${q}&fields=files(id,name,webViewLink,modifiedTime,size)&orderBy=modifiedTime desc&corpora=allDrives`
   );
   return list.files || [];
 }
