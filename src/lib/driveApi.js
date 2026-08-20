@@ -100,13 +100,28 @@ export async function convertXlsxToSheets(xlsxFileId, folderId, targetName) {
  * Cari/siapkan versi Google Sheets dari sebuah site: kalau sudah pernah dikonversi
  * sebelumnya (ada file Sheets dengan nama tsb di folder), pakai itu. Kalau belum,
  * cari file .xlsx aslinya (originalFileName), konversi sekali, lalu pakai hasilnya.
+ *
+ * Di-cache di memori (per sesi browser) supaya submit berikutnya untuk site yang
+ * sama TIDAK cari ulang lewat Drive Search API - soalnya Drive Search punya jeda
+ * index (file yang baru saja dibuat kadang belum langsung muncul di hasil search),
+ * yang kalau tidak di-cache bisa bikin file baru berulang tiap kali submit.
  */
+const spreadsheetIdCache = new Map();
+
 export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {
+  const cacheKey = folderId + '|' + originalFileName;
+  if (spreadsheetIdCache.has(cacheKey)) {
+    return spreadsheetIdCache.get(cacheKey);
+  }
+
   const sheetsMime = 'application/vnd.google-apps.spreadsheet';
 
-  // 1. Sudah pernah dikonversi sebelumnya?
+  // 1. Sudah pernah dikonversi sebelumnya (termasuk dari sesi/browser lain)?
   const existingSheets = await findFileByExactName(folderId, originalFileName, sheetsMime);
-  if (existingSheets) return existingSheets.id;
+  if (existingSheets) {
+    spreadsheetIdCache.set(cacheKey, existingSheets.id);
+    return existingSheets.id;
+  }
 
   // 2. Cari file .xlsx aslinya di folder ini
   const xlsxMime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
@@ -118,8 +133,9 @@ export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {
     );
   }
 
-  // 3. Konversi
+  // 3. Konversi (sekali saja - hasilnya langsung di-cache, tidak perlu search lagi)
   const converted = await convertXlsxToSheets(originalXlsx.id, folderId, originalFileName);
+  spreadsheetIdCache.set(cacheKey, converted.id);
   return converted.id;
 }
 
