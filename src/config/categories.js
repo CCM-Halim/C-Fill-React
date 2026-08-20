@@ -3811,4 +3811,703 @@ export const CATEGORIES = [
     "short_name": "Tower",
     "items": [
       {
-        
+        "id": "i1",
+        "label": "Pemeriksaan kekuatan struktur eksterior tower, pemeriksaan baut pengikat masing-masing komponen dan bagian, serta pengencangan baut seluruh tower. (6 bulan)",
+        "standar": "Hasil pemeriksaan dalam keadaan baik"
+      },
+      {
+        "id": "i2",
+        "label": "Periksa kekencangan pemasangan platform tower, tangga, jaring pelindung, bracket antena dan komponen tambahan lainnya, dan kencangkan bautnya (6 bulan)",
+        "standar": "Hasil pemeriksaan dalam keadaan baik"
+      },
+      {
+        "id": "i3",
+        "label": "Pengujian vertikalitas tower (1 tahun)",
+        "standar": "Menggunakan theodolit/hasil NMC tower monitoring"
+      },
+      {
+        "id": "i4",
+        "label": "Pengujian dan perbaikan kabel ground, inspeksi dan perbaikan penangkal petir dan konduktor penangkal petir (1 tahun)",
+        "standar": "Hasil pemeriksaan baik dan tidak lebih dari 10Ω"
+      },
+      {
+        "id": "i5",
+        "label": "Pemeriksaan dan perawatan pondasi tower dan struktur geologi sekitarnya (1 tahun)",
+        "standar": "Hasil pemeriksaan dalam keadaan baik"
+      }
+    ],
+    "periods": [
+      "6 Bulanan",
+      "1 Tahunan"
+    ],
+    "slotMap": {
+      "headerRow": 6,
+      "dateCol": 1,
+      "petugasCol": 7,
+      "slotStartRow": 10,
+      "slotStep": 6,
+      "slotCount": 2,
+      "itemColumns": [
+        {
+          "id": "i1",
+          "colStart": 2,
+          "colWidth": 1
+        },
+        {
+          "id": "i2",
+          "colStart": 3,
+          "colWidth": 1
+        },
+        {
+          "id": "i3",
+          "colStart": 4,
+          "colWidth": 1
+        },
+        {
+          "id": "i4",
+          "colStart": 5,
+          "colWidth": 1
+        },
+        {
+          "id": "i5",
+          "colStart": 6,
+          "colWidth": 1
+        }
+      ],
+      "type": "monthly_slot"
+    }
+  },
+  {
+    "id": "cat48",
+    "sheetName": "Transmisi (3M,6M)",
+    "title": "Lembar Pemeriksaan dan Perawatan Peralatan Transmisi SDH/MSTP (3 Bulanan, 6 Bulanan)",
+    "short_name": "Transmisi SDH/MSTP",
+    "items": [
+      {
+        "id": "i1",
+        "label": "Pemeriksaan status operasi peralatan (3 bulan)",
+        "standar": "Status operasi normal dan tidak ada alarm"
+      },
+      {
+        "id": "i2",
+        "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
+        "standar": "Hasil pemeriksaan rapi dan label sesuai"
+      },
+      {
+        "id": "i3",
+        "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
+        "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan"
+      },
+      {
+        "id": "i4",
+        "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
+        "standar": "Pemeriksaan baik dan koneksi kuat"
+      },
+      {
+        "id": "i5",
+        "label": "Uji tegangan daya input dan output (6 bulan)",
+        "standar": "Lakukan pengukuran V.in dan V.out"
+      },
+      {
+        "id": "i6",
+        "label": "Pembersihan kipas (6 bulan)",
+        "standar": "Sudah dibersihkan dan operasi kipas baik"
+      }
+    ],
+    "periods": [
+      "3 Bulanan",
+      "6 Bulanan"
+    ],
+    "slotMap": {
+      "headerRow": 6,
+      "dateCol": 1,
+      "petugasCol": 8,
+      "slotStartRow": 10,
+      "slotStep": 3,
+      "slotCount": 4,
+      "itemColumns": [
+        {
+          "id": "i1",
+          "colStart": 2,
+          "colWidth": 1
+        },
+        {
+          "id": "i2",
+          "colStart": 3,
+          "colWidth": 1
+        },
+        {
+          "id": "i3",
+          "colStart": 4,
+          "colWidth": 1
+        },
+        {
+          "id": "i4",
+          "colStart": 5,
+          "colWidth": 1
+        },
+        {
+          "id": "i5",
+          "colStart": 6,
+          "colWidth": 1
+        },
+        {
+          "id": "i6",
+          "colStart": 7,
+          "colWidth": 1
+        }
+      ],
+      "type": "monthly_slot"
+    }
+  },
+  {
+    "id": "cat49",
+    "sheetName": "Transmisi 10G (3M,6M)",
+    "title": "Lembar Pemeriksaan dan Perawatan Peralatan Transmisi SDH/MSTP (3 Bulanan, 6 Bulanan)",
+    "short_name": "Transmisi SDH/MSTP 10G",
+    "items": [
+      {
+        "id": "i1",
+        "label": "Pemeriksaan status operasi peralatan (3 bulan)",
+        "standar": "Status operasi normal dan tidak ada alarm"
+      },
+      {
+        "id": "i2",
+        "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
+        "standar": "Hasil pemeriksaan rapi dan label sesuai"
+      },
+      {
+        "id": "i3",
+        "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
+        "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan"
+      },
+      {
+        "id": "i4",
+        "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
+        "standar": "Pemeriksaan baik dan koneksi kuat"
+      },
+      {
+        "id": "i5",
+        "label": "Uji tegangan daya input dan output (6 bulan)",
+        "standar": "Lakukan pengukuran V.in dan V.out"
+      },
+      {
+        "id": "i6",
+        "label": "Pembersihan kipas (6 bulan)",
+        "standar": "Sudah dibersihkan dan operasi kipas baik"
+      }
+    ],
+    "periods": [
+      "3 Bulanan",
+      "6 Bulanan"
+    ],
+    "slotMap": {
+      "headerRow": 6,
+      "dateCol": 1,
+      "petugasCol": 8,
+      "slotStartRow": 10,
+      "slotStep": 3,
+      "slotCount": 4,
+      "itemColumns": [
+        {
+          "id": "i1",
+          "colStart": 2,
+          "colWidth": 1
+        },
+        {
+          "id": "i2",
+          "colStart": 3,
+          "colWidth": 1
+        },
+        {
+          "id": "i3",
+          "colStart": 4,
+          "colWidth": 1
+        },
+        {
+          "id": "i4",
+          "colStart": 5,
+          "colWidth": 1
+        },
+        {
+          "id": "i5",
+          "colStart": 6,
+          "colWidth": 1
+        },
+        {
+          "id": "i6",
+          "colStart": 7,
+          "colWidth": 1
+        }
+      ],
+      "type": "monthly_slot"
+    }
+  },
+  {
+    "id": "cat50",
+    "sheetName": "Transmisi 2,5G (3M,6M)",
+    "title": "Lembar Pemeriksaan dan Perawatan Peralatan Transmisi SDH/MSTP (3 Bulanan, 6 Bulanan)",
+    "short_name": "Transmisi SDH/MSTP 2,5G",
+    "items": [
+      {
+        "id": "i1",
+        "label": "Pemeriksaan status operasi peralatan (3 bulan)",
+        "standar": "Status operasi normal dan tidak ada alarm"
+      },
+      {
+        "id": "i2",
+        "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
+        "standar": "Hasil pemeriksaan rapi dan label sesuai"
+      },
+      {
+        "id": "i3",
+        "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
+        "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan"
+      },
+      {
+        "id": "i4",
+        "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
+        "standar": "Pemeriksaan baik dan koneksi kuat"
+      },
+      {
+        "id": "i5",
+        "label": "Uji tegangan daya input dan output (6 bulan)",
+        "standar": "Lakukan pengukuran V.in dan V.out"
+      },
+      {
+        "id": "i6",
+        "label": "Pembersihan kipas (6 bulan)",
+        "standar": "Sudah dibersihkan dan operasi kipas baik"
+      }
+    ],
+    "periods": [
+      "3 Bulanan",
+      "6 Bulanan"
+    ],
+    "slotMap": {
+      "headerRow": 6,
+      "dateCol": 1,
+      "petugasCol": 8,
+      "slotStartRow": 10,
+      "slotStep": 3,
+      "slotCount": 4,
+      "itemColumns": [
+        {
+          "id": "i1",
+          "colStart": 2,
+          "colWidth": 1
+        },
+        {
+          "id": "i2",
+          "colStart": 3,
+          "colWidth": 1
+        },
+        {
+          "id": "i3",
+          "colStart": 4,
+          "colWidth": 1
+        },
+        {
+          "id": "i4",
+          "colStart": 5,
+          "colWidth": 1
+        },
+        {
+          "id": "i5",
+          "colStart": 6,
+          "colWidth": 1
+        },
+        {
+          "id": "i6",
+          "colStart": 7,
+          "colWidth": 1
+        }
+      ],
+      "type": "monthly_slot"
+    }
+  },
+  {
+    "id": "cat51",
+    "sheetName": "Transmisi BTS-A (3M,6M)",
+    "title": "Lembar Pemeriksaan dan Perawatan Peralatan Transmisi SDH/MSTP (3 Bulanan, 6 Bulanan)",
+    "short_name": "Transmisi SDH/MSTP A",
+    "items": [
+      {
+        "id": "i1",
+        "label": "Pemeriksaan status operasi peralatan (3 bulan)",
+        "standar": "Status operasi normal dan tidak ada alarm"
+      },
+      {
+        "id": "i2",
+        "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
+        "standar": "Hasil pemeriksaan rapi dan label sesuai"
+      },
+      {
+        "id": "i3",
+        "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
+        "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan"
+      },
+      {
+        "id": "i4",
+        "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
+        "standar": "Pemeriksaan baik dan koneksi kuat"
+      },
+      {
+        "id": "i5",
+        "label": "Uji tegangan daya input dan output (6 bulan)",
+        "standar": "Lakukan pengukuran V.in dan V.out"
+      },
+      {
+        "id": "i6",
+        "label": "Pembersihan kipas (6 bulan)",
+        "standar": "Sudah dibersihkan dan operasi kipas baik"
+      }
+    ],
+    "periods": [
+      "3 Bulanan",
+      "6 Bulanan"
+    ],
+    "slotMap": {
+      "headerRow": 6,
+      "dateCol": 1,
+      "petugasCol": 8,
+      "slotStartRow": 10,
+      "slotStep": 3,
+      "slotCount": 4,
+      "itemColumns": [
+        {
+          "id": "i1",
+          "colStart": 2,
+          "colWidth": 1
+        },
+        {
+          "id": "i2",
+          "colStart": 3,
+          "colWidth": 1
+        },
+        {
+          "id": "i3",
+          "colStart": 4,
+          "colWidth": 1
+        },
+        {
+          "id": "i4",
+          "colStart": 5,
+          "colWidth": 1
+        },
+        {
+          "id": "i5",
+          "colStart": 6,
+          "colWidth": 1
+        },
+        {
+          "id": "i6",
+          "colStart": 7,
+          "colWidth": 1
+        }
+      ],
+      "type": "monthly_slot"
+    }
+  },
+  {
+    "id": "cat52",
+    "sheetName": "Transmisi BTS-B (3M,6M)",
+    "title": "Lembar Pemeriksaan dan Perawatan Peralatan Transmisi SDH/MSTP (3 Bulanan, 6 Bulanan)",
+    "short_name": "Transmisi SDH/MSTP B",
+    "items": [
+      {
+        "id": "i1",
+        "label": "Pemeriksaan status operasi peralatan (3 bulan)",
+        "standar": "Status operasi normal dan tidak ada alarm"
+      },
+      {
+        "id": "i2",
+        "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
+        "standar": "Hasil pemeriksaan rapi dan label sesuai"
+      },
+      {
+        "id": "i3",
+        "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
+        "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan"
+      },
+      {
+        "id": "i4",
+        "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
+        "standar": "Pemeriksaan baik dan koneksi kuat"
+      },
+      {
+        "id": "i5",
+        "label": "Uji tegangan daya input dan output (6 bulan)",
+        "standar": "Lakukan pengukuran V.in dan V.out"
+      },
+      {
+        "id": "i6",
+        "label": "Pembersihan kipas (6 bulan)",
+        "standar": "Sudah dibersihkan dan operasi kipas baik"
+      }
+    ],
+    "periods": [
+      "3 Bulanan",
+      "6 Bulanan"
+    ],
+    "slotMap": {
+      "headerRow": 6,
+      "dateCol": 1,
+      "petugasCol": 8,
+      "slotStartRow": 10,
+      "slotStep": 3,
+      "slotCount": 4,
+      "itemColumns": [
+        {
+          "id": "i1",
+          "colStart": 2,
+          "colWidth": 1
+        },
+        {
+          "id": "i2",
+          "colStart": 3,
+          "colWidth": 1
+        },
+        {
+          "id": "i3",
+          "colStart": 4,
+          "colWidth": 1
+        },
+        {
+          "id": "i4",
+          "colStart": 5,
+          "colWidth": 1
+        },
+        {
+          "id": "i5",
+          "colStart": 6,
+          "colWidth": 1
+        },
+        {
+          "id": "i6",
+          "colStart": 7,
+          "colWidth": 1
+        }
+      ],
+      "type": "monthly_slot"
+    }
+  },
+  {
+    "id": "cat53",
+    "sheetName": "UPS (1M,3M)",
+    "title": "Lembar Pemeriksaan dan Perawatan Peralatan UPS (1 Bulanan, 3 Bulanan)",
+    "short_name": "UPS",
+    "items": [
+      {
+        "id": "i1",
+        "label": "Pembersihan permukaan dan pembersihan filter debu/kipas (1 bulan)",
+        "standar": "Sudah dibersihkan"
+      },
+      {
+        "id": "i2",
+        "label": "Pemeriksaan status operasi dan catat tegangan output/keluaran (1 bulan)",
+        "standar": "Status normal dan catat tegangan dan arus output"
+      },
+      {
+        "id": "i3",
+        "label": "Pemeriksaan tampilan dan status pemutus sirkuit, kipas angin, unit proteksi dan komponen lainnya (1 bulan)",
+        "standar": "Hasil pemeriksaan baik"
+      },
+      {
+        "id": "i4",
+        "label": "Pengujian tegangan Output, Arus, Frekuensi (3 bulan)",
+        "standar": "Catat hasil pengukuran/tampilan di display"
+      },
+      {
+        "id": "i5",
+        "label": "Pemeriksaan waktu / Time Calibration (Ruangan Signal Building) (3 bulan)",
+        "standar": "Sama dengan waktu jakarta (selain signal building tidak ada time calibration)"
+      },
+      {
+        "id": "i6",
+        "label": "Pengujian fungsi Switching Main & Backup listrik AC (3 bulan)",
+        "standar": "Hasil pengujian baik"
+      }
+    ],
+    "periods": [
+      "1 Bulanan",
+      "3 Bulanan"
+    ],
+    "slotMap": {
+      "headerRow": 6,
+      "dateCol": 1,
+      "petugasCol": 8,
+      "slotStartRow": 10,
+      "slotStep": 1,
+      "slotCount": 12,
+      "itemColumns": [
+        {
+          "id": "i1",
+          "colStart": 2,
+          "colWidth": 1
+        },
+        {
+          "id": "i2",
+          "colStart": 3,
+          "colWidth": 1
+        },
+        {
+          "id": "i3",
+          "colStart": 4,
+          "colWidth": 1
+        },
+        {
+          "id": "i4",
+          "colStart": 5,
+          "colWidth": 1
+        },
+        {
+          "id": "i5",
+          "colStart": 6,
+          "colWidth": 1
+        },
+        {
+          "id": "i6",
+          "colStart": 7,
+          "colWidth": 1
+        }
+      ],
+      "type": "monthly_slot"
+    }
+  },
+  {
+    "id": "cat54",
+    "sheetName": "UPS (6M,1Y)",
+    "title": "Lembar Pemeriksaan dan Perawatan Peralatan UPS (6 Bulanan, 1 Tahunan)",
+    "short_name": "UPS",
+    "items": [
+      {
+        "id": "i1",
+        "label": "Pembersihan kipas (6 bulan)",
+        "standar": "Sudah dibersihan dan kipas berfungsi dengan baik"
+      },
+      {
+        "id": "i2",
+        "label": "Pemeriksaan kekuatan setiap sambungan, perapian wiring, dan periksa label (6 bulan)",
+        "standar": "Hasil pemeriksaan baik, koneksi kuat dan label benar"
+      },
+      {
+        "id": "i3",
+        "label": "Pemeriksaan penampilan dan kekuatan sambungan kabel ground (1 tahun)",
+        "standar": "Hasil pemeriksaan baik dan koneksi kuat"
+      },
+      {
+        "id": "i4",
+        "label": "Pemeriksaan dan verifikasi nilai pengaturan parameter sistem (1 tahun)",
+        "standar": "Hasil pemeriksaan baik dan parameter sesuai"
+      },
+      {
+        "id": "i5",
+        "label": "Inspeksi verifikasi kapasitas beban (1 tahun)",
+        "standar": "Tidak lebih dari 80% dari kapasitas terukur"
+      },
+      {
+        "id": "i6",
+        "label": "Pengujian fungsi alarm (1 tahun)",
+        "standar": "Hasil pengujian baik"
+      }
+    ],
+    "periods": [
+      "6 Bulanan",
+      "1 Tahunan"
+    ],
+    "slotMap": {
+      "headerRow": 6,
+      "dateCol": 1,
+      "petugasCol": 8,
+      "slotStartRow": 10,
+      "slotStep": 6,
+      "slotCount": 2,
+      "itemColumns": [
+        {
+          "id": "i1",
+          "colStart": 2,
+          "colWidth": 1
+        },
+        {
+          "id": "i2",
+          "colStart": 3,
+          "colWidth": 1
+        },
+        {
+          "id": "i3",
+          "colStart": 4,
+          "colWidth": 1
+        },
+        {
+          "id": "i4",
+          "colStart": 5,
+          "colWidth": 1
+        },
+        {
+          "id": "i5",
+          "colStart": 6,
+          "colWidth": 1
+        },
+        {
+          "id": "i6",
+          "colStart": 7,
+          "colWidth": 1
+        }
+      ],
+      "type": "monthly_slot"
+    }
+  },
+  {
+    "id": "cat55",
+    "sheetName": "Video Acces Node (3M)",
+    "title": "Lembar Pemeriksaan dan Perawatan Peralatan Video Access Node（3 bulanan）",
+    "short_name": "Video Access Node（3 bulanan）",
+    "items": [
+      {
+        "id": "i1",
+        "label": "Pembersihan permukaan server, penyimpanan, peralatan switching jaringan dan peralatan lainnya, pembersihan kipas dan pemeriksaan status operasi (3 bulan)",
+        "standar": "Sudah dibersihkan, status operasi normal"
+      },
+      {
+        "id": "i2",
+        "label": "Verifikasi alamat IP camera dengan ledger (buku besar) （3 bulan）",
+        "standar": "Alamat IP sesuai dengan buku besar"
+      },
+      {
+        "id": "i3",
+        "label": "Pemeriksaan proteksi petir dan grounding （3 bulan）",
+        "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω"
+      }
+    ],
+    "periods": [
+      "3 Bulanan"
+    ],
+    "slotMap": {
+      "headerRow": 6,
+      "dateCol": 1,
+      "petugasCol": 5,
+      "slotStartRow": 10,
+      "slotStep": 3,
+      "slotCount": 4,
+      "itemColumns": [
+        {
+          "id": "i1",
+          "colStart": 2,
+          "colWidth": 1
+        },
+        {
+          "id": "i2",
+          "colStart": 3,
+          "colWidth": 1
+        },
+        {
+          "id": "i3",
+          "colStart": 4,
+          "colWidth": 1
+        }
+      ],
+      "type": "monthly_slot"
+    }
+  }
+];
