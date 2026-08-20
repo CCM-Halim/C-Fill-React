@@ -11,6 +11,13 @@ function todayStr() {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
+function formatDateDisplay(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+}
+
 export default function InstrumenPage() {
   const showToast = useToast();
   const [namaInstrumen, setNamaInstrumen] = useState('');
@@ -85,12 +92,13 @@ export default function InstrumenPage() {
           <div key={it.id} className="item-block">
             <div className="item-label">{it.label}</div>
             {it.standar ? <div className="item-standar"><b>Standar:</b> {it.standar}</div> : null}
+            <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
             <textarea
               className="textarea"
               rows={2}
               value={answers[it.id] || ''}
               onChange={(e) => setAnswer(it.id, e.target.value)}
-              placeholder="Hasil pemeriksaan / catatan..."
+              placeholder="Isi catatan hasil pemeriksaan..."
             />
           </div>
         ))}
