@@ -119,15 +119,35 @@ export async function convertXlsxToSheets(xlsxFileId, folderId, targetName) {
  * sebelumnya (ada file Sheets dengan nama tsb di folder), pakai itu. Kalau belum,
  * cari file .xlsx aslinya (originalFileName), konversi sekali, lalu pakai hasilnya.
  *
- * Di-cache di memori (per sesi browser) supaya submit berikutnya untuk site yang
- * sama TIDAK cari ulang lewat Drive Search API.
+ * Di-cache di localStorage (BUKAN cuma memori JS) supaya bertahan walaupun
+ * halaman di-refresh / navigasi antar halaman - jadi submit berikutnya untuk
+ * site yang sama TIDAK cari ulang lewat Drive Search API (yang punya jeda
+ * index setelah file baru dibuat, sumber utama bug "selalu bikin file baru").
  */
-const spreadsheetIdCache = new Map();
+const CACHE_KEY = 'cfill_spreadsheet_cache_v1';
 
-export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {
-  const cacheKey = folderId + '|' + originalFileName;
-  if (spreadsheetIdCache.has(cacheKey)) {
-    return spreadsheetIdCache.get(cacheKey);
+function loadCache() {
+  try {
+    return JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function saveCacheEntry(key, spreadsheetId) {
+  try {
+    const cache = loadCache();
+    cache[key] = spreadsheetId;
+    localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+  } catch {
+    // localStorage penuh/diblokir - abaikan, tidak kritikal (cuma optimisasi)
+  }
+}
+
+export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {  const cacheKey = folderId + '|' + originalFileName;
+  const cache = loadCache();
+  if (cache[cacheKey]) {
+    return cache[cacheKey];
   }
 
   const sheetsMime = 'application/vnd.google-apps.spreadsheet';
@@ -135,7 +155,7 @@ export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {
   // 1. Sudah pernah dikonversi sebelumnya (termasuk dari sesi/browser lain)?
   const existingSheets = await findFileByExactName(folderId, originalFileName, sheetsMime);
   if (existingSheets) {
-    spreadsheetIdCache.set(cacheKey, existingSheets.id);
+    saveCacheEntry(cacheKey, existingSheets.id);
     return existingSheets.id;
   }
 
@@ -151,8 +171,23 @@ export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {
 
   // 3. Konversi (sekali saja - hasilnya langsung di-cache, tidak perlu search lagi)
   const converted = await convertXlsxToSheets(originalXlsx.id, folderId, originalFileName);
-  spreadsheetIdCache.set(cacheKey, converted.id);
+  saveCacheEntry(cacheKey, converted.id);
   return converted.id;
+}
+
+/**
+ * Hapus cache lokal (dipakai kalau perlu paksa aplikasi cari ulang dari Drive -
+ * misalnya setelah kamu menghapus manual file duplikat lewat Drive). Bisa
+ * dipanggil dari browser console: import('./lib/driveApi').then(m => m.clearSpreadsheetCache())
+ * - atau lebih gampang, cukup buka DevTools Console dan jalankan:
+ *   localStorage.removeItem('cfill_spreadsheet_cache_v1')
+ */
+export function clearSpreadsheetCache() {
+  try {
+    localStorage.removeItem(CACHE_KEY);
+  } catch {
+    // abaikan
+  }
 }
 
 /**
