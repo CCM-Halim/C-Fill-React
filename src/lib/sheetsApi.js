@@ -36,13 +36,33 @@ function colLetter(colIndex) {
 }
 
 /**
- * Hitung baris target untuk kategori bertipe "monthly_slot", berdasarkan bulan
- * dari tanggal pemeriksaan yang diisi user (Januari = slot ke-1, dst).
+ * Hitung baris target untuk kategori bertipe "monthly_slot", berdasarkan tanggal
+ * pemeriksaan DAN jumlah slot yang benar-benar tersedia di template (slotCount).
+ *
+ * PENTING: tidak semua kategori punya 12 slot (1 per bulan) - kategori yang cuma
+ * berisi item 3-bulanan/6-bulanan/tahunan (tanpa item bulanan sama sekali) cuma
+ * punya 4/2/1 slot per tahun. Kalau tetap dihitung pakai index bulan mentah
+ * (0-11) dikali slotStep, hasilnya jauh melampaui baris yang benar-benar sudah
+ * diformat di template (baris "meluber" ke area kosong di bawahnya).
+ *
+ * slotCount dipakai untuk menentukan resolusi index yang benar:
+ *   slotCount >= 12 -> 1 slot per bulan   (index = bulan, 0-11)
+ *   slotCount ~ 4   -> 1 slot per kuartal (index = bulan div 3, 0-3)
+ *   slotCount ~ 2   -> 1 slot per semester (index = bulan div 6, 0-1)
+ *   slotCount 1     -> cuma 1 slot/tahun  (index = 0, selalu sama)
  */
 export function computeSlotRow(slotMap, dateStr) {
   const d = new Date(dateStr);
-  const monthIndex = d.getMonth(); // 0 = Januari
-  return slotMap.slotStartRow + slotMap.slotStep * monthIndex;
+  const month = d.getMonth(); // 0 = Januari
+  const slotCount = slotMap.slotCount || 12;
+
+  let slotIndex;
+  if (slotCount >= 9) slotIndex = month;                    // ~12 slot: per bulan
+  else if (slotCount >= 3) slotIndex = Math.floor(month / 3); // ~4 slot: per kuartal
+  else if (slotCount >= 2) slotIndex = Math.floor(month / 6); // ~2 slot: per semester
+  else slotIndex = 0;                                         // 1 slot: sekali/tahun
+
+  return slotMap.slotStartRow + slotMap.slotStep * slotIndex;
 }
 
 function formatDateForSheet(dateStr) {
