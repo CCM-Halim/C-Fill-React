@@ -9,6 +9,7 @@ import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConve
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
 import { INSTRUMENT_SLOT_MAP } from '../config/instruments';
+import { SLOT_MAP_OVERRIDES } from '../config/slotMapOverrides';
 
 const ROOT_CHECKSHEET_FOLDER_ID = import.meta.env.VITE_ROOT_CHECKSHEET_FOLDER_ID;
 const ROOT_INSTRUMEN_FOLDER_ID = import.meta.env.VITE_ROOT_INSTRUMEN_FOLDER_ID;
@@ -48,7 +49,11 @@ export async function submitChecksheet({ buildingCategory, siteName, categoryId,
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
   const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
   const tabName = category.sheetName;
-  const slotMap = category.slotMap;
+
+  // Pakai override kalau file spesifik ini polanya beda dari mayoritas site lain
+  // di kategori yang sama (hasil cross-check ke semua 69 file).
+  const override = SLOT_MAP_OVERRIDES[site.originalFileName]?.[categoryId];
+  const slotMap = override || category.slotMap;
 
   if (slotMap.type === 'matrix') {
     await writeMatrixSlot(spreadsheetId, tabName, slotMap, { tanggal, matrixAnswers: answers, unitCount: slotMap.defaultUnitCount });
@@ -79,10 +84,18 @@ export async function submitInstrumentChecksheet({ namaInstrumen, tanggal, petug
 
 /**
  * Preview baris/slot mana yang bakal ditulis untuk tanggal tertentu - dipakai
- * UI supaya user tahu sebelum submit (mis. "akan mengisi/menimpa baris bulan Maret").
+ * UI supaya user tahu sebelum submit. Ikut menghormati override per-file kalau ada.
+ * Terima 2 bentuk: kategori peralatan { id, slotMap } + originalFileName (utk cek
+ * override), ATAU langsung slotMap mentah (dipakai instrumen, tidak ada override).
  */
-export function previewSlot(categoryOrSlotMap, tanggal) {
-  const slotMap = categoryOrSlotMap.slotMap || categoryOrSlotMap;
+export function previewSlot(categoryOrSlotMap, tanggal, originalFileName) {
+  let slotMap;
+  if (categoryOrSlotMap && categoryOrSlotMap.id) {
+    const override = originalFileName ? SLOT_MAP_OVERRIDES[originalFileName]?.[categoryOrSlotMap.id] : null;
+    slotMap = override || categoryOrSlotMap.slotMap;
+  } else {
+    slotMap = categoryOrSlotMap;
+  }
   if (!slotMap || slotMap.type !== 'monthly_slot') return null;
   return computeSlotRow(slotMap, tanggal);
 }
