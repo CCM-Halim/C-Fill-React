@@ -17,15 +17,25 @@ function requireFolderConfig(id, name) {
   if (!id) throw new Error(`${name} belum diatur di .env (lihat .env.example).`);
 }
 
-async function getSiteFolder(buildingCategory, siteName) {
-  const bcFolderId = await getOrCreateSubfolder(ROOT_CHECKSHEET_FOLDER_ID, buildingCategory);
-  return getOrCreateSubfolder(bcFolderId, siteName);
+async function getBuildingCategoryFolder(buildingCategory) {
+  return getOrCreateSubfolder(ROOT_CHECKSHEET_FOLDER_ID, buildingCategory);
+}
+
+async function getSiteDocumentationFolder(buildingCategory, siteName) {
+  // Folder khusus dokumentasi (foto/dokumen) - ini folder BARU yang dibuat
+  // aplikasi, terpisah dari lokasi file .xlsx checksheet asli (yang taruh
+  // langsung di folder kategori bangunan, bukan di subfolder per-site).
+  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
+  const siteFolderId = await getOrCreateSubfolder(bcFolderId, siteName);
+  return getOrCreateSubfolder(siteFolderId, 'Dokumentasi');
 }
 
 /**
  * Simpan 1 submission checksheet peralatan, ditulis ke slot bulan yang sesuai
  * di dalam file asli site tsb (dikonversi otomatis jadi Google Sheets kalau
- * belum pernah sebelumnya).
+ * belum pernah sebelumnya). File .xlsx asli & hasil konversinya ada LANGSUNG
+ * di folder kategori bangunan (mis. "1. BTS Communication Room"), TIDAK di
+ * subfolder per-site - mengikuti struktur folder asli kamu.
  */
 export async function submitChecksheet({ buildingCategory, siteName, categoryId, tanggal, petugas, answers }) {
   requireFolderConfig(ROOT_CHECKSHEET_FOLDER_ID, 'VITE_ROOT_CHECKSHEET_FOLDER_ID');
@@ -35,8 +45,8 @@ export async function submitChecksheet({ buildingCategory, siteName, categoryId,
   if (!site) throw new Error('Site tidak ditemukan: ' + siteName);
   if (!category.slotMap) throw new Error(`Kategori "${category.short_name}" belum punya peta slot.`);
 
-  const siteFolderId = await getSiteFolder(buildingCategory, siteName);
-  const spreadsheetId = await getOrConvertSiteSpreadsheet(siteFolderId, site.originalFileName);
+  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
+  const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
   const tabName = category.sheetName;
   const slotMap = category.slotMap;
 
@@ -79,15 +89,13 @@ export function previewSlot(categoryOrSlotMap, tanggal) {
 
 export async function uploadDocumentation({ buildingCategory, siteName, file }) {
   requireFolderConfig(ROOT_CHECKSHEET_FOLDER_ID, 'VITE_ROOT_CHECKSHEET_FOLDER_ID');
-  const siteFolderId = await getSiteFolder(buildingCategory, siteName);
-  const docFolderId = await getOrCreateSubfolder(siteFolderId, 'Dokumentasi');
+  const docFolderId = await getSiteDocumentationFolder(buildingCategory, siteName);
   return uploadFileToFolder(docFolderId, file);
 }
 
 export async function listDocumentationFiles({ buildingCategory, siteName }) {
   requireFolderConfig(ROOT_CHECKSHEET_FOLDER_ID, 'VITE_ROOT_CHECKSHEET_FOLDER_ID');
-  const siteFolderId = await getSiteFolder(buildingCategory, siteName);
-  const docFolderId = await getOrCreateSubfolder(siteFolderId, 'Dokumentasi');
+  const docFolderId = await getSiteDocumentationFolder(buildingCategory, siteName);
   return listFilesInFolder(docFolderId);
 }
 
