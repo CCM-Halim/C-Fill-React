@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { CATEGORIES } from '../config/categories';
+import { SITES } from '../config/sites';
 import { submitChecksheet, previewSlot } from '../lib/cfillService';
 import { useToast } from '../components/Toast';
 import BatteryTable from '../components/BatteryTable';
@@ -31,7 +32,8 @@ export default function ChecksheetForm() {
   }
 
   const isMatrix = category.slotMap?.type === 'matrix';
-  const slotRow = !isMatrix ? previewSlot(category, tanggal) : null;
+  const site = SITES.find((s) => s.buildingCategory === decodedBc && s.siteName === decodedSite);
+  const slotRow = !isMatrix ? previewSlot(category, tanggal, site?.originalFileName) : null;
   const bulanIndex = new Date(tanggal).getMonth();
 
   function setAnswer(itemId, value) {
