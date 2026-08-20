@@ -1,5 +1,7 @@
-// Kategori peralatan + slotMap (posisi baris/kolom di template Excel asli,
-// dipakai untuk menulis data ke SLOT yang sudah ada, bukan menambah baris baru)
+// Kategori peralatan + slotMap (posisi baris/kolom di template Excel asli).
+// slotMap = pola mayoritas, divalidasi ke SEMUA 69 file site (2 iterasi
+// perbaikan deteksi tanggal - lihat catatan di README). Terbukti template
+// konsisten di semua file, jadi 1 slotMap per kategori berlaku untuk semua site.
 export const CATEGORIES = [
   {
     "id": "cat01",
@@ -530,7 +532,7 @@ export const CATEGORIES = [
       "petugasCol": 5,
       "slotStartRow": 10,
       "slotStep": 1,
-      "slotCount": 1,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -677,7 +679,7 @@ export const CATEGORIES = [
       "petugasCol": 5,
       "slotStartRow": 10,
       "slotStep": 1,
-      "slotCount": 1,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -824,7 +826,7 @@ export const CATEGORIES = [
       "petugasCol": 5,
       "slotStartRow": 10,
       "slotStep": 1,
-      "slotCount": 1,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -962,7 +964,7 @@ export const CATEGORIES = [
       "petugasCol": 5,
       "slotStartRow": 10,
       "slotStep": 1,
-      "slotCount": 1,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -1100,7 +1102,7 @@ export const CATEGORIES = [
       "petugasCol": 5,
       "slotStartRow": 10,
       "slotStep": 1,
-      "slotCount": 1,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -1238,7 +1240,7 @@ export const CATEGORIES = [
       "petugasCol": 5,
       "slotStartRow": 10,
       "slotStep": 1,
-      "slotCount": 1,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -1300,7 +1302,7 @@ export const CATEGORIES = [
       "petugasCol": 7,
       "slotStartRow": 10,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -1393,7 +1395,7 @@ export const CATEGORIES = [
       "petugasCol": 11,
       "slotStartRow": 10,
       "slotStep": 6,
-      "slotCount": 2,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -1751,7 +1753,7 @@ export const CATEGORIES = [
       "petugasCol": 6,
       "slotStartRow": 10,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -2092,7 +2094,7 @@ export const CATEGORIES = [
       "petugasCol": 8,
       "slotStartRow": 10,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -2176,7 +2178,7 @@ export const CATEGORIES = [
       "petugasCol": 8,
       "slotStartRow": 10,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -2372,7 +2374,7 @@ export const CATEGORIES = [
       "petugasCol": 10,
       "slotStartRow": 10,
       "slotStep": 6,
-      "slotCount": 2,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -2578,7 +2580,7 @@ export const CATEGORIES = [
       "petugasCol": 10,
       "slotStartRow": 10,
       "slotStep": 6,
-      "slotCount": 2,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -2784,7 +2786,7 @@ export const CATEGORIES = [
       "petugasCol": 10,
       "slotStartRow": 10,
       "slotStep": 6,
-      "slotCount": 2,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -2872,7 +2874,7 @@ export const CATEGORIES = [
       "dateCol": 1,
       "petugasCol": 7,
       "slotStartRow": 11,
-      "slotStep": 1,
+      "slotStep": 3,
       "slotCount": 12,
       "itemColumns": [
         {
@@ -3597,7 +3599,7 @@ export const CATEGORIES = [
       "petugasCol": 8,
       "slotStartRow": 10,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -3665,7 +3667,7 @@ export const CATEGORIES = [
       "petugasCol": 5,
       "slotStartRow": 10,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -3718,7 +3720,7 @@ export const CATEGORIES = [
       "petugasCol": 5,
       "slotStartRow": 10,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -3775,7 +3777,7 @@ export const CATEGORIES = [
       "petugasCol": 6,
       "slotStartRow": 11,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -3843,7 +3845,7 @@ export const CATEGORIES = [
       "petugasCol": 7,
       "slotStartRow": 10,
       "slotStep": 6,
-      "slotCount": 2,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -3921,7 +3923,7 @@ export const CATEGORIES = [
       "petugasCol": 8,
       "slotStartRow": 10,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -4004,7 +4006,7 @@ export const CATEGORIES = [
       "petugasCol": 8,
       "slotStartRow": 10,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -4087,7 +4089,7 @@ export const CATEGORIES = [
       "petugasCol": 8,
       "slotStartRow": 10,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -4170,7 +4172,7 @@ export const CATEGORIES = [
       "petugasCol": 8,
       "slotStartRow": 10,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -4253,7 +4255,7 @@ export const CATEGORIES = [
       "petugasCol": 8,
       "slotStartRow": 10,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -4419,7 +4421,7 @@ export const CATEGORIES = [
       "petugasCol": 8,
       "slotStartRow": 10,
       "slotStep": 6,
-      "slotCount": 2,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
@@ -4486,7 +4488,7 @@ export const CATEGORIES = [
       "petugasCol": 5,
       "slotStartRow": 10,
       "slotStep": 3,
-      "slotCount": 4,
+      "slotCount": 12,
       "itemColumns": [
         {
           "id": "i1",
