@@ -14,6 +14,13 @@ function todayStr() {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
+function formatDateDisplay(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+}
+
 export default function ChecksheetForm() {
   const { buildingCategory, siteName, categoryId } = useParams();
   const decodedBc = decodeURIComponent(buildingCategory);
@@ -121,13 +128,16 @@ export default function ChecksheetForm() {
                 onChange={(rows) => setBatteryAnswer(it.id, rows)}
               />
             ) : (
-              <textarea
-                className="textarea"
-                rows={2}
-                placeholder="Hasil pemeriksaan / catatan..."
-                value={answers[it.id] || ''}
-                onChange={(e) => setAnswer(it.id, e.target.value)}
-              />
+              <>
+                <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
+                <textarea
+                  className="textarea"
+                  rows={2}
+                  placeholder="Isi catatan hasil pemeriksaan..."
+                  value={answers[it.id] || ''}
+                  onChange={(e) => setAnswer(it.id, e.target.value)}
+                />
+              </>
             )}
           </div>
         ))}
