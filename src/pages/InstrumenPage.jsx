@@ -34,7 +34,12 @@ export default function InstrumenPage() {
     setSubmitting(true);
     try {
       const res = await submitInstrumentChecksheet({ namaInstrumen, tanggal, petugas: petugas.trim(), answers });
-      showToast(`Checksheet instrumen "${res.fileName}" tersimpan ke slot bulan ${BULAN[bulanIndex]} ✅`);
+      showToast(
+        `Checksheet instrumen "${res.fileName}" tersimpan ke baris bulan ${BULAN[bulanIndex]} ✅`,
+        false,
+        res.sheetUrl,
+        'Buka & cek di Google Sheets →'
+      );
       setAnswers({});
     } catch (e) {
       showToast('Gagal menyimpan: ' + e.message, true);
