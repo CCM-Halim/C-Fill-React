@@ -76,14 +76,20 @@ function formatDateForSheet(dateStr) {
  * - kolom tanggal (dateCol) diisi tanggal pemeriksaan
  * - tiap item diisi ke kolom (atau rentang kolom, utk item tabel baterai) miliknya
  * - kolom petugas (kalau ada di template) diisi juga
+ *
+ * Format isi tiap item mengikuti pola asli template ("Tgl: <tanggal> Catatan: <isian>"),
+ * dengan bagian "Tgl:" otomatis diisi dari tanggal pemeriksaan - user cuma perlu isi
+ * bagian catatannya saja (lihat ChecksheetForm.jsx / InstrumenPage.jsx). Item berbentuk
+ * array (tabel baterai V/R) dikecualikan dari format ini, ditulis apa adanya per kolom.
  */
 export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tanggal, petugas, answers }) {
   const row = computeSlotRow(slotMap, tanggal);
   const data = [];
+  const formattedDate = formatDateForSheet(tanggal);
 
   data.push({
     range: `'${tabName}'!${colLetter(slotMap.dateCol)}${row}`,
-    values: [[formatDateForSheet(tanggal)]]
+    values: [[formattedDate]]
   });
 
   if (slotMap.petugasCol) {
@@ -105,9 +111,11 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
         values: [values]
       });
     } else {
+      // Item teks biasa -> otomatis dibungkus format "Tgl: <tanggal> Catatan: <isian>"
+      // sesuai pola template asli, tanpa user perlu ketik tanggalnya manual.
       data.push({
         range: `'${tabName}'!${colLetter(itemCol.colStart)}${row}`,
-        values: [[answer]]
+        values: [[`Tgl: ${formattedDate} Catatan: ${answer}`]]
       });
     }
   });
