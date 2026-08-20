@@ -58,13 +58,16 @@ export default function BatteryTable({ value, onChange, defaultCount = 24 }) {
               <td style={tdLabelStyle}>Tegangan (V)</td>
               {rows.map((cell, i) => (
                 <td key={i} style={tdStyle}>
-                  <input
-                    className="battery-cell-input"
-                    style={cellInputStyle}
-                    placeholder="V"
-                    value={cell.v}
-                    onChange={(e) => updateCell(i, 'v', e.target.value)}
-                  />
+                  <div style={inputWithUnitStyle}>
+                    <input
+                      className="battery-cell-input"
+                      style={cellInputStyle}
+                      placeholder="0"
+                      value={cell.v}
+                      onChange={(e) => updateCell(i, 'v', e.target.value)}
+                    />
+                    <span style={unitStyle}>V</span>
+                  </div>
                 </td>
               ))}
             </tr>
@@ -72,13 +75,16 @@ export default function BatteryTable({ value, onChange, defaultCount = 24 }) {
               <td style={tdLabelStyle}>Resistansi (R)</td>
               {rows.map((cell, i) => (
                 <td key={i} style={tdStyle}>
-                  <input
-                    className="battery-cell-input"
-                    style={cellInputStyle}
-                    placeholder="R"
-                    value={cell.r}
-                    onChange={(e) => updateCell(i, 'r', e.target.value)}
-                  />
+                  <div style={inputWithUnitStyle}>
+                    <input
+                      className="battery-cell-input"
+                      style={cellInputStyle}
+                      placeholder="0"
+                      value={cell.r}
+                      onChange={(e) => updateCell(i, 'r', e.target.value)}
+                    />
+                    <span style={unitStyle}>mΩ</span>
+                  </div>
                 </td>
               ))}
             </tr>
@@ -100,16 +106,20 @@ const tdLabelStyle = {
 };
 const tdStyle = { padding: '4px', borderBottom: '1px solid var(--border-soft)', textAlign: 'center' };
 const cellInputStyle = {
-  width: 54, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 6,
-  color: 'var(--ink)', fontSize: 12, padding: '5px 4px', textAlign: 'center', outline: 'none', fontFamily: "'IBM Plex Mono',monospace"
+  width: 40, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 6,
+  color: 'var(--ink)', fontSize: 12, padding: '5px 3px', textAlign: 'center', outline: 'none', fontFamily: "'IBM Plex Mono',monospace"
 };
+const inputWithUnitStyle = { display: 'flex', alignItems: 'center', gap: 3, justifyContent: 'center' };
+const unitStyle = { fontSize: 10.5, color: 'var(--ink-faint)', fontWeight: 600 };
 
 /**
  * Serialize array data baterai jadi 1 string ringkas untuk disimpan ke Google Sheet
- * (1 kolom per item, format: "1:V=2.248,R=0.404 | 2:V=2.273,R=0.440 | ...")
+ * (1 kolom per item, format: "1:V=2.248 V,R=0.404 mΩ | 2:V=2.273 V,R=0.440 mΩ | ...")
+ * Catatan: fungsi ini tidak dipakai langsung oleh ChecksheetForm.jsx (yang punya
+ * logic serialize sendiri), disediakan untuk pemakaian lain kalau diperlukan.
  */
 export function serializeBatteryTable(rows) {
   return rows
-    .map((c, i) => `${i + 1}:V=${c.v || '-'},R=${c.r || '-'}`)
+    .map((c, i) => `${i + 1}:V=${c.v || '-'} V,R=${c.r || '-'} mΩ`)
     .join(' | ');
 }
