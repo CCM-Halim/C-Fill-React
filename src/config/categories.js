@@ -1,6 +1,4 @@
-// Kategori peralatan + slotMap. itemColumns[].periodMonths dipakai buat baris
-// tulis per-item (item periode > grid dasar -> anchor sel gabungan, divalidasi
-// ke merged_cells.ranges asli di 66/69 file; battery_table SELALU baris normal).
+// Kategori peralatan + slotMap + semua inputType khusus yang sudah divalidasi.
 export const CATEGORIES = [
   {
     "id": "cat01",
@@ -5063,7 +5061,22 @@ export const CATEGORIES = [
         "label": "Uji tegangan daya input dan output (6 bulan)",
         "standar": "Lakukan pengukuran V.in dan V.out",
         "hasTglCatatan": true,
-        "periodMonths": 6
+        "periodMonths": 6,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "input",
+            "label": "Input",
+            "prefix": "Input",
+            "unit": "V"
+          },
+          {
+            "id": "output",
+            "label": "Output",
+            "prefix": "Output",
+            "unit": "V"
+          }
+        ]
       },
       {
         "id": "i6",
@@ -5167,7 +5180,22 @@ export const CATEGORIES = [
         "label": "Uji tegangan daya input dan output (6 bulan)",
         "standar": "Lakukan pengukuran V.in dan V.out",
         "hasTglCatatan": true,
-        "periodMonths": 6
+        "periodMonths": 6,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "input",
+            "label": "Input",
+            "prefix": "Input",
+            "unit": "V"
+          },
+          {
+            "id": "output",
+            "label": "Output",
+            "prefix": "Output",
+            "unit": "V"
+          }
+        ]
       },
       {
         "id": "i6",
@@ -5271,7 +5299,22 @@ export const CATEGORIES = [
         "label": "Uji tegangan daya input dan output (6 bulan)",
         "standar": "Lakukan pengukuran V.in dan V.out",
         "hasTglCatatan": true,
-        "periodMonths": 6
+        "periodMonths": 6,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "input",
+            "label": "Input",
+            "prefix": "Input",
+            "unit": "V"
+          },
+          {
+            "id": "output",
+            "label": "Output",
+            "prefix": "Output",
+            "unit": "V"
+          }
+        ]
       },
       {
         "id": "i6",
@@ -5375,7 +5418,22 @@ export const CATEGORIES = [
         "label": "Uji tegangan daya input dan output (6 bulan)",
         "standar": "Lakukan pengukuran V.in dan V.out",
         "hasTglCatatan": true,
-        "periodMonths": 6
+        "periodMonths": 6,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "input",
+            "label": "Input",
+            "prefix": "Input",
+            "unit": "V"
+          },
+          {
+            "id": "output",
+            "label": "Output",
+            "prefix": "Output",
+            "unit": "V"
+          }
+        ]
       },
       {
         "id": "i6",
@@ -5479,7 +5537,22 @@ export const CATEGORIES = [
         "label": "Uji tegangan daya input dan output (6 bulan)",
         "standar": "Lakukan pengukuran V.in dan V.out",
         "hasTglCatatan": true,
-        "periodMonths": 6
+        "periodMonths": 6,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "input",
+            "label": "Input",
+            "prefix": "Input",
+            "unit": "V"
+          },
+          {
+            "id": "output",
+            "label": "Output",
+            "prefix": "Output",
+            "unit": "V"
+          }
+        ]
       },
       {
         "id": "i6",
