@@ -28,13 +28,25 @@ function withDriveParams(path) {
 }
 
 async function driveFetch(path, options = {}) {
-  const headers = { ...(options.headers || {}), ...(await authHeaders()) };
-  const res = await fetch(DRIVE_BASE + withDriveParams(path), { ...options, headers });
-  if (!res.ok) {
+  const MAX_ATTEMPTS = 3;
+  let lastError;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const headers = { ...(options.headers || {}), ...(await authHeaders()) };
+    const res = await fetch(DRIVE_BASE + withDriveParams(path), { ...options, headers });
+    if (res.ok) return res.json();
+
     const body = await res.text();
-    throw new Error('Drive API error ' + res.status + ': ' + body);
+    lastError = new Error('Drive API error ' + res.status + ': ' + body);
+
+    // Cuma retry utk error server (5xx) - transien, biasanya gangguan sementara
+    // di Google, BUKAN error dari kode kita. Error 4xx (permission, not found,
+    // dsb) langsung dilempar tanpa retry karena percobaan ulang tidak akan beda.
+    const isRetryable = res.status >= 500;
+    if (!isRetryable || attempt === MAX_ATTEMPTS) throw lastError;
+
+    await new Promise((resolve) => setTimeout(resolve, attempt * 1000));
   }
-  return res.json();
+  throw lastError;
 }
 
 /**
@@ -95,23 +107,39 @@ export async function findFileByExactName(folderId, name, mimeType) {
  */
 export async function convertXlsxToSheets(xlsxFileId, folderId, targetName) {
   const token = await getValidAccessToken();
-  const res = await fetch(
-    `${DRIVE_BASE}/files/${xlsxFileId}/copy?fields=id,name,mimeType&${DRIVE_SUPPORT_PARAMS}`,
-    {
-      method: 'POST',
-      headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: targetName,
-        mimeType: 'application/vnd.google-apps.spreadsheet',
-        parents: [folderId]
-      })
-    }
-  );
-  if (!res.ok) {
+
+  // Retry otomatis untuk error 5xx (biasanya gangguan sementara di server Google,
+  // terutama utk file besar/kompleks) - coba ulang beberapa kali dengan jeda,
+  // sebelum benar-benar dianggap gagal.
+  const MAX_ATTEMPTS = 5;
+  let lastError;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const res = await fetch(
+      `${DRIVE_BASE}/files/${xlsxFileId}/copy?fields=id,name,mimeType&${DRIVE_SUPPORT_PARAMS}`,
+      {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: targetName,
+          mimeType: 'application/vnd.google-apps.spreadsheet',
+          parents: [folderId]
+        })
+      }
+    );
+    if (res.ok) return res.json();
+
     const body = await res.text();
-    throw new Error('Gagal konversi xlsx ke Sheets (' + res.status + '): ' + body);
+    lastError = new Error('Gagal konversi xlsx ke Sheets (' + res.status + '): ' + body);
+
+    const isRetryable = res.status >= 500;
+    if (!isRetryable || attempt === MAX_ATTEMPTS) throw lastError;
+
+    // Backoff makin lama tiap percobaan + sedikit jitter acak (hindari semua
+    // percobaan retry "serentak" kalau banyak user kena error bersamaan)
+    const delay = attempt * 1500 + Math.random() * 500;
+    await new Promise((resolve) => setTimeout(resolve, delay));
   }
-  return res.json();
+  throw lastError;
 }
 
 /**
