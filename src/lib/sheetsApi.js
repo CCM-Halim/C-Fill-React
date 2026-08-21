@@ -110,6 +110,13 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
         range: `'${tabName}'!${colLetter(itemCol.colStart)}${row}:${colLetter(itemCol.colStart + values.length - 1)}${row}`,
         values: [values]
       });
+    } else if (typeof answer === 'object' && answer.__rawText !== undefined) {
+      // Item dengan format sendiri (mis. "Lokasi Uji Fungsi: ... Catatan: ...")
+      // - ditulis apa adanya, TIDAK dibungkus prefix "Tgl: ..." otomatis.
+      data.push({
+        range: `'${tabName}'!${colLetter(itemCol.colStart)}${row}`,
+        values: [[answer.__rawText]]
+      });
     } else {
       // Item teks biasa -> otomatis dibungkus format "Tgl: <tanggal> Catatan: <isian>"
       // sesuai pola template asli, tanpa user perlu ketik tanggalnya manual.
