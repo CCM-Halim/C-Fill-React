@@ -45,8 +45,15 @@ export default function ChecksheetForm() {
   const slotRow = !isMatrix ? previewSlot(category, tanggal, site?.originalFileName) : null;
   const bulanIndex = new Date(tanggal).getMonth();
 
-  function setAnswer(itemId, value) {
-    setAnswers((prev) => ({ ...prev, [itemId]: value }));
+  function setAnswer(itemId, value, noTglPrefix) {
+    // Item dengan noTglPrefix (periodenya = grid dasar kategori, misal item
+    // 1-bulanan di grid bulanan) ditulis TEKS POLOS, tanpa prefix "Tgl: ..."
+    // otomatis - soalnya kolom Tanggal utama sudah cukup mengidentifikasi baris itu.
+    if (noTglPrefix) {
+      setAnswers((prev) => ({ ...prev, [itemId]: value ? { __rawText: value } : null }));
+    } else {
+      setAnswers((prev) => ({ ...prev, [itemId]: value }));
+    }
   }
 
   function setMeasurementAnswer(itemId, rawValue, unit) {
@@ -158,13 +165,15 @@ export default function ChecksheetForm() {
               </>
             ) : (
               <>
-                <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
+                {!it.noTglPrefix && (
+                  <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
+                )}
                 <textarea
                   className="textarea"
                   rows={2}
-                  placeholder="Isi catatan hasil pemeriksaan..."
-                  value={answers[it.id] || ''}
-                  onChange={(e) => setAnswer(it.id, e.target.value)}
+                  placeholder={it.noTglPrefix ? 'Isi hasil pemeriksaan...' : 'Isi catatan hasil pemeriksaan...'}
+                  value={it.noTglPrefix ? (answers[it.id]?.__rawText || '') : (answers[it.id] || '')}
+                  onChange={(e) => setAnswer(it.id, e.target.value, it.noTglPrefix)}
                 />
               </>
             )}
