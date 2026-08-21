@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './components/AuthContext';
 import { ToastProvider } from './components/Toast';
 import LoginScreen from './components/LoginScreen';
@@ -12,9 +12,11 @@ import SiteCategoryList from './pages/SiteCategoryList';
 import ChecksheetForm from './pages/ChecksheetForm';
 import InstrumenPage from './pages/InstrumenPage';
 import DokumentasiPage from './pages/DokumentasiPage';
+import VerifikasiIndex from './pages/VerifikasiIndex';
+import VerifikasiSite from './pages/VerifikasiSite';
 
 function AppShell() {
-  const { user } = useAuth();
+  const { user, isForeman } = useAuth();
 
   if (!user) {
     return <LoginScreen />;
@@ -33,6 +35,14 @@ function AppShell() {
           <Route path="/peralatan/:buildingCategory/:siteName/:categoryId" element={<ChecksheetForm />} />
           <Route path="/instrumen" element={<InstrumenPage />} />
           <Route path="/dokumentasi" element={<DokumentasiPage />} />
+          {isForeman ? (
+            <>
+              <Route path="/verifikasi" element={<VerifikasiIndex />} />
+              <Route path="/verifikasi/:buildingCategory/:siteName" element={<VerifikasiSite />} />
+            </>
+          ) : (
+            <Route path="/verifikasi/*" element={<Navigate to="/" replace />} />
+          )}
         </Routes>
       </main>
     </div>
