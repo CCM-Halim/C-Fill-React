@@ -1,7 +1,10 @@
-// Kategori peralatan + slotMap. inputType: 'battery_table' (V/R per baterai),
-// 'measurement_ohm' (grounding, satuan Ω), 'measurement_multi' (V+I, V+I+Hz,
-// atau MR Kelas+Suhu+Kelembaban - lihat measurementFields per item, tiap field
-// punya 'prefix' sendiri utk serialisasi, bukan ambil huruf pertama label).
+// Kategori peralatan + slotMap. inputType: 'battery_table', 'measurement_ohm',
+// 'measurement_multi' (V+I, V+I+Hz, MR Kelas+Suhu+Kelembaban). noTglPrefix=true
+// pada item berarti periodenya = grid dasar kategori (mis. item 1-bulanan di
+// grid bulanan) -> ditulis teks polos, TIDAK dibungkus 'Tgl: ...' otomatis
+// (soalnya kolom Tanggal utama baris itu sudah cukup). Item tanpa flag ini
+// (periodenya lebih jarang dari grid, mis. 3-bulanan di grid bulanan) tetap
+// dibungkus 'Tgl: ... Catatan: ...' otomatis seperti biasa.
 export const CATEGORIES = [
   {
     "id": "cat01",
@@ -13,19 +16,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan panel (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan tampilan instrumen, lampu indikator, dan posisi sakelar (1 bulan)",
         "standar": "Hasil Pemeriksaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan tampilan pemutus sirkuit dan kontaktor (1 bulan)",
         "standar": "Hasil Pemeriksaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -176,7 +182,8 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan peralatan (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
@@ -265,7 +272,8 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan peralatan (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
@@ -354,7 +362,8 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan peralatan (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
@@ -443,25 +452,29 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
@@ -560,19 +573,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Verivikasi Discharge Test (1 tahun)",
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pengujian Penurunan Tegangan Busbar Voltage Drop Test (1 tahun)",
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Tes Kapasitas Baterai (Menggunakan battery comprehensive tester)",
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       }
     ],
     "periods": [
@@ -615,25 +631,29 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
@@ -732,19 +752,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Verivikasi Discharge Test (1 tahun)",
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pengujian Penurunan Tegangan Busbar Voltage Drop Test (1 tahun)",
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Tes Kapasitas Baterai (Menggunakan battery comprehensive tester)",
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       }
     ],
     "periods": [
@@ -787,25 +810,29 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
@@ -904,19 +931,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Verivikasi Discharge Test (1 tahun)",
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pengujian Penurunan Tegangan Busbar Voltage Drop Test (1 tahun)",
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Tes Kapasitas Baterai (Menggunakan battery comprehensive tester)",
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       }
     ],
     "periods": [
@@ -959,25 +989,29 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
@@ -1065,13 +1099,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Verivikasi Discharge Test (1 tahun)",
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pengujian Penurunan Tegangan Busbar Voltage Drop Test (1 tahun)",
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -1121,25 +1157,29 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
@@ -1227,13 +1267,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Verivikasi Discharge Test (1 tahun)",
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pengujian Penurunan Tegangan Busbar Voltage Drop Test (1 tahun)",
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -1283,25 +1325,29 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
@@ -1389,13 +1435,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Verivikasi Discharge Test (1 tahun)",
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pengujian Penurunan Tegangan Busbar Voltage Drop Test (1 tahun)",
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -1445,25 +1493,29 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan kondisi pemasangan kamera, kepala pan/tilt, topi pelindung, lampu inframerah, dll di lapangan. (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kondisi pemasangan panel box peralatan luar ruangan di lapangan (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan Video vertikalitas tiang (tower), status pondasi dan lingkungan sekitar, dll di lapangan. (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pemeriksaan dan pembersihan status peralatan seperti codec, transceiver optik video, peralatan switching jaringan, dll. (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
@@ -1524,13 +1576,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan tampilan, kekuatan penyangga kamera, kekuatan koneksi kabel, kepala pan/tilt, cover pelindung, lampu inframerah,dan peralatan lainnya (6 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Bersihkan benda dan objek yang menghalangi pandangan kamera (6 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -1646,7 +1700,8 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan status operasi receiver satelit (1 bulan)",
         "standar": "Bekerja dengan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
@@ -1725,19 +1780,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan indikator kegagalan dan status sakelar pemutus pelindung lonjakan arus (1 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan lampu indikator kotak proteksi petir, tampilan display, periksa dan catat jumlah sambaran petir (1 bulan)",
         "standar": "Hasil pemeriksaan baik (catat nilai sambaran)",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan Waktu / Time Calibration (1 bulan)",
         "standar": "Sama dengan waktu Jakarta",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -1828,49 +1886,57 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan peralatan dan pemeriksaan status (1 bulan)",
         "standar": "Pembersihan peralatan dan pemeriksaan status operasi (1 bulan)",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Periksa kabel sambungan dan label (1 bulan)",
         "standar": "Konektor bagus, label sesuai",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan pengaturan dan kontrol kamera (1 bulan)",
         "standar": "Berfungsi baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Uji suara dan gambar: input dan output audio dan video (1 bulan)",
         "standar": "Uji fungsi baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
         "label": "Pemeriksaan fungsi mixer (1 bulan)",
         "standar": "Berfungsi baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i6",
         "label": "Pemeriksaan fungsi TV (monitor, dll) (1 bulan)",
         "standar": "Berfungsi baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i7",
         "label": "Pemeriksaan fungsi amplifier (1 bulan)",
         "standar": "Berfungsi baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i8",
         "label": "Pemeriksaan fungsi mikrofon (1 bulan)",
         "standar": "Berfungsi baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       }
     ],
     "periods": [
@@ -1938,19 +2004,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan peralatan dan periksa status pengoperasian (3 bulan)",
         "standar": "Sudah dibersihkan, status operasi normal dan tidak ada alarm",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan aksesoris peralatan, kabel dan label (3 bulan)",
         "standar": "Hasil pemeriksaan baik, kabel rapi, dan label sesuai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pembersihan filter debu peralatan (3 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -2005,43 +2074,50 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan operasi peralatan (Cek lampu led indikator operasi) (1 bulan)",
         "standar": "Peralatan bekerja dengan baik,tidak ada alarm",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Bersihkan permukaan peralatan, periksa mikrofon dan koneksi (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Periksa status peralatan, atur sensitivitas layar, waktu di display, dan lainnya",
         "standar": "Hasil pemeriksaan lampu indikator normal, sentuhan sensitif, dan waktu akurat",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pemeriksaan saluran utama dan cadangan (interface ganda), saluran utama dan tambahan panggilan, bicara, uji peralihan gagang (1 bulan)",
         "standar": "Peralihan normal dan layanan panggilan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
         "label": "Uji Panggilan Dispatch : area layanan stasiun, antar stasiun, OCE dengan petugas lapangan (1 bulan)",
         "standar": "Layanan panggilan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i6",
         "label": "Pengujian panggilan masuk dan keluar ekstensi darurat (1 bulan)",
         "standar": "Hasil pengujian layanan panggilan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i7",
         "label": "Pembaruan pemeriksaan label aplikasi (1 bulan)",
         "standar": "Pelabelan jelas",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       }
     ],
     "periods": [
@@ -2170,55 +2246,64 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan dan pembersihan berbagai kabel dan plug-in peralatan (1 bulan)",
         "standar": "Bersih dan dalam kondisi baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan, pembersihan dan pengujian berbagai peralatan (1 bulan)",
         "standar": "Bersih dan dalam kondisi baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan dan verifikasi kuantitas kabel optik darurat (1 bulan)",
         "standar": "Kondisi bagus, kuantitas sesuai",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pemeriksaan daya baterai dan pengisian daya baterai (1 bulan)",
         "standar": "Terisi penuh",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
         "label": "Pemeriksaan kinerja dan verifikasi kuantitas peralatan darurat dan peralatan lainnya (1 bulan)",
         "standar": "Performa bagus dan kuantitas sesuai",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i6",
         "label": "Uji coba panggilan telepon (1 bulan)",
         "standar": "Uji panggilan bagus",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i7",
         "label": "Uji coba transmisi gambar, data, dan video conference (1 bulan)",
         "standar": "Uji transmisi bagus",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i8",
         "label": "Pemeriksaan dan pengujian kabel optik darurat (1 bulan)",
         "standar": "Uji fungsi bagus",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i9",
         "label": "Latihan di lapangan : uji panggilan internal di lapangan, uji panggilan di lapangan dengan pusat komando darurat (OCC), uji pengiriman dokumen dan uji transmisi gambar dinamis (1 bulan)",
         "standar": "Hasil uji bagus",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       }
     ],
     "periods": [
@@ -2292,25 +2377,29 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan peralatan dan status operasi peralatan (3 bulan)",
         "standar": "Hasil pemeriksaan baik, status operasi normal dan tidak ada alarm",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pengujian layanan dasar panggilan (3 bulan)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kabel dan kekuatan koneksi (3 bulan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pembersihan debu repeater (3 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
@@ -2382,25 +2471,29 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan peralatan dan status operasi peralatan (3 bulan)",
         "standar": "Hasil pemeriksaan baik, status operasi normal dan tidak ada alarm",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pengujian layanan dasar panggilan (3 bulan)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kabel dan kekuatan koneksi (3 bulan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pembersihan debu repeater (3 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
@@ -2472,19 +2565,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan peralatan (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan status operasi dan catat tegangan dan Arus output /keluaran (1 bulan)",
         "standar": "Status normal dan catat tegangan output",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan ATS/transfer switch,sekring, pemutus sirkuit/circuit breaker, kontaktor, unit proteksi petir, dan kipas (1 bulan)",
         "standar": "Hasil pemeriksaan Baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -2598,13 +2694,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan kipas beroperasi dengan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kekuatan setiap sambungan, pengaturan wiring kabel,dan periksa label (6 bulan)",
         "standar": "Koneksi kuat dan labelnya benar",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -2709,19 +2807,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan peralatan (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan status operasi dan catat tegangan dan Arus output /keluaran (1 bulan)",
         "standar": "Status normal dan catat tegangan output",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan ATS/transfer switch,sekring, pemutus sirkuit/circuit breaker, kontaktor, unit proteksi petir, dan kipas (1 bulan)",
         "standar": "Hasil pemeriksaan Baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -2835,13 +2936,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan kipas beroperasi dengan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kekuatan setiap sambungan, pengaturan wiring kabel,dan periksa label (6 bulan)",
         "standar": "Koneksi kuat dan labelnya benar",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -2946,19 +3049,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan peralatan (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan status operasi dan catat tegangan dan Arus output /keluaran (1 bulan)",
         "standar": "Status normal dan catat tegangan output",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan ATS/transfer switch,sekring, pemutus sirkuit/circuit breaker, kontaktor, unit proteksi petir, dan kipas (1 bulan)",
         "standar": "Hasil pemeriksaan Baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -3072,13 +3178,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan kipas beroperasi dengan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kekuatan setiap sambungan, pengaturan wiring kabel,dan periksa label (6 bulan)",
         "standar": "Koneksi kuat dan labelnya benar",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -3183,13 +3291,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Periksa kabel optik dan saluran pipa untuk mengetahui adanya kelainan dan pengaruh eksternal, dan tangani masalah dengan segera jika ditemukan (1 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Bersihkan gulma di sekitar patok pada bagian kabel optik yang ditanam jari-jari 50 cm dari patok, lalu luruskan dan perkuat patok tersebut (1 bulan)",
         "standar": "Sudah dibersihkan dan patok sudah kokoh",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -3286,7 +3396,8 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan ruangan dan lingkungan",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
@@ -3323,25 +3434,29 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan kinerja AC",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pemeriksaan fasilitas pencahayaan",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
         "label": "Pemeriksaan pintu dan ventilasi ruangan",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i6",
         "label": "Pemeriksaan peralatan pemadam kebakaran",
         "standar": "Catat tanggal kadaluarsa",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       }
     ],
     "periods": [
@@ -3399,31 +3514,36 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan peralatan dan pemeriksaan status pengoperasian (1 bulan)",
         "standar": "Sudah dibersihkan, operasi normal, dan tidak ada alarm",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kabel dan konektor (1 bulan)",
         "standar": "Hasil pemeriksaan baik dan konektor kuat",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan waktu / Time Calibration (1 bulan)",
         "standar": "Sama dengan waktu Jakarta",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pengujian/play file rekaman suara (1 bulan)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i5",
         "label": "Pembaruan verifikasi label (1 bulan)",
         "standar": "Label Sesuai",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i6",
@@ -3555,19 +3675,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan tampilan tower dan kabel feeder antena (1 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Inspeksi pagar dan kontrol akses (1 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan jalur dan kelengkapan leacky cable (1 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -3700,13 +3823,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Bersihkan permukaan LCX monitoring/FSU dan periksa status operasi (1 Bulan)",
         "standar": "Sudah dibersihkan, status operasi normal tidak ada alarm",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan dan inspeksi kondisi perangkat host LCX Monitoring/FSU (1 Bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -3792,13 +3917,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Bersihkan permukaan RTU dan periksa status operasi (1 Bulan)",
         "standar": "Sudah dibersihkan, status operasi normal tidak ada alarm",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Periksa dan kalibrasi waktu peralatan (1 Bulan)",
         "standar": "Sama dengan waktu jakarta",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -3884,13 +4011,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Bersihkan permukaan tower monitoring dan periksa status operasi (1 Bulan)",
         "standar": "Sudah dibersihkan, status operasi normal tidak ada alarm",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan dan inspeksi kondisi perangkat tower monitoring (1 Bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -3987,19 +4116,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan eksterior peralatan (3 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan peralatan tambahan dan kabel (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Periksa dan bersihkan atau ganti filter debu dan kipas (3 bulan)",
         "standar": "Hasil pemeriksaan baik dan sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -4076,13 +4208,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan peralatan dan periksa status operasi (3 bulan)",
         "standar": "Sudah dibersihkan,pemeriksaan status operasi normal dan tidak ada alarm",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan aksesoris, kabel dan label peralatan (3 bulan)",
         "standar": "Hasil pemeriksaan kabel rapi dan label sesuai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -4132,13 +4266,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan peralatan dan periksa status operasi (3 bulan)",
         "standar": "Sudah dibersihkan,pemeriksaan status operasi normal dan tidak ada alarm",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan aksesoris, kabel dan label peralatan (3 bulan)",
         "standar": "Hasil pemeriksaan kabel rapi dan label sesuai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -4188,25 +4324,29 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan tampilan struktur tower, anchors dan baut (3 bulan)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kondisi pondasi tower dan lingkungan sekitar (3 bulan)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan koneksi ground (3 bulan)",
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
         "label": "Pemeriksaan lampu tanda penerbangan dan tanda peringatan keselamatan (3 bulan)",
         "standar": "Hasil pemeriksaan lampu dalam kondisi baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       }
     ],
     "periods": [
@@ -4254,13 +4394,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan kekuatan struktur eksterior tower, pemeriksaan baut pengikat masing-masing komponen dan bagian, serta pengencangan baut seluruh tower. (6 bulan)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Periksa kekencangan pemasangan platform tower, tangga, jaring pelindung, bracket antena dan komponen tambahan lainnya, dan kencangkan bautnya (6 bulan)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -4332,19 +4474,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -4421,19 +4566,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -4510,19 +4658,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -4599,19 +4750,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -4688,19 +4842,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -4777,19 +4934,22 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan dan pembersihan filter debu/kipas (1 bulan)",
         "standar": "Sudah dibersihkan",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan status operasi dan catat tegangan output/keluaran (1 bulan)",
         "standar": "Status normal dan catat tegangan dan arus output",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
         "label": "Pemeriksaan tampilan dan status pemutus sirkuit, kipas angin, unit proteksi dan komponen lainnya (1 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "noTglPrefix": true
       },
       {
         "id": "i4",
@@ -4887,13 +5047,15 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihan dan kipas berfungsi dengan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kekuatan setiap sambungan, perapian wiring, dan periksa label (6 bulan)",
         "standar": "Hasil pemeriksaan baik, koneksi kuat dan label benar",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "noTglPrefix": true
       },
       {
         "id": "i3",
@@ -4975,12 +5137,14 @@ export const CATEGORIES = [
       {
         "id": "i1",
         "label": "Pembersihan permukaan server, penyimpanan, peralatan switching jaringan dan peralatan lainnya, pembersihan kipas dan pemeriksaan status operasi (3 bulan)",
-        "standar": "Sudah dibersihkan, status operasi normal"
+        "standar": "Sudah dibersihkan, status operasi normal",
+        "noTglPrefix": true
       },
       {
         "id": "i2",
         "label": "Verifikasi alamat IP camera dengan ledger (buku besar) （3 bulan）",
-        "standar": "Alamat IP sesuai dengan buku besar"
+        "standar": "Alamat IP sesuai dengan buku besar",
+        "noTglPrefix": true
       },
       {
         "id": "i3",
