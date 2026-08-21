@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { login as googleLogin, logout as googleLogout, getCurrentUser } from '../lib/googleAuth';
+import { isForemanEmail } from '../config/foremen';
 
 const AuthContext = createContext(null);
 
@@ -32,8 +33,10 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
+  const isForeman = isForemanEmail(user?.email);
+
   return (
-    <AuthContext.Provider value={{ user, loading, error, login: handleLogin, logout: handleLogout }}>
+    <AuthContext.Provider value={{ user, loading, error, login: handleLogin, logout: handleLogout, isForeman }}>
       {children}
     </AuthContext.Provider>
   );
