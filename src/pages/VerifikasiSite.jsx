@@ -75,7 +75,10 @@ export default function VerifikasiSite() {
         {status === null ? (
           <div className="muted">Memuat...</div>
         ) : status.error ? (
-          <div className="muted">Gagal memuat: {status.error}</div>
+          <div>
+            <div className="muted" style={{ marginBottom: 12 }}>Gagal memuat: {status.error}</div>
+            <button className="btn btn-secondary" onClick={loadStatus}>🔄 Coba Lagi</button>
+          </div>
         ) : (
           <>
             <a href={status.sheetUrl} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ marginBottom: 16 }}>
