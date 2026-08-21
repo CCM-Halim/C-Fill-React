@@ -65,6 +65,63 @@ export function computeSlotRow(slotMap, dateStr) {
   return slotMap.slotStartRow + slotMap.slotStep * slotIndex;
 }
 
+/**
+ * Jumlah bulan per slot DASAR grid (1/3/6/12), diturunkan dari slotCount -
+ * dipakai buat komputasi baris per-item di bawah.
+ */
+function baseGridMonths(slotMap) {
+  const slotCount = slotMap.slotCount || 12;
+  if (slotCount >= 9) return 1;
+  if (slotCount >= 3) return 3;
+  if (slotCount >= 2) return 6;
+  return 12;
+}
+
+/**
+ * Hitung baris target KHUSUS untuk 1 item, berdasarkan periode item itu SENDIRI
+ * (itemCol.periodMonths) - BEDA dari computeSlotRow (yang pakai periode dasar
+ * grid keseluruhan).
+ *
+ * PENTING: kolom item yang periodenya lebih JARANG dari grid dasarnya (mis.
+ * item 3-bulanan di dalam grid bulanan) ternyata pakai SEL GABUNGAN (merged
+ * cell) di template asli, mencakup beberapa baris bulan sekaligus (mis. baris
+ * Jul-Agu-Sep digabung jadi 1 sel, tampil di baris Jul saja). Kalau ditulis ke
+ * baris "tengah" gabungan itu (mis. baris Agustus), Google Sheets menganggap
+ * itu sel "hantu" yang tersembunyi di balik merge, jadi TIDAK PERNAH terlihat
+ * berubah walau API-nya sukses. Makanya baris tulis utk item begini harus
+ * di-"snap" ke baris AWAL blok periode-nya (anchor sel gabungan), bukan baris
+ * bulan yang persis.
+ *
+ * Sudah divalidasi ke SEMUA 69 file (cek langsung merged_cells.ranges, bukan
+ * cuma tebak dari pola tanggal) - 66/69 file cocok sama rumus kalender standar
+ * (blok kuartal Jan-Mar/Apr-Jun/dst). 3 file yang strukturnya beneran beda
+ * (baris gabungan tidak rata 6 baris) dapat itemCol.explicitAnchors - daftar
+ * baris anchor asli hasil baca langsung dari file, dipakai duluan sebelum rumus.
+ */
+function computeItemRow(slotMap, itemCol, dateStr, isBatteryTable) {
+  if (isBatteryTable) {
+    // Item tabel baterai (banyak kolom per unit) TIDAK pakai merge kuartal -
+    // selalu baris per-bulan seperti biasa, walau labelnya bilang "(3 bulan)".
+    return computeSlotRow(slotMap, dateStr);
+  }
+
+  const month = new Date(dateStr).getMonth();
+  const baseMonths = baseGridMonths(slotMap);
+  const itemMonths = itemCol.periodMonths || baseMonths;
+
+  if (itemCol.explicitAnchors && itemCol.explicitAnchors.length > 0) {
+    const idx = Math.min(Math.floor(month / itemMonths), itemCol.explicitAnchors.length - 1);
+    return itemCol.explicitAnchors[idx];
+  }
+
+  if (itemMonths <= baseMonths) {
+    return computeSlotRow(slotMap, dateStr);
+  }
+  const blockSizeInSlots = Math.round(itemMonths / baseMonths);
+  const blockIndex = Math.floor(month / itemMonths);
+  return slotMap.slotStartRow + slotMap.slotStep * blockSizeInSlots * blockIndex;
+}
+
 function formatDateForSheet(dateStr) {
   const d = new Date(dateStr);
   const pad = (n) => String(n).padStart(2, '0');
@@ -103,25 +160,31 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
     const answer = answers[itemCol.id];
     if (answer === undefined || answer === null) return;
 
-    if (Array.isArray(answer)) {
+    const isBatteryTable = Array.isArray(answer);
+    // Item yang periodenya lebih jarang dari grid dasar (mis. 3-bulanan di grid
+    // bulanan) ditulis ke baris ANCHOR blok periodenya sendiri, bukan baris row
+    // di atas (lihat computeItemRow). Item tabel baterai selalu baris normal.
+    const itemRow = computeItemRow(slotMap, itemCol, tanggal, isBatteryTable);
+
+    if (isBatteryTable) {
       // Jawaban berbentuk array (mis. tabel baterai V/R per unit) -> 1 nilai per kolom
       const values = answer.map((v) => (typeof v === 'string' ? v : JSON.stringify(v)));
       data.push({
-        range: `'${tabName}'!${colLetter(itemCol.colStart)}${row}:${colLetter(itemCol.colStart + values.length - 1)}${row}`,
+        range: `'${tabName}'!${colLetter(itemCol.colStart)}${itemRow}:${colLetter(itemCol.colStart + values.length - 1)}${itemRow}`,
         values: [values]
       });
     } else if (typeof answer === 'object' && answer.__rawText !== undefined) {
       // Item dengan format sendiri (mis. "Lokasi Uji Fungsi: ... Catatan: ...")
       // - ditulis apa adanya, TIDAK dibungkus prefix "Tgl: ..." otomatis.
       data.push({
-        range: `'${tabName}'!${colLetter(itemCol.colStart)}${row}`,
+        range: `'${tabName}'!${colLetter(itemCol.colStart)}${itemRow}`,
         values: [[answer.__rawText]]
       });
     } else {
       // Item teks biasa -> otomatis dibungkus format "Tgl: <tanggal> Catatan: <isian>"
       // sesuai pola template asli, tanpa user perlu ketik tanggalnya manual.
       data.push({
-        range: `'${tabName}'!${colLetter(itemCol.colStart)}${row}`,
+        range: `'${tabName}'!${colLetter(itemCol.colStart)}${itemRow}`,
         values: [[`Tgl: ${formattedDate} Catatan: ${answer}`]]
       });
     }
