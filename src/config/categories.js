@@ -1,7 +1,6 @@
-// Kategori peralatan + slotMap (posisi baris/kolom di template Excel asli).
-// inputType 'battery_table' = tabel V/R per unit baterai (satuan V, mΩ).
-// inputType 'measurement_ohm' = input angka tunggal + satuan Ω otomatis
-// (item pengukuran resistansi grounding).
+// Kategori peralatan + slotMap. inputType: 'battery_table' (V/R per baterai),
+// 'measurement_ohm' (grounding, satuan Ω), 'measurement_multi' (mis. Tegangan+
+// Arus, atau Tegangan+Arus+Frekuensi - lihat measurementFields per item).
 export const CATEGORIES = [
   {
     "id": "cat01",
@@ -467,7 +466,20 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pengujian tegangan floating charge total dan arus floating charge dari battery bank / grup baterai (3 bulan)",
         "standar": "53.52V - 54.52V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "v",
+            "label": "Tegangan",
+            "unit": "V"
+          },
+          {
+            "id": "i",
+            "label": "Arus",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i6",
@@ -624,7 +636,20 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pengujian tegangan floating charge total dan arus floating charge dari battery bank / grup baterai (3 bulan)",
         "standar": "53.52V - 54.52V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "v",
+            "label": "Tegangan",
+            "unit": "V"
+          },
+          {
+            "id": "i",
+            "label": "Arus",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i6",
@@ -781,7 +806,20 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pengujian tegangan floating charge total dan arus floating charge dari battery bank / grup baterai (3 bulan)",
         "standar": "53.52V - 54.52V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "v",
+            "label": "Tegangan",
+            "unit": "V"
+          },
+          {
+            "id": "i",
+            "label": "Arus",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i6",
@@ -938,7 +976,20 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pengujian tegangan floating charge total dan arus floating charge dari battery bank / grup baterai (3 bulan)",
         "standar": "214.08V- 218.08V 428.16V- 436.16V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "v",
+            "label": "Tegangan",
+            "unit": "V"
+          },
+          {
+            "id": "i",
+            "label": "Arus",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i6",
@@ -1085,7 +1136,20 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pengujian tegangan floating charge total dan arus floating charge dari battery bank / grup baterai (3 bulan)",
         "standar": "214.08V- 218.08V 428.16V- 436.16V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "v",
+            "label": "Tegangan",
+            "unit": "V"
+          },
+          {
+            "id": "i",
+            "label": "Arus",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i6",
@@ -1232,7 +1296,20 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pengujian tegangan floating charge total dan arus floating charge dari battery bank / grup baterai (3 bulan)",
         "standar": "40.14V - 40.89V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "v",
+            "label": "Tegangan",
+            "unit": "V"
+          },
+          {
+            "id": "i",
+            "label": "Arus",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i6",
@@ -2400,7 +2477,20 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pengujian tegangan keluaran & arus keluaran (3 bulan)",
         "standar": "Tegangan: 53,2-57,6 V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "v",
+            "label": "Tegangan",
+            "unit": "V"
+          },
+          {
+            "id": "i",
+            "label": "Arus",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i5",
@@ -2622,7 +2712,20 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pengujian tegangan keluaran & arus keluaran (3 bulan)",
         "standar": "Tegangan: 53,2-57,6 V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "v",
+            "label": "Tegangan",
+            "unit": "V"
+          },
+          {
+            "id": "i",
+            "label": "Arus",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i5",
@@ -2844,7 +2947,20 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pengujian tegangan keluaran & arus keluaran (3 bulan)",
         "standar": "Tegangan: 53,2-57,6 V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "v",
+            "label": "Tegangan",
+            "unit": "V"
+          },
+          {
+            "id": "i",
+            "label": "Arus",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i5",
@@ -4635,7 +4751,25 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pengujian tegangan Output, Arus, Frekuensi (3 bulan)",
         "standar": "Catat hasil pengukuran/tampilan di display",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "v",
+            "label": "Tegangan",
+            "unit": "V"
+          },
+          {
+            "id": "i",
+            "label": "Arus",
+            "unit": "A"
+          },
+          {
+            "id": "hz",
+            "label": "Frekuensi",
+            "unit": "Hz"
+          }
+        ]
       },
       {
         "id": "i5",
