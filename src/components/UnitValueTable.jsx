@@ -1,27 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 /**
  * UnitValueTable
- * Tabel 1 baris nilai per unit bernomor (mis. Arus tiap modul rectifier) -
- * mirip BatteryTable tapi cuma 1 baris pengukuran (bukan V+R), dan jumlah
- * unit BISA BEDA per lokasi (teknisi yang atur sendiri, bukan tetap).
+ * Tabel 1 baris nilai per unit bernomor (mis. Arus tiap modul rectifier).
+ * State disimpan LOKAL (useState) - lihat catatan di MeasurementMultiInput.jsx
+ * soal kenapa ini penting (hindari race condition kehilangan input saat
+ * ngetik cepat pindah-pindah antar kolom).
  */
 export default function UnitValueTable({ value, onChange, unit = 'A', defaultCount = 4 }) {
   const [count, setCount] = useState((value && value.length) || defaultCount);
+  const [rows, setRows] = useState(() => {
+    if (value && value.length) return value;
+    return Array.from({ length: defaultCount }, () => '');
+  });
+  const didInit = useRef(false);
 
-  const rows = value && value.length === count ? value : Array.from({ length: count }, (_, i) => (value && value[i]) || '');
+  useEffect(() => {
+    if (!didInit.current) {
+      didInit.current = true;
+      return;
+    }
+    if (!value || value.length === 0) {
+      setRows(Array.from({ length: count }, () => ''));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   function updateCell(idx, val) {
-    const next = rows.slice();
-    next[idx] = val;
-    onChange(next);
+    setRows((prev) => {
+      const next = prev.slice();
+      next[idx] = val;
+      onChange(next);
+      return next;
+    });
   }
 
   function handleCountChange(newCount) {
     newCount = Math.max(1, Math.min(20, newCount));
     setCount(newCount);
-    const next = Array.from({ length: newCount }, (_, i) => rows[i] || '');
-    onChange(next);
+    setRows((prev) => {
+      const next = Array.from({ length: newCount }, (_, i) => prev[i] || '');
+      onChange(next);
+      return next;
+    });
   }
 
   return (
