@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 /**
  * BatteryTable
@@ -7,26 +7,48 @@ import React, { useState } from 'react';
  * Excel asli (1 kolom = 1 baterai). Default 24 baterai (bisa dikurangi/ditambah
  * kalau lokasi punya jumlah baterai berbeda).
  *
- * Output disimpan sebagai 1 string terstruktur di jawaban item tsb (dipisah "; "),
- * supaya tetap kompatibel dengan skema 1-kolom-per-item di Google Sheet.
+ * State (rows) disimpan LOKAL (useState + functional update) - bukan dibaca
+ * ulang dari prop `value` tiap keystroke. Kalau baca dari prop tiap kali,
+ * ada risiko race condition: teknisi ngetik cepat pindah antar kotak (ada
+ * puluhan kotak di tabel ini) bisa bikin nilai yang baru diketik KETIMPA/HILANG
+ * kalau re-render dari parent belum sempat kejadian di antara 2 keystroke.
  */
 export default function BatteryTable({ value, onChange, defaultCount = 24 }) {
-  const [count, setCount] = useState(defaultCount);
+  const [count, setCount] = useState((value && value.length) || defaultCount);
+  const [rows, setRows] = useState(() => {
+    if (value && value.length) return value;
+    return Array.from({ length: defaultCount }, () => ({ v: '', r: '' }));
+  });
+  const didInit = useRef(false);
 
-  // value = array of { v: '', r: '' }, panjang = count
-  const rows = value && value.length === count ? value : Array.from({ length: count }, (_, i) => (value && value[i]) || { v: '', r: '' });
+  useEffect(() => {
+    if (!didInit.current) {
+      didInit.current = true;
+      return;
+    }
+    if (!value || value.length === 0) {
+      setRows(Array.from({ length: count }, () => ({ v: '', r: '' })));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   function updateCell(idx, field, val) {
-    const next = rows.slice();
-    next[idx] = { ...next[idx], [field]: val };
-    onChange(next);
+    setRows((prev) => {
+      const next = prev.slice();
+      next[idx] = { ...next[idx], [field]: val };
+      onChange(next);
+      return next;
+    });
   }
 
   function handleCountChange(newCount) {
     newCount = Math.max(1, Math.min(60, newCount));
     setCount(newCount);
-    const next = Array.from({ length: newCount }, (_, i) => rows[i] || { v: '', r: '' });
-    onChange(next);
+    setRows((prev) => {
+      const next = Array.from({ length: newCount }, (_, i) => prev[i] || { v: '', r: '' });
+      onChange(next);
+      return next;
+    });
   }
 
   return (
