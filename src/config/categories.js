@@ -1,6 +1,6 @@
-// Kategori peralatan + slotMap. inputType tambahan: 'unit_value_table'
-// (1 nilai per unit bernomor, mis. Arus per modul rectifier - jumlah unit
-// bisa disesuaikan teknisi karena beda2 per lokasi).
+// Kategori peralatan + slotMap. itemColumns[].periodMonths dipakai buat baris
+// tulis per-item (item periode > grid dasar -> anchor sel gabungan, divalidasi
+// ke merged_cells.ranges asli di 66/69 file; battery_table SELALU baris normal).
 export const CATEGORIES = [
   {
     "id": "cat01",
@@ -13,57 +13,66 @@ export const CATEGORIES = [
         "label": "Pembersihan permukaan panel (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan tampilan instrumen, lampu indikator, dan posisi sakelar (1 bulan)",
         "standar": "Hasil Pemeriksaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan tampilan pemutus sirkuit dan kontaktor (1 bulan)",
         "standar": "Hasil Pemeriksaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Pengujian alarm pemadaman listrik (3 bulan)",
         "standar": "Hasil Pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Pengujian fungsi Switching Main & Backup listrik AC (3 bulan)",
         "standar": "Hasil pengujian swtching baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i6",
         "label": "Pembersihan rak kabel (parit/bagian bawah) dan pemeriksaan penampilan saluran listrik (3 bulan)",
         "standar": "Sudah dibersihkan dan kabel dalam kondisi baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i7",
         "label": "Periksa kekuatan koneksi antar komponen, perapian kabel, dan cek labelnya(6 bulan)",
         "standar": "Hasil pemeriksaann baik dan label sesuai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i8",
         "label": "Periksa kondisi dan kekuatan koneksi kabel grounding",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 1
       },
       {
         "id": "i9",
         "label": "Periksa pembagian beban arus dan kapasitas pemutus sirkuit",
         "standar": "Circuit Breaker minimal bernilai 1,5 kali arus pengukuran",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 1
       }
     ],
     "periods": [
@@ -83,47 +92,56 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i8",
           "colStart": 9,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i9",
           "colStart": 10,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         }
       ],
       "type": "monthly_slot"
@@ -179,37 +197,43 @@ export const CATEGORIES = [
         "label": "Pembersihan peralatan (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan status pengoperasian BBU dan RRU (3 bulan)",
         "standar": "Pemeriksaan operasi normal dan tidak ada alarm",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Peeriksaan konektor dan kabel (3 bulan)",
         "standar": "Pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan operasi kipas dan bersihkan kipas/filter debu (3 bulan)",
         "standar": "Pemeriksaan baik dan sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Pengujian panggilan di tempat (3 bulan)",
         "standar": "Hasil pengujian panggilan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i6",
         "label": "Pengujian layanan intelligent Network (3 Bulanan)",
         "standar": "Hasil pengujian panggilan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -227,32 +251,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -269,37 +299,43 @@ export const CATEGORIES = [
         "label": "Pembersihan peralatan (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan status pengoperasian BBU dan RRU (3 bulan)",
         "standar": "Pemeriksaan operasi normal dan tidak ada alarm",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Peeriksaan konektor dan kabel (3 bulan)",
         "standar": "Pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan operasi kipas dan bersihkan kipas/filter debu (3 bulan)",
         "standar": "Pemeriksaan baik dan sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Pengujian panggilan di tempat (3 bulan)",
         "standar": "Hasil pengujian panggilan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i6",
         "label": "Pengujian layanan intelligent Network (3 Bulanan)",
         "standar": "Hasil pengujian panggilan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -317,32 +353,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -359,37 +401,43 @@ export const CATEGORIES = [
         "label": "Pembersihan peralatan (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan status pengoperasian BBU dan RRU (3 bulan)",
         "standar": "Pemeriksaan operasi normal dan tidak ada alarm",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Peeriksaan konektor dan kabel (3 bulan)",
         "standar": "Pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan operasi kipas dan bersihkan kipas/filter debu (3 bulan)",
         "standar": "Pemeriksaan baik dan sudah dibersihkan",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Pengujian panggilan di tempat (3 bulan)",
         "standar": "Hasil pengujian panggilan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i6",
         "label": "Pengujian layanan intelligent Network (3 Bulanan)",
         "standar": "Hasil pengujian panggilan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -407,32 +455,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -449,28 +503,32 @@ export const CATEGORIES = [
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i5",
@@ -491,7 +549,8 @@ export const CATEGORIES = [
             "unit": "A",
             "prefix": "I"
           }
-        ]
+        ],
+        "periodMonths": 3
       },
       {
         "id": "i6",
@@ -499,13 +558,15 @@ export const CATEGORIES = [
         "standar": "Tegangan Baterai 2V：2.23V-2.27V; Tegangan Baterai 12V:13.38-13.63V",
         "inputType": "battery_table",
         "defaultBatteryCount": 24,
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i7",
         "label": "Balanced charging / Pengisian seimbang dari grup baterai (3 bulan)",
         "standar": "55.2V-56.4V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -523,37 +584,44 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 12
+          "colWidth": 12,
+          "periodMonths": 3
         },
         {
           "id": "i7",
           "colStart": 19,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -570,21 +638,24 @@ export const CATEGORIES = [
         "label": "Verivikasi Discharge Test (1 tahun)",
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       },
       {
         "id": "i2",
         "label": "Pengujian Penurunan Tegangan Busbar Voltage Drop Test (1 tahun)",
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       },
       {
         "id": "i3",
         "label": "Tes Kapasitas Baterai (Menggunakan battery comprehensive tester)",
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -601,17 +672,20 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -628,28 +702,32 @@ export const CATEGORIES = [
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i5",
@@ -670,7 +748,8 @@ export const CATEGORIES = [
             "unit": "A",
             "prefix": "I"
           }
-        ]
+        ],
+        "periodMonths": 3
       },
       {
         "id": "i6",
@@ -678,13 +757,15 @@ export const CATEGORIES = [
         "standar": "Tegangan Baterai 2V：2.23V-2.27V; Tegangan Baterai 12V:13.38-13.63V",
         "inputType": "battery_table",
         "defaultBatteryCount": 24,
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "periodMonths": 3
       },
       {
         "id": "i7",
         "label": "Balanced charging / Pengisian seimbang dari grup baterai (3 bulan)",
         "standar": "55.2V-56.4V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -702,37 +783,44 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 12
+          "colWidth": 12,
+          "periodMonths": 3
         },
         {
           "id": "i7",
           "colStart": 19,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -749,21 +837,24 @@ export const CATEGORIES = [
         "label": "Verivikasi Discharge Test (1 tahun)",
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       },
       {
         "id": "i2",
         "label": "Pengujian Penurunan Tegangan Busbar Voltage Drop Test (1 tahun)",
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       },
       {
         "id": "i3",
         "label": "Tes Kapasitas Baterai (Menggunakan battery comprehensive tester)",
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -780,17 +871,20 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -807,28 +901,32 @@ export const CATEGORIES = [
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i5",
@@ -849,7 +947,8 @@ export const CATEGORIES = [
             "unit": "A",
             "prefix": "I"
           }
-        ]
+        ],
+        "periodMonths": 3
       },
       {
         "id": "i6",
@@ -857,13 +956,15 @@ export const CATEGORIES = [
         "standar": "Tegangan Baterai 2V：2.23V-2.27V; Tegangan Baterai 12V:13.38-13.63V",
         "inputType": "battery_table",
         "defaultBatteryCount": 24,
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "periodMonths": 3
       },
       {
         "id": "i7",
         "label": "Balanced charging / Pengisian seimbang dari grup baterai (3 bulan)",
         "standar": "55.2V-56.4V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -881,37 +982,44 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 12
+          "colWidth": 12,
+          "periodMonths": 3
         },
         {
           "id": "i7",
           "colStart": 19,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -928,21 +1036,24 @@ export const CATEGORIES = [
         "label": "Verivikasi Discharge Test (1 tahun)",
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       },
       {
         "id": "i2",
         "label": "Pengujian Penurunan Tegangan Busbar Voltage Drop Test (1 tahun)",
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       },
       {
         "id": "i3",
         "label": "Tes Kapasitas Baterai (Menggunakan battery comprehensive tester)",
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -959,17 +1070,20 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -986,28 +1100,32 @@ export const CATEGORIES = [
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i5",
@@ -1028,7 +1146,8 @@ export const CATEGORIES = [
             "unit": "A",
             "prefix": "I"
           }
-        ]
+        ],
+        "periodMonths": 3
       },
       {
         "id": "i6",
@@ -1036,7 +1155,8 @@ export const CATEGORIES = [
         "standar": "Tegangan Baterai 12V:13.38V-13.63V",
         "inputType": "battery_table",
         "defaultBatteryCount": 24,
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -1054,32 +1174,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 12
+          "colWidth": 12,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -1096,20 +1222,23 @@ export const CATEGORIES = [
         "label": "Verivikasi Discharge Test (1 tahun)",
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       },
       {
         "id": "i2",
         "label": "Pengujian Penurunan Tegangan Busbar Voltage Drop Test (1 tahun)",
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       },
       {
         "id": "i3",
         "label": "Tes Kapasitas Baterai (Menggunakan battery comprehensive tester) (3 Tahun)",
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 36
       }
     ],
     "periods": [
@@ -1127,17 +1256,20 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 36
         }
       ],
       "type": "monthly_slot"
@@ -1154,28 +1286,32 @@ export const CATEGORIES = [
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i5",
@@ -1196,7 +1332,8 @@ export const CATEGORIES = [
             "unit": "A",
             "prefix": "I"
           }
-        ]
+        ],
+        "periodMonths": 3
       },
       {
         "id": "i6",
@@ -1204,7 +1341,8 @@ export const CATEGORIES = [
         "standar": "Tegangan Baterai 12V:13.38V-13.63V",
         "inputType": "battery_table",
         "defaultBatteryCount": 24,
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -1222,32 +1360,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 12
+          "colWidth": 12,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -1264,20 +1408,23 @@ export const CATEGORIES = [
         "label": "Verivikasi Discharge Test (1 tahun)",
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       },
       {
         "id": "i2",
         "label": "Pengujian Penurunan Tegangan Busbar Voltage Drop Test (1 tahun)",
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       },
       {
         "id": "i3",
         "label": "Tes Kapasitas Baterai (Menggunakan battery comprehensive tester) (3 Tahun)",
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 36
       }
     ],
     "periods": [
@@ -1295,17 +1442,20 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 36
         }
       ],
       "type": "monthly_slot"
@@ -1322,28 +1472,32 @@ export const CATEGORIES = [
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i5",
@@ -1364,7 +1518,8 @@ export const CATEGORIES = [
             "unit": "A",
             "prefix": "I"
           }
-        ]
+        ],
+        "periodMonths": 3
       },
       {
         "id": "i6",
@@ -1372,7 +1527,8 @@ export const CATEGORIES = [
         "standar": "Tegangan Baterai 12V:13.38-13.63V",
         "inputType": "battery_table",
         "defaultBatteryCount": 24,
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -1390,32 +1546,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 12
+          "colWidth": 12,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -1432,20 +1594,23 @@ export const CATEGORIES = [
         "label": "Verivikasi Discharge Test (1 tahun)",
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       },
       {
         "id": "i2",
         "label": "Pengujian Penurunan Tegangan Busbar Voltage Drop Test (1 tahun)",
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 12
       },
       {
         "id": "i3",
         "label": "Tes Kapasitas Baterai (Menggunakan battery comprehensive tester) (3 Tahun)",
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 36
       }
     ],
     "periods": [
@@ -1463,17 +1628,20 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 36
         }
       ],
       "type": "monthly_slot"
@@ -1490,28 +1658,32 @@ export const CATEGORIES = [
         "label": "Pemeriksaan kondisi pemasangan kamera, kepala pan/tilt, topi pelindung, lampu inframerah, dll di lapangan. (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kondisi pemasangan panel box peralatan luar ruangan di lapangan (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Pemeriksaan Video vertikalitas tiang (tower), status pondasi dan lingkungan sekitar, dll di lapangan. (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan dan pembersihan status peralatan seperti codec, transceiver optik video, peralatan switching jaringan, dll. (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i5",
@@ -1519,7 +1691,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
         "hasTglCatatan": true,
         "inputType": "measurement_ohm",
-        "unit": "Ω"
+        "unit": "Ω",
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -1536,27 +1709,32 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -1573,56 +1751,65 @@ export const CATEGORIES = [
         "label": "Pemeriksaan tampilan, kekuatan penyangga kamera, kekuatan koneksi kabel, kepala pan/tilt, cover pelindung, lampu inframerah,dan peralatan lainnya (6 bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 6
       },
       {
         "id": "i2",
         "label": "Bersihkan benda dan objek yang menghalangi pandangan kamera (6 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 6
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kekuatan struktur tiang CCTV, kekuatan setiap komponen dan bagian pemeriksaan baut rutin (1 tahun)",
         "standar": "Kondisi Baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kondisi sambungan las komponen utama tiang CCTV (1 tahun)",
         "standar": "Kondisi Baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i5",
         "label": "Pemeriksaan lapisan anti korosi dan kondisi karat pada komponen tiang video (tower), las, baut, mur, dll. (1 tahun)",
         "standar": "Kondisi Baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i6",
         "label": "Pemeriksaan pondasi tiang video (tower) dan struktur geologi di sekitarnya (1 tahun)",
         "standar": "Kondisi Baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i7",
         "label": "pemeriksaan di lapangan, penguatan dan pengaturan kotak peralatan luar ruangan (termasuk peralatan tambahan internal) (1 tahun)",
         "standar": "Kondisi Baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i8",
         "label": "Deteksi vertikalitas tiang video (tower) (1 tahun)",
         "standar": "Kondisi Baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i9",
         "label": "Pemeliharaan peralatan seperti codec, transceiver optik video, peralatan switching jaringan, dll. (1 tahun)",
         "standar": "Kondisi Baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -1640,47 +1827,56 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i8",
           "colStart": 9,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i9",
           "colStart": 10,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -1697,31 +1893,36 @@ export const CATEGORIES = [
         "label": "Pemeriksaan status operasi receiver satelit (1 bulan)",
         "standar": "Bekerja dengan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pembersihan permukaan peralatan (3 bulan)",
         "standar": "Bersih tanpa debu",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Pemeriksaan Feeder dan receiver antena satelit dan lingkungan sekitar (3 bulan)",
         "standar": "Kondisi baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kabel ground peralatan, pemeriksaan perangkat proteksi petir feeder antena (1 tahun)",
         "standar": "Konektor yang kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i5",
         "label": "Pemeriksaan kabel dan pelabelan (1 tahun)",
         "standar": "Pengkabelan rapi dan pelabelan sesuai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -1740,27 +1941,32 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -1777,39 +1983,45 @@ export const CATEGORIES = [
         "label": "Pemeriksaan indikator kegagalan dan status sakelar pemutus pelindung lonjakan arus (1 bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan lampu indikator kotak proteksi petir, tampilan display, periksa dan catat jumlah sambaran petir (1 bulan)",
         "standar": "Hasil pemeriksaan baik (catat nilai sambaran)",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan Waktu / Time Calibration (1 bulan)",
         "standar": "Sama dengan waktu Jakarta",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Pemeriksaan heating status modul pelindung lonjakan daya (3 bulan)",
         "standar": "-40ºCº ~ 85ºC",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Pemeriksa kualitas koneksi grounding bar, kabel grounding, ikatan ekuipotensial, dan kabel jaringan grounding (1 tahun)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i6",
         "label": "Pemeriksaan tampilan dan kualitas sambungan pelindung lonjakan arus (1 tahun)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i7",
@@ -1817,7 +2029,8 @@ export const CATEGORIES = [
         "standar": "Tidak lebih dari 1Ω",
         "hasTglCatatan": true,
         "inputType": "measurement_ohm",
-        "unit": "Ω"
+        "unit": "Ω",
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -1836,37 +2049,44 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -1883,56 +2103,64 @@ export const CATEGORIES = [
         "label": "Pembersihan permukaan peralatan dan pemeriksaan status (1 bulan)",
         "standar": "Pembersihan peralatan dan pemeriksaan status operasi (1 bulan)",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Periksa kabel sambungan dan label (1 bulan)",
         "standar": "Konektor bagus, label sesuai",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan pengaturan dan kontrol kamera (1 bulan)",
         "standar": "Berfungsi baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Uji suara dan gambar: input dan output audio dan video (1 bulan)",
         "standar": "Uji fungsi baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i5",
         "label": "Pemeriksaan fungsi mixer (1 bulan)",
         "standar": "Berfungsi baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i6",
         "label": "Pemeriksaan fungsi TV (monitor, dll) (1 bulan)",
         "standar": "Berfungsi baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i7",
         "label": "Pemeriksaan fungsi amplifier (1 bulan)",
         "standar": "Berfungsi baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i8",
         "label": "Pemeriksaan fungsi mikrofon (1 bulan)",
         "standar": "Berfungsi baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       }
     ],
     "periods": [
@@ -1949,42 +2177,50 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i8",
           "colStart": 9,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         }
       ],
       "type": "monthly_slot"
@@ -2001,27 +2237,31 @@ export const CATEGORIES = [
         "label": "Pembersihan permukaan peralatan dan periksa status pengoperasian (3 bulan)",
         "standar": "Sudah dibersihkan, status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Pemeriksaan aksesoris peralatan, kabel dan label (3 bulan)",
         "standar": "Hasil pemeriksaan baik, kabel rapi, dan label sesuai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Pembersihan filter debu peralatan (3 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan operasi kipas baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       }
     ],
     "periods": [
@@ -2039,22 +2279,26 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         }
       ],
       "type": "monthly_slot"
@@ -2071,49 +2315,56 @@ export const CATEGORIES = [
         "label": "Pemeriksaan operasi peralatan (Cek lampu led indikator operasi) (1 bulan)",
         "standar": "Peralatan bekerja dengan baik,tidak ada alarm",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Bersihkan permukaan peralatan, periksa mikrofon dan koneksi (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Periksa status peralatan, atur sensitivitas layar, waktu di display, dan lainnya",
         "standar": "Hasil pemeriksaan lampu indikator normal, sentuhan sensitif, dan waktu akurat",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Pemeriksaan saluran utama dan cadangan (interface ganda), saluran utama dan tambahan panggilan, bicara, uji peralihan gagang (1 bulan)",
         "standar": "Peralihan normal dan layanan panggilan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i5",
         "label": "Uji Panggilan Dispatch : area layanan stasiun, antar stasiun, OCE dengan petugas lapangan (1 bulan)",
         "standar": "Layanan panggilan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i6",
         "label": "Pengujian panggilan masuk dan keluar ekstensi darurat (1 bulan)",
         "standar": "Hasil pengujian layanan panggilan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i7",
         "label": "Pembaruan pemeriksaan label aplikasi (1 bulan)",
         "standar": "Pelabelan jelas",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       }
     ],
     "periods": [
@@ -2130,37 +2381,44 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         }
       ],
       "type": "monthly_slot"
@@ -2176,25 +2434,29 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pengujian, inspeksi dan penyesuaian keamanan perangkat dan cek kabel grounding (1 tahun)",
         "standar": "Dispatch Console dalam kondisi baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i2",
         "label": "Pembersihan, pemeriksaan, perbaikan dan penggantian suku cadang peralatan jika diperlukan (1 tahun)",
         "standar": "Hasil pemeriksaan seluruh mesin dan komponennya dalam kondisi baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kondisi dan pengujian mikrofon, atau ganti mikrofon jika diperlukan (1 tahun)",
         "standar": "Hasil pemeriksaan mikrofon dalam kondisi baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i4",
         "label": "Pengujian fungsi utama seperti panggilan, rekaman panggilan dan uji permintaan, uji mandiri daya, dll. (1 tahun)",
         "standar": "Status panggilan baik, query rekaman panggilan normal, dan pengujian fungsi normal",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -2211,22 +2473,26 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -2243,63 +2509,72 @@ export const CATEGORIES = [
         "label": "Pemeriksaan dan pembersihan berbagai kabel dan plug-in peralatan (1 bulan)",
         "standar": "Bersih dan dalam kondisi baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan, pembersihan dan pengujian berbagai peralatan (1 bulan)",
         "standar": "Bersih dan dalam kondisi baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan dan verifikasi kuantitas kabel optik darurat (1 bulan)",
         "standar": "Kondisi bagus, kuantitas sesuai",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Pemeriksaan daya baterai dan pengisian daya baterai (1 bulan)",
         "standar": "Terisi penuh",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i5",
         "label": "Pemeriksaan kinerja dan verifikasi kuantitas peralatan darurat dan peralatan lainnya (1 bulan)",
         "standar": "Performa bagus dan kuantitas sesuai",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i6",
         "label": "Uji coba panggilan telepon (1 bulan)",
         "standar": "Uji panggilan bagus",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i7",
         "label": "Uji coba transmisi gambar, data, dan video conference (1 bulan)",
         "standar": "Uji transmisi bagus",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i8",
         "label": "Pemeriksaan dan pengujian kabel optik darurat (1 bulan)",
         "standar": "Uji fungsi bagus",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i9",
         "label": "Latihan di lapangan : uji panggilan internal di lapangan, uji panggilan di lapangan dengan pusat komando darurat (OCC), uji pengiriman dokumen dan uji transmisi gambar dinamis (1 bulan)",
         "standar": "Hasil uji bagus",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       }
     ],
     "periods": [
@@ -2317,47 +2592,56 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i8",
           "colStart": 9,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i9",
           "colStart": 10,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         }
       ],
       "type": "monthly_slot"
@@ -2374,40 +2658,46 @@ export const CATEGORIES = [
         "label": "Pemeriksaan peralatan dan status operasi peralatan (3 bulan)",
         "standar": "Hasil pemeriksaan baik, status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Pengujian layanan dasar panggilan (3 bulan)",
         "standar": "Hasil pengujian baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kabel dan kekuatan koneksi (3 bulan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pembersihan debu repeater (3 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Pengujian serat optik cadangan (1 tahun)",
         "standar": "Hasil pengujian sesuai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i6",
         "label": "Pengujian RF output power RU (2 Tahunan)",
         "standar": "Menggunakan Spectrume Analyzer",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 24
       }
     ],
     "periods": [
@@ -2426,32 +2716,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 24
         }
       ],
       "type": "monthly_slot"
@@ -2468,40 +2764,46 @@ export const CATEGORIES = [
         "label": "Pemeriksaan peralatan dan status operasi peralatan (3 bulan)",
         "standar": "Hasil pemeriksaan baik, status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Pengujian layanan dasar panggilan (3 bulan)",
         "standar": "Hasil pengujian baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kabel dan kekuatan koneksi (3 bulan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pembersihan debu repeater (3 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Pengujian serat optik cadangan (1 tahun)",
         "standar": "Hasil pengujian sesuai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i6",
         "label": "Pengujian RF output power RU (2 Tahunan)",
         "standar": "Menggunakan Spectrume Analyzer",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 24
       }
     ],
     "periods": [
@@ -2520,32 +2822,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 24
         }
       ],
       "type": "monthly_slot"
@@ -2562,21 +2870,24 @@ export const CATEGORIES = [
         "label": "Pembersihan permukaan peralatan (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan status operasi dan catat tegangan dan Arus output /keluaran (1 bulan)",
         "standar": "Status normal dan catat tegangan output",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan ATS/transfer switch,sekring, pemutus sirkuit/circuit breaker, kontaktor, unit proteksi petir, dan kipas (1 bulan)",
         "standar": "Hasil pemeriksaan Baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
@@ -2597,13 +2908,15 @@ export const CATEGORIES = [
             "unit": "A",
             "prefix": "I"
           }
-        ]
+        ],
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Pemeriksaan Waktu / Time Calibration (3 bulan)",
         "standar": "Sama dengan waktu Jakarta",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i6",
@@ -2612,19 +2925,22 @@ export const CATEGORIES = [
         "hasTglCatatan": true,
         "inputType": "unit_value_table",
         "unit": "A",
-        "defaultUnitCount": 4
+        "defaultUnitCount": 4,
+        "periodMonths": 3
       },
       {
         "id": "i7",
         "label": "Pengujian alarm pemadaman listrik AC (3 bulan)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i8",
         "label": "Pengujian fungsi Switching Main & Backup listrik AC (3 bulan)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -2642,42 +2958,50 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i8",
           "colStart": 9,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -2694,50 +3018,58 @@ export const CATEGORIES = [
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan kipas beroperasi dengan baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 6
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kekuatan setiap sambungan, pengaturan wiring kabel,dan periksa label (6 bulan)",
         "standar": "Koneksi kuat dan labelnya benar",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 6
       },
       {
         "id": "i3",
         "label": "Inspeksi Visual/Tampilan dan inspeksi kekuatan sambungan kabel ground protektif (1 tahun)",
         "standar": "Koneksi kuat dan labelnya benar",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i4",
         "label": "Pengujian fungsi pembatas arus/current limiting (1 tahun)",
         "standar": "Pembatasan arus pengisian baterai adalah 1/10 dari kapasitas baterai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i5",
         "label": "Pengujian arus beban DC dan pemeriksaan kapasitas sekring (Pemutus sirkuit/Circuit Breaker) (1 tahun)",
         "standar": "Circuit Breaker minimal bernilai 1,5 kali arus pengukuran",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i6",
         "label": "Pengujian penurunan/Drop tegangan ujung ke ujung/End to End voltage pada rangkaian catu daya DC (1 tahun)",
         "standar": "Nilai output catu daya switching dikurangi nilai input pada sisi perangkat tidak boleh melebihi 3,2V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i7",
         "label": "Pemeriksaan verifikasi pengaturan parameter sistem (1 tahun)",
         "standar": "Alarm batas bawah tegangan rendah ditetapkan 48V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i8",
         "label": "Pengujian Fungsi Alarm (1 tahun)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -2755,42 +3087,50 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i8",
           "colStart": 9,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -2807,21 +3147,24 @@ export const CATEGORIES = [
         "label": "Pembersihan permukaan peralatan (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan status operasi dan catat tegangan dan Arus output /keluaran (1 bulan)",
         "standar": "Status normal dan catat tegangan output",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan ATS/transfer switch,sekring, pemutus sirkuit/circuit breaker, kontaktor, unit proteksi petir, dan kipas (1 bulan)",
         "standar": "Hasil pemeriksaan Baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
@@ -2842,13 +3185,15 @@ export const CATEGORIES = [
             "unit": "A",
             "prefix": "I"
           }
-        ]
+        ],
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Pemeriksaan Waktu / Time Calibration (3 bulan)",
         "standar": "Sama dengan waktu Jakarta",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i6",
@@ -2857,19 +3202,22 @@ export const CATEGORIES = [
         "hasTglCatatan": true,
         "inputType": "unit_value_table",
         "unit": "A",
-        "defaultUnitCount": 4
+        "defaultUnitCount": 4,
+        "periodMonths": 3
       },
       {
         "id": "i7",
         "label": "Pengujian alarm pemadaman listrik AC (3 bulan)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i8",
         "label": "Pengujian fungsi Switching Main & Backup listrik AC (3 bulan)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -2887,42 +3235,50 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i8",
           "colStart": 9,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -2939,50 +3295,58 @@ export const CATEGORIES = [
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan kipas beroperasi dengan baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 6
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kekuatan setiap sambungan, pengaturan wiring kabel,dan periksa label (6 bulan)",
         "standar": "Koneksi kuat dan labelnya benar",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 6
       },
       {
         "id": "i3",
         "label": "Inspeksi Visual/Tampilan dan inspeksi kekuatan sambungan kabel ground protektif (1 tahun)",
         "standar": "Koneksi kuat dan labelnya benar",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i4",
         "label": "Pengujian fungsi pembatas arus/current limiting (1 tahun)",
         "standar": "Pembatasan arus pengisian baterai adalah 1/10 dari kapasitas baterai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i5",
         "label": "Pengujian arus beban DC dan pemeriksaan kapasitas sekring (Pemutus sirkuit/Circuit Breaker) (1 tahun)",
         "standar": "Circuit Breaker minimal bernilai 1,5 kali arus pengukuran",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i6",
         "label": "Pengujian penurunan/Drop tegangan ujung ke ujung/End to End voltage pada rangkaian catu daya DC (1 tahun)",
         "standar": "Nilai output catu daya switching dikurangi nilai input pada sisi perangkat tidak boleh melebihi 3,2V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i7",
         "label": "Pemeriksaan verifikasi pengaturan parameter sistem (1 tahun)",
         "standar": "Alarm batas bawah tegangan rendah ditetapkan 48V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i8",
         "label": "Pengujian Fungsi Alarm (1 tahun)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -3000,42 +3364,50 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i8",
           "colStart": 9,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -3052,21 +3424,24 @@ export const CATEGORIES = [
         "label": "Pembersihan permukaan peralatan (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan status operasi dan catat tegangan dan Arus output /keluaran (1 bulan)",
         "standar": "Status normal dan catat tegangan output",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan ATS/transfer switch,sekring, pemutus sirkuit/circuit breaker, kontaktor, unit proteksi petir, dan kipas (1 bulan)",
         "standar": "Hasil pemeriksaan Baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
@@ -3087,13 +3462,15 @@ export const CATEGORIES = [
             "unit": "A",
             "prefix": "I"
           }
-        ]
+        ],
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Pemeriksaan Waktu / Time Calibration (3 bulan)",
         "standar": "Sama dengan waktu Jakarta",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i6",
@@ -3102,19 +3479,22 @@ export const CATEGORIES = [
         "hasTglCatatan": true,
         "inputType": "unit_value_table",
         "unit": "A",
-        "defaultUnitCount": 4
+        "defaultUnitCount": 4,
+        "periodMonths": 3
       },
       {
         "id": "i7",
         "label": "Pengujian alarm pemadaman listrik AC (3 bulan)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i8",
         "label": "Pengujian fungsi Switching Main & Backup listrik AC (3 bulan)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -3132,42 +3512,50 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i8",
           "colStart": 9,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -3184,50 +3572,58 @@ export const CATEGORIES = [
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan kipas beroperasi dengan baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 6
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kekuatan setiap sambungan, pengaturan wiring kabel,dan periksa label (6 bulan)",
         "standar": "Koneksi kuat dan labelnya benar",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 6
       },
       {
         "id": "i3",
         "label": "Inspeksi Visual/Tampilan dan inspeksi kekuatan sambungan kabel ground protektif (1 tahun)",
         "standar": "Koneksi kuat dan labelnya benar",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i4",
         "label": "Pengujian fungsi pembatas arus/current limiting (1 tahun)",
         "standar": "Pembatasan arus pengisian baterai adalah 1/10 dari kapasitas baterai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i5",
         "label": "Pengujian arus beban DC dan pemeriksaan kapasitas sekring (Pemutus sirkuit/Circuit Breaker) (1 tahun)",
         "standar": "Circuit Breaker minimal bernilai 1,5 kali arus pengukuran",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i6",
         "label": "Pengujian penurunan/Drop tegangan ujung ke ujung/End to End voltage pada rangkaian catu daya DC (1 tahun)",
         "standar": "Nilai output catu daya switching dikurangi nilai input pada sisi perangkat tidak boleh melebihi 3,2V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i7",
         "label": "Pemeriksaan verifikasi pengaturan parameter sistem (1 tahun)",
         "standar": "Alarm batas bawah tegangan rendah ditetapkan 48V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i8",
         "label": "Pengujian Fungsi Alarm (1 tahun)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -3245,42 +3641,50 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i8",
           "colStart": 9,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -3297,32 +3701,37 @@ export const CATEGORIES = [
         "label": "Periksa kabel optik dan saluran pipa untuk mengetahui adanya kelainan dan pengaruh eksternal, dan tangani masalah dengan segera jika ditemukan (1 bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Bersihkan gulma di sekitar patok pada bagian kabel optik yang ditanam jari-jari 50 cm dari patok, lalu luruskan dan perkuat patok tersebut (1 bulan)",
         "standar": "Sudah dibersihkan dan patok sudah kokoh",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kekuatan dan pemeliharaan saluran kabel optik dan fasilitas tambahan (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Deteksi dan konfirmasi jalur kabel optik yang terkubur langsung, inspeksi kedalaman penguburan, penguatan dan konsolidasi tanah (1 tahun)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i5",
         "label": "Pemeriksaan sambungan isolasi dan grounding kabel optik yang masuk ke machinery room (1 tahun)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -3341,27 +3750,32 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -3402,7 +3816,8 @@ export const CATEGORIES = [
         "label": "Pembersihan ruangan dan lingkungan",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
@@ -3433,35 +3848,40 @@ export const CATEGORIES = [
             "prefix": "RH",
             "unit": "%"
           }
-        ]
+        ],
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan kinerja AC",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Pemeriksaan fasilitas pencahayaan",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i5",
         "label": "Pemeriksaan pintu dan ventilasi ruangan",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i6",
         "label": "Pemeriksaan peralatan pemadam kebakaran",
         "standar": "Catat tanggal kadaluarsa",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       }
     ],
     "periods": [
@@ -3478,32 +3898,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         }
       ],
       "type": "monthly_slot"
@@ -3520,77 +3946,89 @@ export const CATEGORIES = [
         "label": "Pembersihan permukaan peralatan dan pemeriksaan status pengoperasian (1 bulan)",
         "standar": "Sudah dibersihkan, operasi normal, dan tidak ada alarm",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kabel dan konektor (1 bulan)",
         "standar": "Hasil pemeriksaan baik dan konektor kuat",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan waktu / Time Calibration (1 bulan)",
         "standar": "Sama dengan waktu Jakarta",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Pengujian/play file rekaman suara (1 bulan)",
         "standar": "Hasil pengujian baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i5",
         "label": "Pembaruan verifikasi label (1 bulan)",
         "standar": "Label Sesuai",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i6",
         "label": "Pemeriksaan display perekam: status pengoperasian, status perekaman, status pemutaran rekaman (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i7",
         "label": "Pengujian fungsi alarm perekam (3 bulan)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i8",
         "label": "Memeriksa dan mengatur file rekaman (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i9",
         "label": "Pemeriksaan, pengukuran dan penyesuaian kabel ground (3 bulan)",
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i10",
         "label": "Pembersihan, pemeriksaan dan penggantian komponen seluruh mesin (Overhaul/Opsional) (1 tahun)",
         "standar": "Sudah dibersihkan dan dalam kondisi baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i11",
         "label": "Penggantian kabel yang sudah usang (Opsional) (1 tahun)",
         "standar": "Keadaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i12",
         "label": "Uji fungsi seperti penyetelan, pemantauan, penghapusan, tampilan, dan sinkronisasi waktu (1 tahun)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -3609,62 +4047,74 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i8",
           "colStart": 9,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i9",
           "colStart": 10,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i10",
           "colStart": 11,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i11",
           "colStart": 12,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i12",
           "colStart": 13,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -3681,69 +4131,80 @@ export const CATEGORIES = [
         "label": "Pemeriksaan tampilan tower dan kabel feeder antena (1 bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Inspeksi pagar dan kontrol akses (1 bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan jalur dan kelengkapan leacky cable (1 bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
         "label": "Pemeriksaan sambungan leacky cable (6 bulanan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i5",
         "label": "Pemeriksaan sambungan, antena feeder dan pengencangan tower (6 bulan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i6",
         "label": "Pengujian inspeksi sudut elevasi antena dan sudut azimuth (6 bulan)",
         "standar": "Gunakan compas untuk menyesuaikan dengan database BTS",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i7",
         "label": "pemeriksaan kekuatan dan sealing kabel antena dan feeder (6 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i8",
         "label": "Pengujian SWR (Standing Wave ratio) antena dan feeder (1 tahun)",
         "standar": "Nilai VSWR dibawah 1.4",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i9",
         "label": "Pemeriksaan bersama, perbaikan dan penggantian jika diperlukan (1 tahun)",
         "standar": "Hasil pemeriksaan baik (Tidak ada pemggantian komponen)",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i10",
         "label": "Pengujian SWR (Standing Wave ratio) kabel LCX (1 tahun)",
         "standar": "Nilai VSWR dibawah 1.4",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i11",
         "label": "Pemeriksaan peralatan pendukung kabel LCX (bracket parts, hanging wires and fixing parts) (1 tahun)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -3762,57 +4223,68 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i8",
           "colStart": 9,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i9",
           "colStart": 10,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i10",
           "colStart": 11,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i11",
           "colStart": 12,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -3829,32 +4301,37 @@ export const CATEGORIES = [
         "label": "Bersihkan permukaan LCX monitoring/FSU dan periksa status operasi (1 Bulan)",
         "standar": "Sudah dibersihkan, status operasi normal tidak ada alarm",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan dan inspeksi kondisi perangkat host LCX Monitoring/FSU (1 Bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan label peralatan dan label kabel (3 Bulan)",
         "standar": "Hasil pemeriksaan baik dan pelabelan benar",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan penampilan, pemasangan dan kekuatan koneksi sensor front-end (3 Bulan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Verifikasi fungsi manajemen sistem pemantauan dan pemeriksaan data pemantauan (1 Tahun)",
         "standar": "Berkordinasi dengan NMC",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i6",
@@ -3862,7 +4339,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
         "hasTglCatatan": true,
         "inputType": "measurement_ohm",
-        "unit": "Ω"
+        "unit": "Ω",
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -3881,32 +4359,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -3923,32 +4407,37 @@ export const CATEGORIES = [
         "label": "Bersihkan permukaan RTU dan periksa status operasi (1 Bulan)",
         "standar": "Sudah dibersihkan, status operasi normal tidak ada alarm",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Periksa dan kalibrasi waktu peralatan (1 Bulan)",
         "standar": "Sama dengan waktu jakarta",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan label peralatan dan label kabel (3 Bulan)",
         "standar": "Hasil pemeriksaan baik dan pelabelan benar",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kondisi sensor, pemasangan sensor dan kekuatan koneksi sensor (3 Bulan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Verifikasi fungsi manajemen sistem pemantauan dan pemeriksaan data pemantauan (1 Tahun)",
         "standar": "Berkordinasi dengan NMC",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i6",
@@ -3956,7 +4445,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
         "hasTglCatatan": true,
         "inputType": "measurement_ohm",
-        "unit": "Ω"
+        "unit": "Ω",
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -3975,32 +4465,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -4017,38 +4513,44 @@ export const CATEGORIES = [
         "label": "Bersihkan permukaan tower monitoring dan periksa status operasi (1 Bulan)",
         "standar": "Sudah dibersihkan, status operasi normal tidak ada alarm",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan dan inspeksi kondisi perangkat tower monitoring (1 Bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan data tower monitoring (Berkordinasi dan verifikasi ke NMC) (3 Bulan)",
         "standar": "Sudah diverifikasi",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan label peralatan dan label kabel (3 Bulan)",
         "standar": "Hasil pemeriksaan baik dan pelabelan benar",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Pemeriksaan penampilan, pemasangan dan kekuatan koneksi sensor front-end (3 Bulan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i6",
         "label": "Verifikasi fungsi manajemen sistem pemantauan dan pemeriksaan data pemantauan (1 Tahun)",
         "standar": "Berkordinasi dengan NMC",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i7",
@@ -4056,7 +4558,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
         "hasTglCatatan": true,
         "inputType": "measurement_ohm",
-        "unit": "Ω"
+        "unit": "Ω",
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -4075,37 +4578,44 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i7",
           "colStart": 8,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -4122,39 +4632,45 @@ export const CATEGORIES = [
         "label": "Pembersihan eksterior peralatan (3 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Pemeriksaan peralatan tambahan dan kabel (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Periksa dan bersihkan atau ganti filter debu dan kipas (3 bulan)",
         "standar": "Hasil pemeriksaan baik dan sudah dibersihkan",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pengukuran tegangan daya input (1 tahun)",
         "standar": "53V-54V",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i5",
         "label": "Pemeriksaan kabel dan tampilan kabel ground dan unit proteksi (1 tahun)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i6",
         "label": "Pengujian fungsi utama: Panggilan prioritas, penyisipan panggilan secara paksa, panggilan individual, panggilan darurat, panggilan grup, dan panggilan konferensi (1 Tahun)",
         "standar": "Dilakukan Emergency Drill Terpadu",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -4172,32 +4688,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -4214,20 +4736,23 @@ export const CATEGORIES = [
         "label": "Pembersihan permukaan peralatan dan periksa status operasi (3 bulan)",
         "standar": "Sudah dibersihkan,pemeriksaan status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Pemeriksaan aksesoris, kabel dan label peralatan (3 bulan)",
         "standar": "Hasil pemeriksaan kabel rapi dan label sesuai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Uji dial panggilan (Cek modulasi dan nada notifikasi panggilan) (6 bulan)",
         "standar": "Uji panggilan baik (Pengujian softswitch hanya di stasiun & Signal Building)",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       }
     ],
     "periods": [
@@ -4245,17 +4770,20 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         }
       ],
       "type": "monthly_slot"
@@ -4272,20 +4800,23 @@ export const CATEGORIES = [
         "label": "Pembersihan permukaan peralatan dan periksa status operasi (3 bulan)",
         "standar": "Sudah dibersihkan,pemeriksaan status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Pemeriksaan aksesoris, kabel dan label peralatan (3 bulan)",
         "standar": "Hasil pemeriksaan kabel rapi dan label sesuai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Uji dial panggilan (Cek modulasi dan nada notifikasi panggilan) (6 bulan)",
         "standar": "Uji panggilan baik (Pengujian softswitch hanya di stasiun & Signal Building)",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       }
     ],
     "periods": [
@@ -4303,17 +4834,20 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         }
       ],
       "type": "monthly_slot"
@@ -4330,28 +4864,32 @@ export const CATEGORIES = [
         "label": "Pemeriksaan tampilan struktur tower, anchors dan baut (3 bulan)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kondisi pondasi tower dan lingkungan sekitar (3 bulan)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Pemeriksaan koneksi ground (3 bulan)",
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan lampu tanda penerbangan dan tanda peringatan keselamatan (3 bulan)",
         "standar": "Hasil pemeriksaan lampu dalam kondisi baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -4368,22 +4906,26 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -4400,32 +4942,37 @@ export const CATEGORIES = [
         "label": "Pemeriksaan kekuatan struktur eksterior tower, pemeriksaan baut pengikat masing-masing komponen dan bagian, serta pengencangan baut seluruh tower. (6 bulan)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 6
       },
       {
         "id": "i2",
         "label": "Periksa kekencangan pemasangan platform tower, tangga, jaring pelindung, bracket antena dan komponen tambahan lainnya, dan kencangkan bautnya (6 bulan)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 6
       },
       {
         "id": "i3",
         "label": "Pengujian vertikalitas tower (1 tahun)",
         "standar": "Menggunakan theodolit/hasil NMC tower monitoring",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i4",
         "label": "Pengujian dan perbaikan kabel ground, inspeksi dan perbaikan penangkal petir dan konduktor penangkal petir (1 tahun)",
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 10Ω",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i5",
         "label": "Pemeriksaan dan perawatan pondasi tower dan struktur geologi sekitarnya (1 tahun)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -4443,27 +4990,32 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -4480,39 +5032,45 @@ export const CATEGORIES = [
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
         "standar": "Pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i5",
         "label": "Uji tegangan daya input dan output (6 bulan)",
         "standar": "Lakukan pengukuran V.in dan V.out",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i6",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan operasi kipas baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       }
     ],
     "periods": [
@@ -4530,32 +5088,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         }
       ],
       "type": "monthly_slot"
@@ -4572,39 +5136,45 @@ export const CATEGORIES = [
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
         "standar": "Pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i5",
         "label": "Uji tegangan daya input dan output (6 bulan)",
         "standar": "Lakukan pengukuran V.in dan V.out",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i6",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan operasi kipas baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       }
     ],
     "periods": [
@@ -4622,32 +5192,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         }
       ],
       "type": "monthly_slot"
@@ -4664,39 +5240,45 @@ export const CATEGORIES = [
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
         "standar": "Pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i5",
         "label": "Uji tegangan daya input dan output (6 bulan)",
         "standar": "Lakukan pengukuran V.in dan V.out",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i6",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan operasi kipas baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       }
     ],
     "periods": [
@@ -4714,32 +5296,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         }
       ],
       "type": "monthly_slot"
@@ -4756,39 +5344,45 @@ export const CATEGORIES = [
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
         "standar": "Pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i5",
         "label": "Uji tegangan daya input dan output (6 bulan)",
         "standar": "Lakukan pengukuran V.in dan V.out",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i6",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan operasi kipas baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       }
     ],
     "periods": [
@@ -4806,32 +5400,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         }
       ],
       "type": "monthly_slot"
@@ -4848,39 +5448,45 @@ export const CATEGORIES = [
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i4",
         "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
         "standar": "Pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i5",
         "label": "Uji tegangan daya input dan output (6 bulan)",
         "standar": "Lakukan pengukuran V.in dan V.out",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       },
       {
         "id": "i6",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan operasi kipas baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 6
       }
     ],
     "periods": [
@@ -4898,32 +5504,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         }
       ],
       "type": "monthly_slot"
@@ -4940,21 +5552,24 @@ export const CATEGORIES = [
         "label": "Pembersihan permukaan dan pembersihan filter debu/kipas (1 bulan)",
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i2",
         "label": "Pemeriksaan status operasi dan catat tegangan output/keluaran (1 bulan)",
         "standar": "Status normal dan catat tegangan dan arus output",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i3",
         "label": "Pemeriksaan tampilan dan status pemutus sirkuit, kipas angin, unit proteksi dan komponen lainnya (1 bulan)",
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 1
       },
       {
         "id": "i4",
@@ -4981,19 +5596,22 @@ export const CATEGORIES = [
             "unit": "Hz",
             "prefix": "Hz"
           }
-        ]
+        ],
+        "periodMonths": 3
       },
       {
         "id": "i5",
         "label": "Pemeriksaan waktu / Time Calibration (Ruangan Signal Building) (3 bulan)",
         "standar": "Sama dengan waktu jakarta (selain signal building tidak ada time calibration)",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       },
       {
         "id": "i6",
         "label": "Pengujian fungsi Switching Main & Backup listrik AC (3 bulan)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -5011,32 +5629,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 1
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
@@ -5053,38 +5677,44 @@ export const CATEGORIES = [
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihan dan kipas berfungsi dengan baik",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 6
       },
       {
         "id": "i2",
         "label": "Pemeriksaan kekuatan setiap sambungan, perapian wiring, dan periksa label (6 bulan)",
         "standar": "Hasil pemeriksaan baik, koneksi kuat dan label benar",
         "hasTglCatatan": true,
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 6
       },
       {
         "id": "i3",
         "label": "Pemeriksaan penampilan dan kekuatan sambungan kabel ground (1 tahun)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i4",
         "label": "Pemeriksaan dan verifikasi nilai pengaturan parameter sistem (1 tahun)",
         "standar": "Hasil pemeriksaan baik dan parameter sesuai",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i5",
         "label": "Inspeksi verifikasi kapasitas beban (1 tahun)",
         "standar": "Tidak lebih dari 80% dari kapasitas terukur",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       },
       {
         "id": "i6",
         "label": "Pengujian fungsi alarm (1 tahun)",
         "standar": "Hasil pengujian baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "periodMonths": 12
       }
     ],
     "periods": [
@@ -5102,32 +5732,38 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 6
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i4",
           "colStart": 5,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i5",
           "colStart": 6,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         },
         {
           "id": "i6",
           "colStart": 7,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -5143,20 +5779,23 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan server, penyimpanan, peralatan switching jaringan dan peralatan lainnya, pembersihan kipas dan pemeriksaan status operasi (3 bulan)",
         "standar": "Sudah dibersihkan, status operasi normal",
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i2",
         "label": "Verifikasi alamat IP camera dengan ledger (buku besar) （3 bulan）",
         "standar": "Alamat IP sesuai dengan buku besar",
-        "noTglPrefix": true
+        "noTglPrefix": true,
+        "periodMonths": 3
       },
       {
         "id": "i3",
         "label": "Pemeriksaan proteksi petir dan grounding （3 bulan）",
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
         "inputType": "measurement_ohm",
-        "unit": "Ω"
+        "unit": "Ω",
+        "periodMonths": 3
       }
     ],
     "periods": [
@@ -5173,17 +5812,20 @@ export const CATEGORIES = [
         {
           "id": "i1",
           "colStart": 2,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i2",
           "colStart": 3,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         },
         {
           "id": "i3",
           "colStart": 4,
-          "colWidth": 1
+          "colWidth": 1,
+          "periodMonths": 3
         }
       ],
       "type": "monthly_slot"
