@@ -1,22 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 /**
  * MeasurementMultiInput
  * Input beberapa nilai sekaligus dalam 1 item (mis. Tegangan + Arus, Tegangan +
- * Arus + Frekuensi, atau Kelas + Suhu + Kelembaban) - tiap kolom bisa berupa
- * angka+satuan otomatis, atau dropdown pilihan - teknisi cuma perlu isi nilainya.
+ * Arus + Frekuensi, atau Kelas + Suhu + Kelembaban).
  *
- * fields = [
- *   { id: 'v', label: 'Tegangan', prefix: 'V', unit: 'V' },              // angka + satuan
- *   { id: 'kelas', label: 'MR Kelas', prefix: 'MR Kelas', type: 'select', options: ['II','III'] }
- * ]
- * value = { v: '', kelas: '' }
+ * PENTING: state nilai disimpan LOKAL di komponen ini (useState), bukan cuma
+ * dibaca ulang dari prop `value` tiap kali user ngetik. Kalau baca dari prop
+ * setiap keystroke, ada risiko race condition - user ngetik cepat pindah field
+ * (mis. Tegangan lalu buru-buru pindah ke Arus) bisa bikin nilai field pertama
+ * KETIMPA/HILANG kalau re-render dari parent belum sempat kejadian di antara
+ * 2 keystroke itu. State lokal + functional setState menghindari ini.
  */
 export default function MeasurementMultiInput({ fields, value, onChange }) {
-  const current = value || {};
+  const [local, setLocal] = useState(() => value || {});
+  const didInit = useRef(false);
+
+  // Sinkronisasi kalau parent reset value dari luar (misal ganti kategori/pindah halaman)
+  useEffect(() => {
+    if (!didInit.current) {
+      didInit.current = true;
+      return;
+    }
+    if (!value || Object.keys(value).length === 0) {
+      setLocal({});
+    }
+  }, [value]);
 
   function updateField(id, val) {
-    onChange({ ...current, [id]: val });
+    setLocal((prev) => {
+      const next = { ...prev, [id]: val };
+      onChange(next);
+      return next;
+    });
   }
 
   return (
@@ -28,7 +44,7 @@ export default function MeasurementMultiInput({ fields, value, onChange }) {
             <select
               className="input"
               style={{ width: 110 }}
-              value={current[f.id] || ''}
+              value={local[f.id] || ''}
               onChange={(e) => updateField(f.id, e.target.value)}
             >
               <option value="">-- pilih --</option>
@@ -40,7 +56,7 @@ export default function MeasurementMultiInput({ fields, value, onChange }) {
                 className="input"
                 style={{ width: 100, textAlign: 'right', fontFamily: "'IBM Plex Mono',monospace" }}
                 placeholder="0"
-                value={current[f.id] || ''}
+                value={local[f.id] || ''}
                 onChange={(e) => updateField(f.id, e.target.value)}
                 inputMode="decimal"
               />
@@ -56,7 +72,6 @@ export default function MeasurementMultiInput({ fields, value, onChange }) {
 /**
  * Gabungkan nilai multi-field jadi 1 string buat disimpan ke Google Sheet,
  * format: "V: 53.8 V  I: 19 A" atau "MR Kelas: II  C: 22 ºC  RH: 55 %".
- * Pakai field.prefix (bukan cuma huruf pertama dari label) supaya presisi.
  */
 export function serializeMeasurementMulti(fields, value) {
   const current = value || {};
