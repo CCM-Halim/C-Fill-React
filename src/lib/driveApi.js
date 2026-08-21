@@ -255,6 +255,20 @@ export async function uploadPublicImage(folderId, blob, fileName) {
 }
 
 /**
+ * Cari folder di dalam parent yang NAMANYA MENGANDUNG teks tertentu (bukan
+ * harus persis sama) - dipakai buat cocokkan folder site di "Dokumentasi
+ * Kegiatan" yang formatnya nggak seragam (kadang "K21+020 (6 Agustus 2026)",
+ * kadang "K 21 + 020 ( 6 agustus 2026 )" dst). Perbandingan dilakukan setelah
+ * SEMUA SPASI dihapus dari kedua sisi, biar variasi spasi nggak masalah.
+ */
+export async function findFolderContaining(parentId, searchTerm) {
+  const list = await driveFetch(`/files?q=${encodeURIComponent(`'${parentId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`)}&fields=files(id,name)&corpora=allDrives`);
+  const normalizedSearch = searchTerm.replace(/\s+/g, '').toLowerCase();
+  const found = (list.files || []).find((f) => f.name.replace(/\s+/g, '').toLowerCase().includes(normalizedSearch));
+  return found ? found.id : null;
+}
+
+/**
  * Upload 1 file (blob/File dari <input type="file">) ke folder tertentu.
  */
 export async function uploadFileToFolder(folderId, file) {
