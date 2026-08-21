@@ -72,8 +72,9 @@ export default function DokumentasiPage() {
       <div className="card form-card">
         <div className="card-title">Upload Dokumentasi Pekerjaan</div>
         <p className="muted">
-          File akan tersimpan otomatis di Google Drive, di folder{' '}
-          <strong>Kategori Bangunan &gt; Site &gt; Dokumentasi</strong>.
+          File akan tersimpan otomatis di folder <strong>Dokumentasi Kegiatan</strong>,
+          mengikuti struktur <strong>Bulan &gt; Nama Site (tanggal)</strong>. Kalau folder
+          site untuk bulan ini sudah ada, file akan ditambahkan ke situ (bukan bikin folder baru).
         </p>
 
         <div className="field-grid">
