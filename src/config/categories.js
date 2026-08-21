@@ -1,10 +1,6 @@
-// Kategori peralatan + slotMap. inputType: 'battery_table', 'measurement_ohm',
-// 'measurement_multi' (V+I, V+I+Hz, MR Kelas+Suhu+Kelembaban). noTglPrefix=true
-// pada item berarti periodenya = grid dasar kategori (mis. item 1-bulanan di
-// grid bulanan) -> ditulis teks polos, TIDAK dibungkus 'Tgl: ...' otomatis
-// (soalnya kolom Tanggal utama baris itu sudah cukup). Item tanpa flag ini
-// (periodenya lebih jarang dari grid, mis. 3-bulanan di grid bulanan) tetap
-// dibungkus 'Tgl: ... Catatan: ...' otomatis seperti biasa.
+// Kategori peralatan + slotMap. inputType tambahan: 'unit_value_table'
+// (1 nilai per unit bernomor, mis. Arus per modul rectifier - jumlah unit
+// bisa disesuaikan teknisi karena beda2 per lokasi).
 export const CATEGORIES = [
   {
     "id": "cat01",
@@ -2613,7 +2609,10 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pemeriksaan pembagian arus merata (current sharing) modul rectifier (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "inputType": "unit_value_table",
+        "unit": "A",
+        "defaultUnitCount": 4
       },
       {
         "id": "i7",
@@ -2855,7 +2854,10 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pemeriksaan pembagian arus merata (current sharing) modul rectifier (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "inputType": "unit_value_table",
+        "unit": "A",
+        "defaultUnitCount": 4
       },
       {
         "id": "i7",
@@ -3097,7 +3099,10 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pemeriksaan pembagian arus merata (current sharing) modul rectifier (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
-        "hasTglCatatan": true
+        "hasTglCatatan": true,
+        "inputType": "unit_value_table",
+        "unit": "A",
+        "defaultUnitCount": 4
       },
       {
         "id": "i7",
