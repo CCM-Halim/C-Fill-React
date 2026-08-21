@@ -28,7 +28,7 @@ function withDriveParams(path) {
 }
 
 async function driveFetch(path, options = {}) {
-  const MAX_ATTEMPTS = 3;
+  const MAX_ATTEMPTS = 6;
   let lastError;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     const headers = { ...(options.headers || {}), ...(await authHeaders()) };
@@ -38,13 +38,15 @@ async function driveFetch(path, options = {}) {
     const body = await res.text();
     lastError = new Error('Drive API error ' + res.status + ': ' + body);
 
-    // Cuma retry utk error server (5xx) - transien, biasanya gangguan sementara
-    // di Google, BUKAN error dari kode kita. Error 4xx (permission, not found,
-    // dsb) langsung dilempar tanpa retry karena percobaan ulang tidak akan beda.
-    const isRetryable = res.status >= 500;
+    // Retry utk error server (5xx) ATAU rate-limit (429/403) - keduanya biasanya
+    // gangguan sementara, bukan error dari kode kita. Error 4xx lain (permission,
+    // not found, dsb) langsung dilempar tanpa retry karena percobaan ulang tidak
+    // akan beda.
+    const isRetryable = res.status >= 500 || res.status === 429 || res.status === 403;
     if (!isRetryable || attempt === MAX_ATTEMPTS) throw lastError;
 
-    await new Promise((resolve) => setTimeout(resolve, attempt * 1000));
+    const delay = Math.min(2000 * Math.pow(2, attempt - 1), 32000) + Math.random() * 500;
+    await new Promise((resolve) => setTimeout(resolve, delay));
   }
   throw lastError;
 }
@@ -108,10 +110,12 @@ export async function findFileByExactName(folderId, name, mimeType) {
 export async function convertXlsxToSheets(xlsxFileId, folderId, targetName) {
   const token = await getValidAccessToken();
 
-  // Retry otomatis untuk error 5xx (biasanya gangguan sementara di server Google,
-  // terutama utk file besar/kompleks) - coba ulang beberapa kali dengan jeda,
-  // sebelum benar-benar dianggap gagal.
-  const MAX_ATTEMPTS = 5;
+  // Retry otomatis untuk error 5xx. Backoff EXPONENSIAL (2s, 4s, 8s, 16s, 32s)
+  // bukan cuma linear - soalnya error "Internal Error" pada operasi copy sering
+  // sebenarnya rate-limit dari Google (terutama kalau banyak file DIBEDA-beda
+  // dikonversi cepat berturut-turut, mis. waktu testing banyak site sekaligus).
+  // Rate-limit butuh jeda lebih lama utk reda, bukan cuma retry cepat berkali-kali.
+  const MAX_ATTEMPTS = 6;
   let lastError;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     const res = await fetch(
@@ -131,12 +135,10 @@ export async function convertXlsxToSheets(xlsxFileId, folderId, targetName) {
     const body = await res.text();
     lastError = new Error('Gagal konversi xlsx ke Sheets (' + res.status + '): ' + body);
 
-    const isRetryable = res.status >= 500;
+    const isRetryable = res.status >= 500 || res.status === 429 || res.status === 403;
     if (!isRetryable || attempt === MAX_ATTEMPTS) throw lastError;
 
-    // Backoff makin lama tiap percobaan + sedikit jitter acak (hindari semua
-    // percobaan retry "serentak" kalau banyak user kena error bersamaan)
-    const delay = attempt * 1500 + Math.random() * 500;
+    const delay = Math.min(2000 * Math.pow(2, attempt - 1), 32000) + Math.random() * 500;
     await new Promise((resolve) => setTimeout(resolve, delay));
   }
   throw lastError;
