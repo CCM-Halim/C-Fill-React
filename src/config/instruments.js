@@ -1,5 +1,7 @@
 // 32 instrumen tetap (nama file .xlsx aslinya sama persis dengan nama ini + '.xlsx'),
-// + slotMap (posisi baris/kolom di template asli, sama sistemnya dengan checksheet peralatan)
+// + slotMap. Item i6 ('Latihan Pengujian instrumen di lapangan') pakai
+// inputType 'location_note' - formatnya 'Lokasi Uji Fungsi: ... Catatan: ...'
+// (BEDA dari item lain yang otomatis 'Tgl: ... Catatan: ...').
 export const INSTRUMENTS = [
   "2M Digital Data Performance Analyzer",
   "Antena Feeder Cable Comprehensive Tester",
@@ -64,7 +66,9 @@ export const INSTRUMENT_ITEMS = [
   {
     "id": "i6",
     "label": "Latihan Pengujian instrumen di lapangan (simulasi pengukuran, fault detection, dan reporting)",
-    "standar": "Performa bagus dan penggunaan dapat dipahami"
+    "standar": "Performa bagus dan penggunaan dapat dipahami",
+    "inputType": "location_note",
+    "defaultLocation": "Gudang CCM Halim"
   }
 ];
 
