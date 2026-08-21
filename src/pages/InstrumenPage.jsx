@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { INSTRUMENTS, INSTRUMENT_ITEMS, INSTRUMENT_SLOT_MAP } from '../config/instruments';
 import { submitInstrumentChecksheet, previewSlot } from '../lib/cfillService';
 import { useToast } from '../components/Toast';
+import LocationNoteInput, { serializeLocationNote } from '../components/LocationNoteInput';
 
 const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
@@ -33,6 +34,10 @@ export default function InstrumenPage() {
     setAnswers((prev) => ({ ...prev, [id]: value }));
   }
 
+  function setLocationNoteAnswer(id, value) {
+    setAnswers((prev) => ({ ...prev, [id]: serializeLocationNote(value), [id + '__raw']: value }));
+  }
+
   async function handleSubmit() {
     if (!namaInstrumen || !petugas.trim()) {
       showToast('Nama instrumen dan petugas wajib diisi.', true);
@@ -40,7 +45,10 @@ export default function InstrumenPage() {
     }
     setSubmitting(true);
     try {
-      const res = await submitInstrumentChecksheet({ namaInstrumen, tanggal, petugas: petugas.trim(), answers });
+      const cleanAnswers = {};
+      Object.entries(answers).forEach(([k, v]) => { if (!k.endsWith('__raw')) cleanAnswers[k] = v; });
+
+      const res = await submitInstrumentChecksheet({ namaInstrumen, tanggal, petugas: petugas.trim(), answers: cleanAnswers });
       showToast(
         `Checksheet instrumen "${res.fileName}" tersimpan ke baris bulan ${BULAN[bulanIndex]} ✅`,
         false,
@@ -92,14 +100,24 @@ export default function InstrumenPage() {
           <div key={it.id} className="item-block">
             <div className="item-label">{it.label}</div>
             {it.standar ? <div className="item-standar"><b>Standar:</b> {it.standar}</div> : null}
-            <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
-            <textarea
-              className="textarea"
-              rows={2}
-              value={answers[it.id] || ''}
-              onChange={(e) => setAnswer(it.id, e.target.value)}
-              placeholder="Isi catatan hasil pemeriksaan..."
-            />
+            {it.inputType === 'location_note' ? (
+              <LocationNoteInput
+                defaultLocation={it.defaultLocation}
+                value={answers[it.id + '__raw']}
+                onChange={(val) => setLocationNoteAnswer(it.id, val)}
+              />
+            ) : (
+              <>
+                <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
+                <textarea
+                  className="textarea"
+                  rows={2}
+                  value={answers[it.id] || ''}
+                  onChange={(e) => setAnswer(it.id, e.target.value)}
+                  placeholder="Isi catatan hasil pemeriksaan..."
+                />
+              </>
+            )}
           </div>
         ))}
 
