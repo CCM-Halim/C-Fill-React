@@ -7,6 +7,7 @@ import { useToast } from '../components/Toast';
 import BatteryTable from '../components/BatteryTable';
 import MeasurementInput, { serializeMeasurement } from '../components/MeasurementInput';
 import MeasurementMultiInput, { serializeMeasurementMulti } from '../components/MeasurementMultiInput';
+import UnitValueTable, { serializeUnitValueTable } from '../components/UnitValueTable';
 
 const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
@@ -62,6 +63,10 @@ export default function ChecksheetForm() {
 
   function setMeasurementMultiAnswer(itemId, fields, rawValue) {
     setAnswers((prev) => ({ ...prev, [itemId]: serializeMeasurementMulti(fields, rawValue), [itemId + '__raw']: rawValue }));
+  }
+
+  function setUnitValueTableAnswer(itemId, rows, unit) {
+    setAnswers((prev) => ({ ...prev, [itemId]: serializeUnitValueTable(rows, unit), [itemId + '__raw']: rows }));
   }
 
   // Untuk item tabel baterai: simpan sebagai array "V:.. V R:.. mΩ" per baterai
@@ -161,6 +166,16 @@ export default function ChecksheetForm() {
                   fields={it.measurementFields}
                   value={answers[it.id + '__raw']}
                   onChange={(val) => setMeasurementMultiAnswer(it.id, it.measurementFields, val)}
+                />
+              </>
+            ) : it.inputType === 'unit_value_table' ? (
+              <>
+                <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
+                <UnitValueTable
+                  unit={it.unit || 'A'}
+                  defaultCount={it.defaultUnitCount || 4}
+                  value={answers[it.id + '__raw']}
+                  onChange={(rows) => setUnitValueTableAnswer(it.id, rows, it.unit || 'A')}
                 />
               </>
             ) : (
