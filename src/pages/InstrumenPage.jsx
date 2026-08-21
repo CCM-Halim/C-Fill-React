@@ -31,7 +31,10 @@ export default function InstrumenPage() {
   const bulanIndex = new Date(tanggal).getMonth();
 
   function setAnswer(id, value) {
-    setAnswers((prev) => ({ ...prev, [id]: value }));
+    // Item instrumen (selain "Lokasi Uji Fungsi") formatnya teks polos langsung,
+    // TIDAK pakai prefix "Tgl: ..." otomatis (beda dari checksheet Peralatan) -
+    // dikirim sebagai __rawText supaya writeMonthlySlot tidak membungkusnya.
+    setAnswers((prev) => ({ ...prev, [id]: value ? { __rawText: value } : null, [id + '__raw']: value }));
   }
 
   function setLocationNoteAnswer(id, value) {
@@ -107,16 +110,13 @@ export default function InstrumenPage() {
                 onChange={(val) => setLocationNoteAnswer(it.id, val)}
               />
             ) : (
-              <>
-                <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
-                <textarea
-                  className="textarea"
-                  rows={2}
-                  value={answers[it.id] || ''}
-                  onChange={(e) => setAnswer(it.id, e.target.value)}
-                  placeholder="Isi catatan hasil pemeriksaan..."
-                />
-              </>
+              <textarea
+                className="textarea"
+                rows={2}
+                value={answers[it.id + '__raw'] || ''}
+                onChange={(e) => setAnswer(it.id, e.target.value)}
+                placeholder="Isi hasil pemeriksaan..."
+              />
             )}
           </div>
         ))}
