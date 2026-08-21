@@ -107,10 +107,14 @@ const inputStyle = {
 };
 
 /**
- * Serialize array nilai per unit jadi 1 string ringkas, format:
- * "1: 4.9 A  2: 5.0 A  3: 4.3 A  4: 4.8 A"
+ * Serialize array nilai per unit jadi 1 string ringkas, dipisah BARIS BARU
+ * (bukan spasi) supaya tampil vertikal sesuai pola data lama di template asli:
+ *   1: 4.9 A
+ *   2: 5.0 A
+ *   3: 4.3 A
+ *   4: 4.8 A
  */
 export function serializeUnitValueTable(rows, unit) {
   if (!rows || !rows.some((v) => v)) return '';
-  return rows.map((v, i) => `${i + 1}: ${v || '-'} ${unit}`).join('  ');
+  return rows.map((v, i) => `${i + 1}: ${v || '-'} ${unit}`).join('\n');
 }
