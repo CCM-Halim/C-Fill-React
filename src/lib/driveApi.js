@@ -191,6 +191,40 @@ export function clearSpreadsheetCache() {
 }
 
 /**
+ * Upload gambar tanda tangan (Blob/File) ke folder tertentu, lalu set izin
+ * "siapapun yang punya link bisa lihat" - supaya bisa dirender lewat formula
+ * =IMAGE(...) di Google Sheets (butuh URL yang bisa diakses tanpa login).
+ * Return URL langsung yang kompatibel dipakai di =IMAGE().
+ */
+export async function uploadPublicImage(folderId, blob, fileName) {
+  const token = await getValidAccessToken();
+  const metadata = { name: fileName, parents: [folderId] };
+
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+  form.append('file', blob);
+
+  const res = await fetch(
+    `${UPLOAD_BASE}/files?uploadType=multipart&fields=id&${DRIVE_SUPPORT_PARAMS}`,
+    { method: 'POST', headers: { Authorization: 'Bearer ' + token }, body: form }
+  );
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error('Upload tanda tangan gagal (' + res.status + '): ' + body);
+  }
+  const file = await res.json();
+
+  // Set permission publik (link-only, cuma viewer) supaya =IMAGE() bisa mengambilnya
+  await fetch(`${DRIVE_BASE}/files/${file.id}/permissions?${DRIVE_SUPPORT_PARAMS}`, {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ role: 'reader', type: 'anyone' })
+  });
+
+  return { fileId: file.id, imageUrl: `https://lh3.googleusercontent.com/d/${file.id}` };
+}
+
+/**
  * Upload 1 file (blob/File dari <input type="file">) ke folder tertentu.
  */
 export async function uploadFileToFolder(folderId, file) {

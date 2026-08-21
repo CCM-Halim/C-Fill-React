@@ -4,12 +4,20 @@
  * .xlsx asli jadi Google Sheets (sekali saja), lalu tulis ke SLOT baris/kolom
  * yang sudah ada di dalamnya - BUKAN menambah baris baru di bawah.
  */
-import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow } from './sheetsApi';
-import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet } from './driveApi';
+import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow } from './sheetsApi';
+import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, uploadPublicImage } from './driveApi';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
 import { INSTRUMENT_SLOT_MAP } from '../config/instruments';
 import { SLOT_MAP_OVERRIDES } from '../config/slotMapOverrides';
+import { logActivity } from './activityLog';
+import { getCurrentUser } from './googleAuth';
+
+// Struktur sheet "Lembar Verifikasi Pekerjaan" (boilerplate, sama di semua 69
+// file site): baris 6 = Januari, step 1/bulan, kolom C = Tanggal, D = Nama
+// Verifikator, F = Tanda tangan/paraf (diisi nama juga, sbg tanda digital).
+const VERIFICATION_SLOT_MAP = { slotStartRow: 6, slotStep: 1, dateCol: 3, namaCol: 4, parafCol: 6 };
+const VERIFICATION_TAB_NAME = 'Lembar Verifikasi Pekerjaan';
 
 const ROOT_CHECKSHEET_FOLDER_ID = import.meta.env.VITE_ROOT_CHECKSHEET_FOLDER_ID;
 const ROOT_INSTRUMEN_FOLDER_ID = import.meta.env.VITE_ROOT_INSTRUMEN_FOLDER_ID;
@@ -63,7 +71,14 @@ export async function submitChecksheet({ buildingCategory, siteName, categoryId,
 
   const { row } = await writeMonthlySlot(spreadsheetId, tabName, slotMap, { tanggal, petugas, answers });
   const gid = await getSheetGid(spreadsheetId, tabName);
-  return { success: true, fileName: site.originalFileName, row, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid) };
+  const sheetUrl = getSpreadsheetUrl(spreadsheetId, gid);
+
+  logActivity(ROOT_CHECKSHEET_FOLDER_ID, {
+    buildingCategory, siteName, categoryName: category.short_name, tanggal, petugas,
+    email: getCurrentUser()?.email, sheetUrl
+  });
+
+  return { success: true, fileName: site.originalFileName, row, sheetUrl };
 }
 
 /**
@@ -79,7 +94,14 @@ export async function submitInstrumentChecksheet({ namaInstrumen, tanggal, petug
 
   const { row } = await writeMonthlySlot(spreadsheetId, tabName, INSTRUMENT_SLOT_MAP, { tanggal, petugas, answers });
   const gid = await getSheetGid(spreadsheetId, tabName);
-  return { success: true, fileName: originalFileName, row, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid) };
+  const sheetUrl = getSpreadsheetUrl(spreadsheetId, gid);
+
+  logActivity(ROOT_CHECKSHEET_FOLDER_ID, {
+    buildingCategory: 'Instrumen', siteName: namaInstrumen, categoryName: 'Checksheet Instrumen', tanggal, petugas,
+    email: getCurrentUser()?.email, sheetUrl
+  });
+
+  return { success: true, fileName: originalFileName, row, sheetUrl };
 }
 
 /**
@@ -120,4 +142,79 @@ export function getCategoriesForSite(siteName) {
   const site = SITES.find((s) => s.siteName === siteName);
   if (!site) return [];
   return site.categoryIds.map((id) => CATEGORIES.find((c) => c.id === id)).filter(Boolean);
+}
+
+/**
+ * ==== Verifikasi (Foreman / Deputy Foreman) ====
+ * Menulis & membaca sheet "Lembar Verifikasi Pekerjaan" - sign-off bulanan
+ * per site (bukan per kategori/submission), sesuai proses asli KCIC.
+ */
+
+const BULAN_LIST = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+function formatDateID(dateStr) {
+  const d = new Date(dateStr);
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+}
+
+/**
+ * Baca status verifikasi 12 bulan untuk 1 site (dipakai halaman detail Verifikasi).
+ * Return array 12 objek { bulan, tanggal, namaVerifikator } - kosong kalau belum diverifikasi.
+ */
+export async function getVerificationStatus(buildingCategory, siteName) {
+  requireFolderConfig(ROOT_CHECKSHEET_FOLDER_ID, 'VITE_ROOT_CHECKSHEET_FOLDER_ID');
+  const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
+  if (!site) throw new Error('Site tidak ditemukan: ' + siteName);
+
+  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
+  const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+
+  const result = [];
+  for (let i = 0; i < 12; i++) {
+    const row = VERIFICATION_SLOT_MAP.slotStartRow + i;
+    const cells = await readSlotRow(spreadsheetId, VERIFICATION_TAB_NAME, row, 6);
+    result.push({
+      bulan: BULAN_LIST[i],
+      tanggal: cells[2] || '',
+      namaVerifikator: cells[3] || ''
+    });
+  }
+  const gid = await getSheetGid(spreadsheetId, VERIFICATION_TAB_NAME);
+  return { months: result, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid) };
+}
+
+/**
+ * Tulis verifikasi untuk 1 bulan tertentu di 1 site - dipanggil dari halaman
+ * Verifikasi setelah Foreman/Deputy Foreman cek manual checksheet teknisi
+ * dan menyatakan OK. Nama verifikator diambil dari akun Google yang login.
+ * Kalau signatureBlob diisi (hasil gambar/upload di SignaturePad), tanda
+ * tangan diupload ke Drive dulu lalu ditampilkan sebagai gambar di kolom paraf.
+ */
+export async function submitVerification({ buildingCategory, siteName, monthIndex, signatureBlob }) {
+  requireFolderConfig(ROOT_CHECKSHEET_FOLDER_ID, 'VITE_ROOT_CHECKSHEET_FOLDER_ID');
+  const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
+  if (!site) throw new Error('Site tidak ditemukan: ' + siteName);
+
+  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
+  const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const today = new Date().toISOString().slice(0, 10);
+  const namaVerifikator = getCurrentUser()?.name || getCurrentUser()?.email || 'Verifikator';
+
+  let signatureImageUrl = null;
+  if (signatureBlob) {
+    const signFolderId = await getOrCreateSubfolder(ROOT_CHECKSHEET_FOLDER_ID, 'Tanda Tangan Verifikasi');
+    const fileName = `TTD - ${siteName} - ${namaVerifikator} - ${today}.png`;
+    const uploaded = await uploadPublicImage(signFolderId, signatureBlob, fileName);
+    signatureImageUrl = uploaded.imageUrl;
+  }
+
+  const { row } = await writeVerificationRow(spreadsheetId, VERIFICATION_TAB_NAME, VERIFICATION_SLOT_MAP, monthIndex, {
+    tanggalVerifikasi: today,
+    namaVerifikator,
+    signatureImageUrl
+  });
+
+  const gid = await getSheetGid(spreadsheetId, VERIFICATION_TAB_NAME);
+  return { success: true, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid), row };
 }

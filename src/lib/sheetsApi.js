@@ -182,3 +182,33 @@ export async function getSheetGid(spreadsheetId, tabName) {
   const found = meta.sheets.find((s) => s.properties.title === tabName);
   return found ? found.properties.sheetId : 0;
 }
+
+/**
+ * Tulis 1 baris verifikasi ke sheet "Lembar Verifikasi Pekerjaan", langsung
+ * berdasarkan index bulan (0=Januari) - BEDA dari writeMonthlySlot yang
+ * menghitung baris dari tanggal, karena verifikasi bisa saja untuk bulan
+ * yang berbeda dari tanggal verifikasi itu sendiri dilakukan (misal
+ * verifikasi telat/susulan untuk bulan lalu).
+ *
+ * Kalau signatureImageUrl diisi, kolom paraf ditulis pakai formula
+ * =IMAGE("url") supaya tanda tangan tampil sebagai gambar di sel - bukan teks.
+ */
+export async function writeVerificationRow(spreadsheetId, tabName, slotMap, monthIndex, { tanggalVerifikasi, namaVerifikator, signatureImageUrl }) {
+  const row = slotMap.slotStartRow + slotMap.slotStep * monthIndex;
+  const formattedDate = formatDateForSheet(tanggalVerifikasi);
+
+  const parafValue = signatureImageUrl ? `=IMAGE("${signatureImageUrl}")` : namaVerifikator;
+
+  const data = [
+    { range: `'${tabName}'!${colLetter(slotMap.dateCol)}${row}`, values: [[formattedDate]] },
+    { range: `'${tabName}'!${colLetter(slotMap.namaCol)}${row}`, values: [[namaVerifikator]] },
+    { range: `'${tabName}'!${colLetter(slotMap.parafCol)}${row}`, values: [[parafValue]] }
+  ];
+
+  await sheetsFetch(`/${spreadsheetId}/values:batchUpdate`, {
+    method: 'POST',
+    body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data })
+  });
+
+  return { row };
+}
