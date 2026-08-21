@@ -71,7 +71,10 @@ export default function MeasurementMultiInput({ fields, value, onChange }) {
 
 /**
  * Gabungkan nilai multi-field jadi 1 string buat disimpan ke Google Sheet,
- * format: "V: 53.8 V  I: 19 A" atau "MR Kelas: II  C: 22 ºC  RH: 55 %".
+ * dipisah BARIS BARU (bukan spasi) supaya tampil vertikal sesuai pola data
+ * lama di template asli, mis:
+ *   V: 53.8 V
+ *   I: 19 A
  */
 export function serializeMeasurementMulti(fields, value) {
   const current = value || {};
@@ -84,5 +87,5 @@ export function serializeMeasurementMulti(fields, value) {
       const unit = f.unit ? ' ' + f.unit : '';
       return `${prefix}: ${val}${unit}`;
     })
-    .join('  ');
+    .join('\n');
 }
