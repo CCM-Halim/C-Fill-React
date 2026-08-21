@@ -1,6 +1,7 @@
 // Kategori peralatan + slotMap. inputType: 'battery_table' (V/R per baterai),
-// 'measurement_ohm' (grounding, satuan Ω), 'measurement_multi' (mis. Tegangan+
-// Arus, atau Tegangan+Arus+Frekuensi - lihat measurementFields per item).
+// 'measurement_ohm' (grounding, satuan Ω), 'measurement_multi' (V+I, V+I+Hz,
+// atau MR Kelas+Suhu+Kelembaban - lihat measurementFields per item, tiap field
+// punya 'prefix' sendiri utk serialisasi, bukan ambil huruf pertama label).
 export const CATEGORIES = [
   {
     "id": "cat01",
@@ -472,12 +473,14 @@ export const CATEGORIES = [
           {
             "id": "v",
             "label": "Tegangan",
-            "unit": "V"
+            "unit": "V",
+            "prefix": "V"
           },
           {
             "id": "i",
             "label": "Arus",
-            "unit": "A"
+            "unit": "A",
+            "prefix": "I"
           }
         ]
       },
@@ -642,12 +645,14 @@ export const CATEGORIES = [
           {
             "id": "v",
             "label": "Tegangan",
-            "unit": "V"
+            "unit": "V",
+            "prefix": "V"
           },
           {
             "id": "i",
             "label": "Arus",
-            "unit": "A"
+            "unit": "A",
+            "prefix": "I"
           }
         ]
       },
@@ -812,12 +817,14 @@ export const CATEGORIES = [
           {
             "id": "v",
             "label": "Tegangan",
-            "unit": "V"
+            "unit": "V",
+            "prefix": "V"
           },
           {
             "id": "i",
             "label": "Arus",
-            "unit": "A"
+            "unit": "A",
+            "prefix": "I"
           }
         ]
       },
@@ -982,12 +989,14 @@ export const CATEGORIES = [
           {
             "id": "v",
             "label": "Tegangan",
-            "unit": "V"
+            "unit": "V",
+            "prefix": "V"
           },
           {
             "id": "i",
             "label": "Arus",
-            "unit": "A"
+            "unit": "A",
+            "prefix": "I"
           }
         ]
       },
@@ -1142,12 +1151,14 @@ export const CATEGORIES = [
           {
             "id": "v",
             "label": "Tegangan",
-            "unit": "V"
+            "unit": "V",
+            "prefix": "V"
           },
           {
             "id": "i",
             "label": "Arus",
-            "unit": "A"
+            "unit": "A",
+            "prefix": "I"
           }
         ]
       },
@@ -1302,12 +1313,14 @@ export const CATEGORIES = [
           {
             "id": "v",
             "label": "Tegangan",
-            "unit": "V"
+            "unit": "V",
+            "prefix": "V"
           },
           {
             "id": "i",
             "label": "Arus",
-            "unit": "A"
+            "unit": "A",
+            "prefix": "I"
           }
         ]
       },
@@ -2483,12 +2496,14 @@ export const CATEGORIES = [
           {
             "id": "v",
             "label": "Tegangan",
-            "unit": "V"
+            "unit": "V",
+            "prefix": "V"
           },
           {
             "id": "i",
             "label": "Arus",
-            "unit": "A"
+            "unit": "A",
+            "prefix": "I"
           }
         ]
       },
@@ -2718,12 +2733,14 @@ export const CATEGORIES = [
           {
             "id": "v",
             "label": "Tegangan",
-            "unit": "V"
+            "unit": "V",
+            "prefix": "V"
           },
           {
             "id": "i",
             "label": "Arus",
-            "unit": "A"
+            "unit": "A",
+            "prefix": "I"
           }
         ]
       },
@@ -2953,12 +2970,14 @@ export const CATEGORIES = [
           {
             "id": "v",
             "label": "Tegangan",
-            "unit": "V"
+            "unit": "V",
+            "prefix": "V"
           },
           {
             "id": "i",
             "label": "Arus",
-            "unit": "A"
+            "unit": "A",
+            "prefix": "I"
           }
         ]
       },
@@ -3273,7 +3292,32 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan suhu dan kelembaban ruangan",
         "standar": "MR Kelas II: suhu 18ºC~28ºC. Kelembaban relatif 30%~75%RH MR kelas III: suhu 5ºC~30ºC. Kelembaban relatif: 15%~ 85%RH",
-        "hasTglCatatan": false
+        "hasTglCatatan": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "kelas",
+            "label": "MR Kelas",
+            "prefix": "MR Kelas",
+            "type": "select",
+            "options": [
+              "II",
+              "III"
+            ]
+          },
+          {
+            "id": "suhu",
+            "label": "Suhu",
+            "prefix": "C",
+            "unit": "ºC"
+          },
+          {
+            "id": "rh",
+            "label": "Kelembaban",
+            "prefix": "RH",
+            "unit": "%"
+          }
+        ]
       },
       {
         "id": "i3",
@@ -4757,17 +4801,20 @@ export const CATEGORIES = [
           {
             "id": "v",
             "label": "Tegangan",
-            "unit": "V"
+            "unit": "V",
+            "prefix": "V"
           },
           {
             "id": "i",
             "label": "Arus",
-            "unit": "A"
+            "unit": "A",
+            "prefix": "I"
           },
           {
             "id": "hz",
             "label": "Frekuensi",
-            "unit": "Hz"
+            "unit": "Hz",
+            "prefix": "Hz"
           }
         ]
       },
