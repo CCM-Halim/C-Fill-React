@@ -6,6 +6,7 @@ import { submitChecksheet, previewSlot } from '../lib/cfillService';
 import { useToast } from '../components/Toast';
 import BatteryTable from '../components/BatteryTable';
 import MeasurementInput, { serializeMeasurement } from '../components/MeasurementInput';
+import MeasurementMultiInput, { serializeMeasurementMulti } from '../components/MeasurementMultiInput';
 
 const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
@@ -50,6 +51,10 @@ export default function ChecksheetForm() {
 
   function setMeasurementAnswer(itemId, rawValue, unit) {
     setAnswers((prev) => ({ ...prev, [itemId]: serializeMeasurement(rawValue, unit), [itemId + '__raw']: rawValue }));
+  }
+
+  function setMeasurementMultiAnswer(itemId, fields, rawValue) {
+    setAnswers((prev) => ({ ...prev, [itemId]: serializeMeasurementMulti(fields, rawValue), [itemId + '__raw']: rawValue }));
   }
 
   // Untuk item tabel baterai: simpan sebagai array "V:.. V R:.. mΩ" per baterai
@@ -140,6 +145,15 @@ export default function ChecksheetForm() {
                   unit={it.unit || 'Ω'}
                   value={answers[it.id + '__raw']}
                   onChange={(val) => setMeasurementAnswer(it.id, val, it.unit || 'Ω')}
+                />
+              </>
+            ) : it.inputType === 'measurement_multi' ? (
+              <>
+                <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
+                <MeasurementMultiInput
+                  fields={it.measurementFields}
+                  value={answers[it.id + '__raw']}
+                  onChange={(val) => setMeasurementMultiAnswer(it.id, it.measurementFields, val)}
                 />
               </>
             ) : (
