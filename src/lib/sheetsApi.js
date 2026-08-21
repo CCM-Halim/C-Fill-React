@@ -181,11 +181,12 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
         values: [[answer.__rawText]]
       });
     } else {
-      // Item teks biasa -> otomatis dibungkus format "Tgl: <tanggal> Catatan: <isian>"
-      // sesuai pola template asli, tanpa user perlu ketik tanggalnya manual.
+      // Item teks biasa -> otomatis dibungkus format "Tgl: <tanggal>\nCatatan:\n<isian>"
+      // (VERTIKAL, pakai baris baru - bukan 1 baris disambung spasi) sesuai pola
+      // tampilan data lama di template asli. User cuma perlu isi bagian catatannya.
       data.push({
         range: `'${tabName}'!${colLetter(itemCol.colStart)}${itemRow}`,
-        values: [[`Tgl: ${formattedDate} Catatan: ${answer}`]]
+        values: [[`Tgl: ${formattedDate}\nCatatan:\n${answer}`]]
       });
     }
   });
