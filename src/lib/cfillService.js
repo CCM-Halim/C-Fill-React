@@ -5,7 +5,7 @@
  * yang sudah ada di dalamnya - BUKAN menambah baris baru di bawah.
  */
 import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow } from './sheetsApi';
-import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, uploadPublicImage } from './driveApi';
+import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, uploadPublicImage, findFolderContaining } from './driveApi';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
 import { INSTRUMENT_SLOT_MAP } from '../config/instruments';
@@ -21,6 +21,9 @@ const VERIFICATION_TAB_NAME = 'Lembar Verifikasi Pekerjaan';
 
 const ROOT_CHECKSHEET_FOLDER_ID = import.meta.env.VITE_ROOT_CHECKSHEET_FOLDER_ID;
 const ROOT_INSTRUMEN_FOLDER_ID = import.meta.env.VITE_ROOT_INSTRUMEN_FOLDER_ID;
+const ROOT_DOKUMENTASI_FOLDER_ID = import.meta.env.VITE_ROOT_DOKUMENTASI_FOLDER_ID;
+
+const BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
 function requireFolderConfig(id, name) {
   if (!id) throw new Error(`${name} belum diatur di .env (lihat .env.example).`);
@@ -30,13 +33,38 @@ async function getBuildingCategoryFolder(buildingCategory) {
   return getOrCreateSubfolder(ROOT_CHECKSHEET_FOLDER_ID, buildingCategory);
 }
 
-async function getSiteDocumentationFolder(buildingCategory, siteName) {
-  // Folder khusus dokumentasi (foto/dokumen) - ini folder BARU yang dibuat
-  // aplikasi, terpisah dari lokasi file .xlsx checksheet asli (yang taruh
-  // langsung di folder kategori bangunan, bukan di subfolder per-site).
-  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-  const siteFolderId = await getOrCreateSubfolder(bcFolderId, siteName);
-  return getOrCreateSubfolder(siteFolderId, 'Dokumentasi');
+/**
+ * Ambil kode singkat site (mis. "K10+200") dari nama site lengkap - dipakai
+ * buat cocokkan/beri nama folder di "Dokumentasi Kegiatan", yang formatnya
+ * pakai kode singkat + tanggal (bukan nama lengkap kayak di Checksheet).
+ */
+function getSiteShortCode(siteName) {
+  const m = siteName.match(/K\s*\d+\s*\+\s*\d+/);
+  return m ? m[0].replace(/\s+/g, '') : siteName;
+}
+
+/**
+ * Cari/siapkan folder dokumentasi utk 1 site pada bulan berjalan, mengikuti
+ * struktur asli "Dokumentasi Kegiatan": [Bulan] / [KodeSite (tanggal)] / file.
+ *
+ * Kalau folder site utk bulan ini SUDAH ADA (baik dibuat manual sebelumnya
+ * dengan format apapun, atau oleh aplikasi ini sebelumnya) - dipakai lagi,
+ * TIDAK bikin folder baru. Kalau belum ada, baru dibuat folder baru dengan
+ * format konsisten "KodeSite (D Bulan YYYY)".
+ */
+async function getOrCreateDocumentationFolder(siteName, date = new Date()) {
+  requireFolderConfig(ROOT_DOKUMENTASI_FOLDER_ID, 'VITE_ROOT_DOKUMENTASI_FOLDER_ID');
+
+  const monthIndex = date.getMonth();
+  const monthFolderName = `${String(monthIndex + 1).padStart(2, '0')}. ${BULAN_ID[monthIndex]}`;
+  const monthFolderId = await getOrCreateSubfolder(ROOT_DOKUMENTASI_FOLDER_ID, monthFolderName);
+
+  const siteCode = getSiteShortCode(siteName);
+  const existingFolderId = await findFolderContaining(monthFolderId, siteCode);
+  if (existingFolderId) return existingFolderId;
+
+  const newFolderName = `${siteCode} (${date.getDate()} ${BULAN_ID[monthIndex]} ${date.getFullYear()})`;
+  return getOrCreateSubfolder(monthFolderId, newFolderName);
 }
 
 /**
@@ -123,14 +151,12 @@ export function previewSlot(categoryOrSlotMap, tanggal, originalFileName) {
 }
 
 export async function uploadDocumentation({ buildingCategory, siteName, file }) {
-  requireFolderConfig(ROOT_CHECKSHEET_FOLDER_ID, 'VITE_ROOT_CHECKSHEET_FOLDER_ID');
-  const docFolderId = await getSiteDocumentationFolder(buildingCategory, siteName);
+  const docFolderId = await getOrCreateDocumentationFolder(siteName);
   return uploadFileToFolder(docFolderId, file);
 }
 
 export async function listDocumentationFiles({ buildingCategory, siteName }) {
-  requireFolderConfig(ROOT_CHECKSHEET_FOLDER_ID, 'VITE_ROOT_CHECKSHEET_FOLDER_ID');
-  const docFolderId = await getSiteDocumentationFolder(buildingCategory, siteName);
+  const docFolderId = await getOrCreateDocumentationFolder(siteName);
   return listFilesInFolder(docFolderId);
 }
 
