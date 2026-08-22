@@ -246,8 +246,45 @@ export function getSpreadsheetUrl(spreadsheetId, gid) {
 }
 
 /**
- * Ambil sheetId (gid) numerik dari nama tab, dipakai untuk bikin link langsung ke tab yang benar.
+ * Cari baris KOSONG berikutnya di kolom tertentu, mulai dari startRow - dipakai
+ * buat sheet log berurutan (mis. "Entry and exit registration") yang formatnya
+ * "nambah baris berikutnya" (bukan slot bulanan tetap kayak checksheet biasa).
+ * Baris dianggap kosong kalau kolom acuan (mis. Tanggal) belum terisi.
  */
+export async function findNextEmptyRow(spreadsheetId, tabName, startRow, checkCol, maxRows = 300) {
+  const colL = colLetter(checkCol);
+  const data = await sheetsFetch(`/${spreadsheetId}/values/${encodeURIComponent(`'${tabName}'!${colL}${startRow}:${colL}${startRow + maxRows}`)}`);
+  const values = data.values || [];
+  for (let i = 0; i < maxRows; i++) {
+    const cell = values[i] ? values[i][0] : undefined;
+    if (!cell || String(cell).trim() === '') {
+      return startRow + i;
+    }
+  }
+  return startRow + maxRows; // fallback kalau semua baris ternyata sudah terisi
+}
+
+/**
+ * Tulis 1 baris log "Entry and exit registration" ke baris kosong berikutnya.
+ */
+export async function writeEntryExitRow(spreadsheetId, tabName, row, entry) {
+  const data = [
+    { range: `'${tabName}'!B${row}`, values: [[entry.tanggal]] },
+    { range: `'${tabName}'!C${row}`, values: [[entry.waktuMasuk]] },
+    { range: `'${tabName}'!D${row}`, values: [[entry.nama]] },
+    { range: `'${tabName}'!E${row}`, values: [[entry.namaUnit]] },
+    { range: `'${tabName}'!F${row}`, values: [[entry.nomorKontak]] },
+    { range: `'${tabName}'!G${row}`, values: [[entry.kegiatan]] },
+    { range: `'${tabName}'!H${row}`, values: [[entry.waktuKeluar]] }
+  ];
+  if (entry.signatureImageUrl) {
+    data.push({ range: `'${tabName}'!I${row}`, values: [[`=IMAGE("${entry.signatureImageUrl}")`]] });
+  }
+  await sheetsFetch(`/${spreadsheetId}/values:batchUpdate`, {
+    method: 'POST',
+    body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data })
+  });
+}
 export async function getSheetGid(spreadsheetId, tabName) {
   const meta = await sheetsFetch(`/${spreadsheetId}?fields=sheets.properties`);
   const found = meta.sheets.find((s) => s.properties.title === tabName);

@@ -4,7 +4,7 @@
  * .xlsx asli jadi Google Sheets (sekali saja), lalu tulis ke SLOT baris/kolom
  * yang sudah ada di dalamnya - BUKAN menambah baris baru di bawah.
  */
-import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow } from './sheetsApi';
+import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow, findNextEmptyRow, writeEntryExitRow } from './sheetsApi';
 import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, uploadPublicImage, findFolderContaining } from './driveApi';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
@@ -168,6 +168,45 @@ export function getCategoriesForSite(siteName) {
   const site = SITES.find((s) => s.siteName === siteName);
   if (!site) return [];
   return site.categoryIds.map((id) => CATEGORIES.find((c) => c.id === id)).filter(Boolean);
+}
+
+const ENTRY_EXIT_TAB_NAME = 'Entry and exit registration';
+const ENTRY_EXIT_START_ROW = 7; // baris pertama data (baris 1-6 header/judul)
+const ENTRY_EXIT_DATE_COL = 2; // kolom B = Tanggal, dipakai buat deteksi baris kosong
+
+/**
+ * Submit 1 baris log "Entry and exit registration" - form keluar-masuk
+ * machinery room. BEDA dari checksheet biasa: nambah ke baris kosong
+ * berikutnya (log berurutan), bukan slot bulanan tetap.
+ */
+export async function submitEntryExit({ buildingCategory, siteName, tanggal, waktuMasuk, nama, namaUnit, nomorKontak, kegiatan, waktuKeluar, signatureBlob }) {
+  requireFolderConfig(ROOT_CHECKSHEET_FOLDER_ID, 'VITE_ROOT_CHECKSHEET_FOLDER_ID');
+  const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
+  if (!site) throw new Error('Site tidak ditemukan: ' + siteName);
+
+  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
+  const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+
+  let signatureImageUrl = null;
+  if (signatureBlob) {
+    const signFolderId = await getOrCreateSubfolder(ROOT_CHECKSHEET_FOLDER_ID, 'Tanda Tangan Entry Exit');
+    const fileName = `TTD - ${siteName} - ${nama} - ${tanggal}.png`;
+    const uploaded = await uploadPublicImage(signFolderId, signatureBlob, fileName);
+    signatureImageUrl = uploaded.imageUrl;
+  }
+
+  const row = await findNextEmptyRow(spreadsheetId, ENTRY_EXIT_TAB_NAME, ENTRY_EXIT_START_ROW, ENTRY_EXIT_DATE_COL);
+  await writeEntryExitRow(spreadsheetId, ENTRY_EXIT_TAB_NAME, row, {
+    tanggal: formatDateID(tanggal), waktuMasuk, nama, namaUnit, nomorKontak, kegiatan, waktuKeluar, signatureImageUrl
+  });
+
+  const gid = await getSheetGid(spreadsheetId, ENTRY_EXIT_TAB_NAME);
+  logActivity(ROOT_CHECKSHEET_FOLDER_ID, {
+    buildingCategory, siteName, categoryName: 'Entry/Exit Registration', tanggal, petugas: nama,
+    email: getCurrentUser()?.email, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid)
+  });
+
+  return { success: true, row, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid) };
 }
 
 /**
