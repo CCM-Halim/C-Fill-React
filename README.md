@@ -6,8 +6,8 @@ Web app untuk:
    .xlsx asli kamu** (dikonversi otomatis jadi Google Sheets), ke slot
    baris/kolom yang sudah ada sesuai bulan pemeriksaan — bukan bikin file
    atau baris baru.
-2. **Upload Dokumentasi Pekerjaan** — otomatis tersimpan ke Google Drive, di
-   folder `Kategori Bangunan > Site > Dokumentasi`.
+2. **Upload Dokumentasi Pekerjaan** — otomatis tersimpan ke folder Drive
+   **"Dokumentasi Kegiatan"**, struktur `Bulan > Nama Site (tanggal)`.
 
 Stack: **React (Vite) + Google OAuth 2.0 (Identity Services) + Sheets API v4 +
 Drive API v3**, semuanya dipanggil langsung dari browser (tidak perlu backend
@@ -120,10 +120,14 @@ Sebagai gantinya:
    ulang, isinya DITIMPA** (bukan nambah baris baru) — cocok dengan struktur
    form asli yang cuma punya 1 slot per bulan.
 
-**Upload Dokumentasi** → tetap ke folder terpisah (bukan bagian dari sheet):
+**Upload Dokumentasi** → folder terpisah, mengikuti struktur asli "Dokumentasi Kegiatan" yang sudah ada:
 ```
-[Folder Checksheet] / [Kategori Bangunan] / [Nama Site] / Dokumentasi / nama_file.jpg
+[Folder Dokumentasi Kegiatan] / [08. Agustus, dst] / [KodeSite (tanggal)] / nama_file.jpg
 ```
+Kalau folder site untuk bulan berjalan **sudah ada** (baik dibuat manual sebelumnya
+dengan format apapun, atau oleh aplikasi ini), file baru ditambahkan ke situ — TIDAK
+bikin folder baru. Folder baru (kalau belum ada) dibuat aplikasi dengan format
+konsisten `KodeSite (D Bulan YYYY)`, mis. `K10+200 (21 Agustus 2026)`.
 
 ---
 
