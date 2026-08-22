@@ -129,6 +129,34 @@ function formatDateForSheet(dateStr) {
 }
 
 /**
+ * Cek nilai V/R tiap baterai terhadap standar resistansi (beda per kelas
+ * tegangan: baterai ~2V pakai batas class2V, baterai ~12V pakai class12V).
+ * Return 'Ada temuan' kalau ADA baterai yang R-nya melebihi batas, 'Normal'
+ * kalau semua baterai (yang keisi) masih dalam batas, atau null kalau tidak
+ * ada data yang bisa dicek sama sekali.
+ */
+function classifyBatteryFindings(answerArray, standard) {
+  if (!standard) return null;
+  let hasAny = false;
+  let hasFinding = false;
+  for (const cell of answerArray) {
+    if (typeof cell !== 'string') continue;
+    const vMatch = cell.match(/V:\s*([\d.,]+)/);
+    const rMatch = cell.match(/R:\s*([\d.,]+)/);
+    if (!vMatch || !rMatch) continue;
+    const v = parseFloat(vMatch[1].replace(',', '.'));
+    const r = parseFloat(rMatch[1].replace(',', '.'));
+    if (isNaN(v) || isNaN(r)) continue;
+    hasAny = true;
+    const isClass2V = v < 6; // baterai ~2V vs ~12V, dipisah dari nilai V yang diketik
+    const limit = isClass2V ? standard.class2V?.maxR : standard.class12V?.maxR;
+    if (limit !== undefined && r > limit) hasFinding = true;
+  }
+  if (!hasAny) return null;
+  return hasFinding ? 'Ada temuan' : 'Normal';
+}
+
+/**
  * Tulis 1 submission checksheet peralatan ke slot yang sesuai (kategori "monthly_slot"):
  * - kolom tanggal (dateCol) diisi tanggal pemeriksaan
  * - tiap item diisi ke kolom (atau rentang kolom, utk item tabel baterai) miliknya
@@ -167,12 +195,34 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
     const itemRow = computeItemRow(slotMap, itemCol, tanggal, isBatteryTable);
 
     if (isBatteryTable) {
-      // Jawaban berbentuk array (mis. tabel baterai V/R per unit) -> 1 nilai per kolom
+      // Jawaban berbentuk array (mis. tabel baterai V/R per unit) -> 1 nilai per kolom,
+      // ditulis di baris bulan yang persis (bukan anchor kuartal, lihat computeItemRow).
       const values = answer.map((v) => (typeof v === 'string' ? v : JSON.stringify(v)));
       data.push({
         range: `'${tabName}'!${colLetter(itemCol.colStart)}${itemRow}:${colLetter(itemCol.colStart + values.length - 1)}${itemRow}`,
         values: [values]
       });
+
+      // Selain data per-baterai, tulis juga RINGKASAN kuartalan ("Tgl: X Catatan:
+      // Normal/Ada temuan") ke baris ANCHOR kuartal (baris yang sama dgn item
+      // coarser lain di kategori ini) - kolom G di template asli punya sel
+      // gabungan lebar di baris itu khusus utk ringkasan begini. "Ada temuan"
+      // otomatis kalau ada baterai yang R-nya lewat batas standar kategori ini.
+      if (itemCol.periodMonths && itemCol.periodMonths > baseGridMonths(slotMap)) {
+        const summaryRow = computeItemRow(slotMap, itemCol, tanggal, false);
+        // Kalau bulan yang diisi kebetulan PAS bulan pertama kuartal, baris
+        // ringkasan = baris data individual (sama-sama di baris anchor) -
+        // jangan ditimpa dengan teks ringkasan, biarkan data per-baterainya.
+        if (summaryRow !== itemRow) {
+          const status = classifyBatteryFindings(answer, itemCol.batteryStandard);
+          if (status) {
+            data.push({
+              range: `'${tabName}'!${colLetter(itemCol.colStart)}${summaryRow}`,
+              values: [[`Tgl: ${formattedDate}\nCatatan:\n${status}`]]
+            });
+          }
+        }
+      }
     } else if (typeof answer === 'object' && answer.__rawText !== undefined) {
       // Item dengan format sendiri (mis. "Lokasi Uji Fungsi: ... Catatan: ...")
       // - ditulis apa adanya, TIDAK dibungkus prefix "Tgl: ..." otomatis.
