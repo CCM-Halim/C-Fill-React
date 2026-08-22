@@ -1,7 +1,6 @@
-// Kategori peralatan + slotMap + semua inputType khusus (battery_table,
-// measurement_ohm, status_ohm, measurement_multi, unit_value_table).
-// noTglPrefix diperbaiki menyeluruh (sempat hilang di 260 item akibat regenerasi
-// slotMap berkali-kali sebelumnya).
+// Kategori peralatan + slotMap + inputType khusus. Item battery_table punya
+// batteryStandard (batas resistansi per kelas tegangan) dipakai buat auto-
+// klasifikasi Normal/Ada temuan di ringkasan kuartalan (lihat sheetsApi.js).
 export const CATEGORIES = [
   {
     "id": "cat01",
@@ -582,7 +581,15 @@ export const CATEGORIES = [
         "inputType": "battery_table",
         "defaultBatteryCount": 24,
         "hasTglCatatan": true,
-        "periodMonths": 3
+        "periodMonths": 3,
+        "batteryStandard": {
+          "class12V": {
+            "maxR": 8
+          },
+          "class2V": {
+            "maxR": 0.8
+          }
+        }
       },
       {
         "id": "i7",
@@ -639,7 +646,15 @@ export const CATEGORIES = [
           "id": "i6",
           "colStart": 7,
           "colWidth": 12,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "batteryStandard": {
+            "class12V": {
+              "maxR": 8
+            },
+            "class2V": {
+              "maxR": 0.8
+            }
+          }
         },
         {
           "id": "i7",
@@ -663,7 +678,7 @@ export const CATEGORIES = [
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -671,7 +686,7 @@ export const CATEGORIES = [
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -679,7 +694,7 @@ export const CATEGORIES = [
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       }
     ],
     "periods": [
@@ -783,7 +798,15 @@ export const CATEGORIES = [
         "inputType": "battery_table",
         "defaultBatteryCount": 24,
         "hasTglCatatan": false,
-        "periodMonths": 3
+        "periodMonths": 3,
+        "batteryStandard": {
+          "class12V": {
+            "maxR": 8
+          },
+          "class2V": {
+            "maxR": 0.8
+          }
+        }
       },
       {
         "id": "i7",
@@ -840,7 +863,15 @@ export const CATEGORIES = [
           "id": "i6",
           "colStart": 7,
           "colWidth": 12,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "batteryStandard": {
+            "class12V": {
+              "maxR": 8
+            },
+            "class2V": {
+              "maxR": 0.8
+            }
+          }
         },
         {
           "id": "i7",
@@ -864,7 +895,7 @@ export const CATEGORIES = [
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -872,7 +903,7 @@ export const CATEGORIES = [
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -880,7 +911,7 @@ export const CATEGORIES = [
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       }
     ],
     "periods": [
@@ -984,7 +1015,15 @@ export const CATEGORIES = [
         "inputType": "battery_table",
         "defaultBatteryCount": 24,
         "hasTglCatatan": false,
-        "periodMonths": 3
+        "periodMonths": 3,
+        "batteryStandard": {
+          "class12V": {
+            "maxR": 8
+          },
+          "class2V": {
+            "maxR": 0.8
+          }
+        }
       },
       {
         "id": "i7",
@@ -1041,7 +1080,15 @@ export const CATEGORIES = [
           "id": "i6",
           "colStart": 7,
           "colWidth": 12,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "batteryStandard": {
+            "class12V": {
+              "maxR": 8
+            },
+            "class2V": {
+              "maxR": 0.8
+            }
+          }
         },
         {
           "id": "i7",
@@ -1065,7 +1112,7 @@ export const CATEGORIES = [
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -1073,7 +1120,7 @@ export const CATEGORIES = [
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -1081,7 +1128,7 @@ export const CATEGORIES = [
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       }
     ],
     "periods": [
@@ -1185,7 +1232,12 @@ export const CATEGORIES = [
         "inputType": "battery_table",
         "defaultBatteryCount": 24,
         "hasTglCatatan": false,
-        "periodMonths": 3
+        "periodMonths": 3,
+        "batteryStandard": {
+          "class12V": {
+            "maxR": 8
+          }
+        }
       }
     ],
     "periods": [
@@ -1234,7 +1286,12 @@ export const CATEGORIES = [
           "id": "i6",
           "colStart": 7,
           "colWidth": 12,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "batteryStandard": {
+            "class12V": {
+              "maxR": 8
+            }
+          }
         }
       ],
       "type": "monthly_slot"
@@ -1252,7 +1309,7 @@ export const CATEGORIES = [
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -1260,7 +1317,7 @@ export const CATEGORIES = [
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -1373,7 +1430,12 @@ export const CATEGORIES = [
         "inputType": "battery_table",
         "defaultBatteryCount": 24,
         "hasTglCatatan": false,
-        "periodMonths": 3
+        "periodMonths": 3,
+        "batteryStandard": {
+          "class12V": {
+            "maxR": 8
+          }
+        }
       }
     ],
     "periods": [
@@ -1422,7 +1484,12 @@ export const CATEGORIES = [
           "id": "i6",
           "colStart": 7,
           "colWidth": 12,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "batteryStandard": {
+            "class12V": {
+              "maxR": 8
+            }
+          }
         }
       ],
       "type": "monthly_slot"
@@ -1440,7 +1507,7 @@ export const CATEGORIES = [
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -1448,7 +1515,7 @@ export const CATEGORIES = [
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -1561,7 +1628,12 @@ export const CATEGORIES = [
         "inputType": "battery_table",
         "defaultBatteryCount": 24,
         "hasTglCatatan": true,
-        "periodMonths": 3
+        "periodMonths": 3,
+        "batteryStandard": {
+          "class12V": {
+            "maxR": 16
+          }
+        }
       }
     ],
     "periods": [
@@ -1610,7 +1682,12 @@ export const CATEGORIES = [
           "id": "i6",
           "colStart": 7,
           "colWidth": 12,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "batteryStandard": {
+            "class12V": {
+              "maxR": 16
+            }
+          }
         }
       ],
       "type": "monthly_slot"
@@ -1628,7 +1705,7 @@ export const CATEGORIES = [
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -1636,7 +1713,7 @@ export const CATEGORIES = [
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -1693,7 +1770,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -1701,7 +1778,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -1709,7 +1786,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i4",
@@ -1717,7 +1794,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i5",
@@ -1727,7 +1804,7 @@ export const CATEGORIES = [
         "inputType": "status_ohm",
         "unit": "Ω",
         "periodMonths": 3,
-        "noTglPrefix": true,
+        "noTglPrefix": false,
         "statusOptions": [
           "Hasil pemeriksaan baik",
           "Hasil pemeriksaan tidak baik"
@@ -1791,7 +1868,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": true,
         "periodMonths": 6,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -1799,7 +1876,7 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": true,
         "periodMonths": 6,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -2292,7 +2369,7 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan, status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -2300,7 +2377,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik, kabel rapi, dan label sesuai",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -2308,7 +2385,7 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i4",
@@ -2718,7 +2795,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik, status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -2726,7 +2803,7 @@ export const CATEGORIES = [
         "standar": "Hasil pengujian baik",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -2734,7 +2811,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i4",
@@ -2742,7 +2819,7 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i5",
@@ -2826,7 +2903,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik, status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -2834,7 +2911,7 @@ export const CATEGORIES = [
         "standar": "Hasil pengujian baik",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -2842,7 +2919,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i4",
@@ -2850,7 +2927,7 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i5",
@@ -3087,7 +3164,7 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan dan kipas beroperasi dengan baik",
         "hasTglCatatan": true,
         "periodMonths": 6,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -3095,7 +3172,7 @@ export const CATEGORIES = [
         "standar": "Koneksi kuat dan labelnya benar",
         "hasTglCatatan": true,
         "periodMonths": 6,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -3375,7 +3452,7 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan dan kipas beroperasi dengan baik",
         "hasTglCatatan": true,
         "periodMonths": 6,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -3383,7 +3460,7 @@ export const CATEGORIES = [
         "standar": "Koneksi kuat dan labelnya benar",
         "hasTglCatatan": true,
         "periodMonths": 6,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -3663,7 +3740,7 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan dan kipas beroperasi dengan baik",
         "hasTglCatatan": true,
         "periodMonths": 6,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -3671,7 +3748,7 @@ export const CATEGORIES = [
         "standar": "Koneksi kuat dan labelnya benar",
         "hasTglCatatan": true,
         "periodMonths": 6,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -4761,7 +4838,7 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -4769,7 +4846,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -4777,7 +4854,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik dan sudah dibersihkan",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i4",
@@ -4868,7 +4945,7 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan,pemeriksaan status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -4876,7 +4953,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan kabel rapi dan label sesuai",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -4933,7 +5010,7 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan,pemeriksaan status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -4941,7 +5018,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan kabel rapi dan label sesuai",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -4997,7 +5074,7 @@ export const CATEGORIES = [
         "label": "Pemeriksaan tampilan struktur tower, anchors dan baut (3 bulan)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true,
+        "noTglPrefix": false,
         "periodMonths": 3
       },
       {
@@ -5005,7 +5082,7 @@ export const CATEGORIES = [
         "label": "Pemeriksaan kondisi pondasi tower dan lingkungan sekitar (3 bulan)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true,
+        "noTglPrefix": false,
         "periodMonths": 3
       },
       {
@@ -5013,7 +5090,7 @@ export const CATEGORIES = [
         "label": "Pemeriksaan koneksi ground (3 bulan)",
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
         "hasTglCatatan": false,
-        "noTglPrefix": true,
+        "noTglPrefix": false,
         "periodMonths": 3
       },
       {
@@ -5021,7 +5098,7 @@ export const CATEGORIES = [
         "label": "Pemeriksaan lampu tanda penerbangan dan tanda peringatan keselamatan (3 bulan)",
         "standar": "Hasil pemeriksaan lampu dalam kondisi baik",
         "hasTglCatatan": false,
-        "noTglPrefix": true,
+        "noTglPrefix": false,
         "periodMonths": 3
       }
     ],
@@ -5076,7 +5153,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan dalam keadaan baik",
         "hasTglCatatan": true,
         "periodMonths": 6,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -5084,7 +5161,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan dalam keadaan baik",
         "hasTglCatatan": true,
         "periodMonths": 6,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -5169,7 +5246,7 @@ export const CATEGORIES = [
         "standar": "Status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -5177,7 +5254,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -5185,7 +5262,7 @@ export const CATEGORIES = [
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i4",
@@ -5291,7 +5368,7 @@ export const CATEGORIES = [
         "standar": "Status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -5299,7 +5376,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -5307,7 +5384,7 @@ export const CATEGORIES = [
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i4",
@@ -5413,7 +5490,7 @@ export const CATEGORIES = [
         "standar": "Status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -5421,7 +5498,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -5429,7 +5506,7 @@ export const CATEGORIES = [
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i4",
@@ -5535,7 +5612,7 @@ export const CATEGORIES = [
         "standar": "Status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -5543,7 +5620,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -5551,7 +5628,7 @@ export const CATEGORIES = [
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i4",
@@ -5657,7 +5734,7 @@ export const CATEGORIES = [
         "standar": "Status operasi normal dan tidak ada alarm",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -5665,7 +5742,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -5673,7 +5750,7 @@ export const CATEGORIES = [
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i4",
@@ -5937,7 +6014,7 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihan dan kipas berfungsi dengan baik",
         "hasTglCatatan": true,
         "periodMonths": 6,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
@@ -5945,7 +6022,7 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik, koneksi kuat dan label benar",
         "hasTglCatatan": true,
         "periodMonths": 6,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -6043,14 +6120,14 @@ export const CATEGORIES = [
         "label": "Pembersihan permukaan server, penyimpanan, peralatan switching jaringan dan peralatan lainnya, pembersihan kipas dan pemeriksaan status operasi (3 bulan)",
         "standar": "Sudah dibersihkan, status operasi normal",
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i2",
         "label": "Verifikasi alamat IP camera dengan ledger (buku besar) （3 bulan）",
         "standar": "Alamat IP sesuai dengan buku besar",
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       },
       {
         "id": "i3",
@@ -6059,7 +6136,7 @@ export const CATEGORIES = [
         "inputType": "measurement_ohm",
         "unit": "Ω",
         "periodMonths": 3,
-        "noTglPrefix": true
+        "noTglPrefix": false
       }
     ],
     "periods": [
