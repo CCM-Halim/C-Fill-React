@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import { IconDashboard, IconClipboard, IconGauge, IconUpload, IconLogout, IconBolt, IconCheckShield } from './Icons';
+import { IconDashboard, IconClipboard, IconGauge, IconUpload, IconLogout, IconBolt, IconCheckShield, IconLogInOut } from './Icons';
 
 const NAV_ITEMS = [
   { to: '/', end: true, icon: IconDashboard, label: 'Dashboard' },
   { to: '/peralatan', end: false, icon: IconClipboard, label: 'Peralatan' },
   { to: '/instrumen', end: false, icon: IconGauge, label: 'Instrumen' },
+  { to: '/entry-exit', end: false, icon: IconLogInOut, label: 'EntryExit' },
   { to: '/dokumentasi', end: false, icon: IconUpload, label: 'Dokumentasi' }
 ];
 
@@ -16,7 +17,8 @@ const LABELS = {
   Peralatan: 'Checksheet Peralatan',
   Instrumen: 'Checksheet Instrumen',
   Dokumentasi: 'Upload Dokumentasi',
-  Verifikasi: 'Verifikasi Pekerjaan'
+  Verifikasi: 'Verifikasi Pekerjaan',
+  EntryExit: 'Entry/Exit Log'
 };
 
 export default function Sidebar() {

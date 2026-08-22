@@ -62,6 +62,16 @@ export function IconCheckShield() {
   );
 }
 
+export function IconLogInOut() {
+  return (
+    <svg {...common}>
+      <path d="M9 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4" />
+      <path d="M15 16l4-4-4-4" />
+      <path d="M19 12H9" />
+    </svg>
+  );
+}
+
 export function IconArrowLeft() {
   return (
     <svg {...common}>

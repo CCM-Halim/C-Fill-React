@@ -36,35 +36,46 @@ export default function MeasurementMultiInput({ fields, value, onChange }) {
   }
 
   return (
-    <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-      {fields.map((f) => (
-        <div key={f.id} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <label style={{ fontSize: 11.5, color: 'var(--ink-soft)', fontWeight: 600 }}>{f.label}</label>
-          {f.type === 'select' ? (
-            <select
-              className="input"
-              style={{ width: 110 }}
-              value={local[f.id] || ''}
-              onChange={(e) => updateField(f.id, e.target.value)}
-            >
-              <option value="">-- pilih --</option>
-              {f.options.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
-            </select>
-          ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <input
+    <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end' }}>
+      {fields.map((f) => {
+        if (f.type === 'section') {
+          // Label section statis (mis. "Output:") - bukan field isian, cuma
+          // penanda visual biar teknisi tau bagian mana yang lagi diisi.
+          return (
+            <div key={f.id} style={{ alignSelf: 'flex-end', paddingBottom: 9, fontSize: 12.5, fontWeight: 700, color: 'var(--ink-soft)' }}>
+              {f.label}:
+            </div>
+          );
+        }
+        return (
+          <div key={f.id} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <label style={{ fontSize: 11.5, color: 'var(--ink-soft)', fontWeight: 600 }}>{f.label}</label>
+            {f.type === 'select' ? (
+              <select
                 className="input"
-                style={{ width: 100, textAlign: 'right', fontFamily: "'IBM Plex Mono',monospace" }}
-                placeholder="0"
+                style={{ minWidth: 110 }}
                 value={local[f.id] || ''}
                 onChange={(e) => updateField(f.id, e.target.value)}
-                inputMode="decimal"
-              />
-              <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-soft)' }}>{f.unit}</span>
-            </div>
-          )}
-        </div>
-      ))}
+              >
+                <option value="">-- pilih --</option>
+                {f.options.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
+              </select>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <input
+                  className="input"
+                  style={{ width: 100, textAlign: 'right', fontFamily: "'IBM Plex Mono',monospace" }}
+                  placeholder="0"
+                  value={local[f.id] || ''}
+                  onChange={(e) => updateField(f.id, e.target.value)}
+                  inputMode="decimal"
+                />
+                <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-soft)' }}>{f.unit}</span>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -73,15 +84,19 @@ export default function MeasurementMultiInput({ fields, value, onChange }) {
  * Gabungkan nilai multi-field jadi 1 string buat disimpan ke Google Sheet,
  * dipisah BARIS BARU (bukan spasi) supaya tampil vertikal sesuai pola data
  * lama di template asli, mis:
- *   V: 53.8 V
- *   I: 19 A
+ *   Status: Normal
+ *   Output:
+ *   V: 220 V
+ *   I: 1,1 A
+ * Field bertipe 'section' tampil sebagai baris label saja (tanpa nilai).
  */
 export function serializeMeasurementMulti(fields, value) {
   const current = value || {};
-  const hasAny = fields.some((f) => current[f.id]);
+  const hasAny = fields.some((f) => f.type !== 'section' && current[f.id]);
   if (!hasAny) return '';
   return fields
     .map((f) => {
+      if (f.type === 'section') return `${f.label}:`;
       const prefix = f.prefix || f.label;
       const val = current[f.id] || '-';
       const unit = f.unit ? ' ' + f.unit : '';
