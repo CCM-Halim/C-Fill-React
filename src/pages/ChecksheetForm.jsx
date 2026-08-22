@@ -6,6 +6,7 @@ import { submitChecksheet, previewSlot } from '../lib/cfillService';
 import { useToast } from '../components/Toast';
 import BatteryTable from '../components/BatteryTable';
 import MeasurementInput, { serializeMeasurement } from '../components/MeasurementInput';
+import StatusMeasurementInput, { serializeStatusMeasurement } from '../components/StatusMeasurementInput';
 import MeasurementMultiInput, { serializeMeasurementMulti } from '../components/MeasurementMultiInput';
 import UnitValueTable, { serializeUnitValueTable } from '../components/UnitValueTable';
 
@@ -59,6 +60,10 @@ export default function ChecksheetForm() {
 
   function setMeasurementAnswer(itemId, rawValue, unit) {
     setAnswers((prev) => ({ ...prev, [itemId]: serializeMeasurement(rawValue, unit), [itemId + '__raw']: rawValue }));
+  }
+
+  function setStatusMeasurementAnswer(itemId, rawValue, unit) {
+    setAnswers((prev) => ({ ...prev, [itemId]: serializeStatusMeasurement(rawValue, unit), [itemId + '__raw']: rawValue }));
   }
 
   function setMeasurementMultiAnswer(itemId, fields, rawValue) {
@@ -157,6 +162,16 @@ export default function ChecksheetForm() {
                   unit={it.unit || 'Ω'}
                   value={answers[it.id + '__raw']}
                   onChange={(val) => setMeasurementAnswer(it.id, val, it.unit || 'Ω')}
+                />
+              </>
+            ) : it.inputType === 'status_ohm' ? (
+              <>
+                <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
+                <StatusMeasurementInput
+                  statusOptions={it.statusOptions}
+                  unit={it.unit || 'Ω'}
+                  value={answers[it.id + '__raw']}
+                  onChange={(val) => setStatusMeasurementAnswer(it.id, val, it.unit || 'Ω')}
                 />
               </>
             ) : it.inputType === 'measurement_multi' ? (
