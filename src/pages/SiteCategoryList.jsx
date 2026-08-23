@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getCategoriesForSite } from '../lib/cfillService';
+import { getCategoriesForSite, checkEntryExitFilledThisMonth } from '../lib/cfillService';
+import EntryExitForm from '../components/EntryExitForm';
 
 export default function SiteCategoryList() {
   const { buildingCategory, siteName } = useParams();
@@ -8,12 +9,54 @@ export default function SiteCategoryList() {
   const decodedSite = decodeURIComponent(siteName);
   const categories = getCategoriesForSite(decodedSite);
 
+  const [entryExitStatus, setEntryExitStatus] = useState(null); // null = loading, {filled, sheetUrl}, atau {error}
+
+  useEffect(() => {
+    setEntryExitStatus(null);
+    checkEntryExitFilledThisMonth(decodedBc, decodedSite)
+      .then(setEntryExitStatus)
+      .catch((e) => setEntryExitStatus({ error: e.message }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [decodedBc, decodedSite]);
+
+  const breadcrumb = (
+    <div className="breadcrumb">
+      <Link to="/peralatan">Checksheet Peralatan</Link> /{' '}
+      <Link to={`/peralatan/${buildingCategory}`}>{decodedBc}</Link> / {decodedSite}
+    </div>
+  );
+
+  if (entryExitStatus === null) {
+    return (
+      <section>
+        {breadcrumb}
+        <div className="muted">Memeriksa status Entry/Exit Registration bulan ini...</div>
+      </section>
+    );
+  }
+
+  if (entryExitStatus.error) {
+    // Gagal cek status - jangan blokir user, langsung tampilkan checksheet
+    // seperti biasa (fail-open), tapi kasih tau ada masalah di background.
+    console.warn('Gagal cek status Entry/Exit:', entryExitStatus.error);
+  }
+
+  if (!entryExitStatus.error && !entryExitStatus.filled) {
+    return (
+      <section>
+        {breadcrumb}
+        <EntryExitForm
+          site={{ buildingCategory: decodedBc, siteName: decodedSite }}
+          mandatory
+          onSuccess={() => setEntryExitStatus({ filled: true, sheetUrl: entryExitStatus.sheetUrl })}
+        />
+      </section>
+    );
+  }
+
   return (
     <section>
-      <div className="breadcrumb">
-        <Link to="/peralatan">Checksheet Peralatan</Link> /{' '}
-        <Link to={`/peralatan/${buildingCategory}`}>{decodedBc}</Link> / {decodedSite}
-      </div>
+      {breadcrumb}
       <div className="grid grid-3 card-grid">
         {categories.map((c) => (
           <Link

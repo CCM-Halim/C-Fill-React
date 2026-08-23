@@ -7,6 +7,8 @@ import { useToast } from '../components/Toast';
 import BatteryTable from '../components/BatteryTable';
 import MeasurementInput, { serializeMeasurement } from '../components/MeasurementInput';
 import StatusMeasurementInput, { serializeStatusMeasurement } from '../components/StatusMeasurementInput';
+import SensorChecklistInput, { serializeSensorChecklist } from '../components/SensorChecklistInput';
+import StatusOnlyInput from '../components/StatusOnlyInput';
 import MeasurementMultiInput, { serializeMeasurementMulti } from '../components/MeasurementMultiInput';
 import UnitValueTable, { serializeUnitValueTable } from '../components/UnitValueTable';
 
@@ -64,6 +66,18 @@ export default function ChecksheetForm() {
 
   function setStatusMeasurementAnswer(itemId, rawValue, unit) {
     setAnswers((prev) => ({ ...prev, [itemId]: serializeStatusMeasurement(rawValue, unit), [itemId + '__raw']: rawValue }));
+  }
+
+  function setSensorChecklistAnswer(itemId, sensors, rawValue) {
+    setAnswers((prev) => ({ ...prev, [itemId]: serializeSensorChecklist(sensors, rawValue), [itemId + '__raw']: rawValue }));
+  }
+
+  function setStatusOnlyAnswer(itemId, value, noTglPrefix) {
+    if (noTglPrefix) {
+      setAnswers((prev) => ({ ...prev, [itemId]: value ? { __rawText: value } : null, [itemId + '__raw']: value }));
+    } else {
+      setAnswers((prev) => ({ ...prev, [itemId]: value, [itemId + '__raw']: value }));
+    }
   }
 
   function setMeasurementMultiAnswer(itemId, fields, rawValue) {
@@ -191,6 +205,27 @@ export default function ChecksheetForm() {
                   defaultCount={it.defaultUnitCount || 4}
                   value={answers[it.id + '__raw']}
                   onChange={(rows) => setUnitValueTableAnswer(it.id, rows, it.unit || 'A')}
+                />
+              </>
+            ) : it.inputType === 'sensor_checklist' ? (
+              <>
+                <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
+                <SensorChecklistInput
+                  sensors={it.sensors}
+                  statusOptions={it.statusOptions}
+                  value={answers[it.id + '__raw']}
+                  onChange={(val) => setSensorChecklistAnswer(it.id, it.sensors, val)}
+                />
+              </>
+            ) : it.inputType === 'status_only' ? (
+              <>
+                {!it.noTglPrefix && (
+                  <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
+                )}
+                <StatusOnlyInput
+                  options={it.statusOptions}
+                  value={answers[it.id + '__raw']}
+                  onChange={(val) => setStatusOnlyAnswer(it.id, val, it.noTglPrefix)}
                 />
               </>
             ) : (
