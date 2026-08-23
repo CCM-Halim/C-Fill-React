@@ -315,6 +315,16 @@ export async function findNextEmptyRow(spreadsheetId, tabName, startRow, checkCo
 }
 
 /**
+ * Baca kolom Tanggal (kolom B) dari baris tertentu s/d baris tertentu - dipakai
+ * buat cek apakah "Entry and exit registration" sudah pernah diisi bulan ini.
+ */
+export async function readEntryExitDates(spreadsheetId, tabName, startRow, endRow) {
+  if (endRow < startRow) return [];
+  const data = await sheetsFetch(`/${spreadsheetId}/values/${encodeURIComponent(`'${tabName}'!B${startRow}:B${endRow}`)}`);
+  return (data.values || []).map((r) => r[0]);
+}
+
+/**
  * Tulis 1 baris log "Entry and exit registration" ke baris kosong berikutnya.
  */
 export async function writeEntryExitRow(spreadsheetId, tabName, row, entry) {
