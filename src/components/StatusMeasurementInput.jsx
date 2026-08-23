@@ -7,7 +7,7 @@ import React from 'react';
  * Dipakai buat item yang standarnya gabungan status kualitatif + nilai ukur,
  * mis. "Hasil pemeriksaan baik dan 0.5Ω".
  */
-export default function StatusMeasurementInput({ statusOptions, unit, value, onChange, connector = 'dan' }) {
+export default function StatusMeasurementInput({ statusOptions, unit, value, onChange, connector = 'dan hasil pengukuran' }) {
   const current = value || { status: '', nilai: '' };
 
   function update(field, val) {
@@ -48,9 +48,10 @@ export default function StatusMeasurementInput({ statusOptions, unit, value, onC
 }
 
 /**
- * Gabungkan status + nilai jadi 1 string, format: "Hasil pemeriksaan baik dan 0.5Ω"
+ * Gabungkan status + nilai jadi 1 string, format: "Hasil pemeriksaan baik dan
+ * hasil pengukuran 0.5Ω" - sesuai pola persis di data historis asli.
  */
-export function serializeStatusMeasurement(value, unit, connector = 'dan') {
+export function serializeStatusMeasurement(value, unit, connector = 'dan hasil pengukuran') {
   if (!value) return '';
   const status = value.status || '';
   const nilai = value.nilai || '';
