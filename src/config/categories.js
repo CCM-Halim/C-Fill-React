@@ -1,6 +1,8 @@
-// Kategori peralatan + slotMap + inputType khusus. Item battery_table punya
-// batteryStandard (batas resistansi per kelas tegangan) dipakai buat auto-
-// klasifikasi Normal/Ada temuan di ringkasan kuartalan (lihat sheetsApi.js).
+// Kategori peralatan + slotMap + semua inputType khusus: battery_table,
+// measurement_ohm (V atau Ω tunggal), status_ohm (dropdown+Ω, semua item
+// grounding sudah konsisten pakai ini), measurement_multi, unit_value_table,
+// sensor_checklist (daftar sensor bernama, vertikal), status_only (dropdown
+// polos, mis. Normal/Tidak Normal).
 export const CATEGORIES = [
   {
     "id": "cat01",
@@ -2158,10 +2160,14 @@ export const CATEGORIES = [
         "label": "Pemeriksaan dan pengukuran nilai resistansi grounding (1 tahun)",
         "standar": "Tidak lebih dari 1Ω",
         "hasTglCatatan": true,
-        "inputType": "measurement_ohm",
+        "inputType": "status_ohm",
         "unit": "Ω",
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "statusOptions": [
+          "Hasil pemeriksaan baik",
+          "Hasil pemeriksaan tidak baik"
+        ]
       }
     ],
     "periods": [
@@ -4188,7 +4194,13 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "status_ohm",
+        "statusOptions": [
+          "Hasil pemeriksaan baik",
+          "Hasil pemeriksaan tidak baik"
+        ],
+        "unit": "Ω"
       },
       {
         "id": "i10",
@@ -4356,7 +4368,12 @@ export const CATEGORIES = [
         "standar": "Gunakan compas untuk menyesuaikan dengan database BTS",
         "hasTglCatatan": true,
         "periodMonths": 6,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "status_only",
+        "statusOptions": [
+          "Normal",
+          "Tidak Normal"
+        ]
       },
       {
         "id": "i7",
@@ -4526,17 +4543,26 @@ export const CATEGORIES = [
         "standar": "Berkordinasi dengan NMC",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "status_only",
+        "statusOptions": [
+          "Normal",
+          "Tidak Normal"
+        ]
       },
       {
         "id": "i6",
         "label": "Pemeriksaan dan pengukuran grounding peralatan serta catat nilainya (1 Tahun)",
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
         "hasTglCatatan": true,
-        "inputType": "measurement_ohm",
+        "inputType": "status_ohm",
         "unit": "Ω",
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "statusOptions": [
+          "Hasil pemeriksaan baik",
+          "Hasil pemeriksaan tidak baik"
+        ]
       }
     ],
     "periods": [
@@ -4628,7 +4654,20 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "sensor_checklist",
+        "sensors": [
+          "Smoke Sensor",
+          "Water immersion",
+          "Light control",
+          "Infrared",
+          "Door sensor",
+          "Temperature & humidity"
+        ],
+        "statusOptions": [
+          "Hasil pemeriksaan baik dan koneksi kuat",
+          "Hasil pemeriksaan tidak baik"
+        ]
       },
       {
         "id": "i5",
@@ -4636,17 +4675,26 @@ export const CATEGORIES = [
         "standar": "Berkordinasi dengan NMC",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "status_only",
+        "statusOptions": [
+          "Normal",
+          "Tidak Normal"
+        ]
       },
       {
         "id": "i6",
         "label": "Pemeriksaan dan pengukuran grounding peralatan serta catat nilainya (1 tahun)",
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
         "hasTglCatatan": true,
-        "inputType": "measurement_ohm",
+        "inputType": "status_ohm",
         "unit": "Ω",
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "statusOptions": [
+          "Hasil pemeriksaan baik",
+          "Hasil pemeriksaan tidak baik"
+        ]
       }
     ],
     "periods": [
@@ -4754,17 +4802,26 @@ export const CATEGORIES = [
         "standar": "Berkordinasi dengan NMC",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "status_only",
+        "statusOptions": [
+          "Normal",
+          "Tidak Normal"
+        ]
       },
       {
         "id": "i7",
         "label": "Pemeriksaan dan pengukuran grounding peralatan serta catat nilainya (1 Tahun)",
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
         "hasTglCatatan": true,
-        "inputType": "measurement_ohm",
+        "inputType": "status_ohm",
         "unit": "Ω",
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "statusOptions": [
+          "Hasil pemeriksaan baik",
+          "Hasil pemeriksaan tidak baik"
+        ]
       }
     ],
     "periods": [
@@ -4862,7 +4919,9 @@ export const CATEGORIES = [
         "standar": "53V-54V",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_ohm",
+        "unit": "V"
       },
       {
         "id": "i5",
@@ -6133,10 +6192,14 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan proteksi petir dan grounding （3 bulan）",
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
-        "inputType": "measurement_ohm",
+        "inputType": "status_ohm",
         "unit": "Ω",
         "periodMonths": 3,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "statusOptions": [
+          "Hasil pemeriksaan baik",
+          "Hasil pemeriksaan tidak baik"
+        ]
       }
     ],
     "periods": [
