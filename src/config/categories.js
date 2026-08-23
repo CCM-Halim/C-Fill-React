@@ -1,8 +1,6 @@
-// Kategori peralatan + slotMap + semua inputType khusus: battery_table,
-// measurement_ohm (V atau Ω tunggal), status_ohm (dropdown+Ω, semua item
-// grounding sudah konsisten pakai ini), measurement_multi, unit_value_table,
-// sensor_checklist (daftar sensor bernama, vertikal), status_only (dropdown
-// polos, mis. Normal/Tidak Normal).
+// Kategori peralatan + slotMap + semua inputType khusus (battery_table,
+// measurement_ohm, status_ohm, measurement_multi, unit_value_table,
+// sensor_checklist, status_only, pemadaman).
 export const CATEGORIES = [
   {
     "id": "cat01",
@@ -680,7 +678,30 @@ export const CATEGORIES = [
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          },
+          {
+            "id": "pelaksanaan",
+            "label": "Pelaksanaan",
+            "prefix": "Pelaksanaan",
+            "type": "select",
+            "options": [
+              "Telah dilakukan discharge test dengan beban aktual",
+              "Belum dilakukan discharge test dengan beban aktual"
+            ]
+          }
+        ]
       },
       {
         "id": "i2",
@@ -688,7 +709,30 @@ export const CATEGORIES = [
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          },
+          {
+            "id": "jenis",
+            "label": "Jenis Baterai",
+            "prefix": "Jenis Baterai",
+            "type": "select",
+            "options": [
+              "2V (standar: kurang dari 90mV)",
+              "12V (standar: kurang dari 480mV)"
+            ]
+          }
+        ]
       },
       {
         "id": "i3",
@@ -696,7 +740,30 @@ export const CATEGORIES = [
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          },
+          {
+            "id": "jenis",
+            "label": "Jenis Baterai",
+            "prefix": "Jenis Baterai",
+            "type": "select",
+            "options": [
+              "2V",
+              "12V"
+            ]
+          }
+        ]
       }
     ],
     "periods": [
@@ -897,7 +964,30 @@ export const CATEGORIES = [
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          },
+          {
+            "id": "pelaksanaan",
+            "label": "Pelaksanaan",
+            "prefix": "Pelaksanaan",
+            "type": "select",
+            "options": [
+              "Telah dilakukan discharge test dengan beban aktual",
+              "Belum dilakukan discharge test dengan beban aktual"
+            ]
+          }
+        ]
       },
       {
         "id": "i2",
@@ -905,7 +995,30 @@ export const CATEGORIES = [
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          },
+          {
+            "id": "jenis",
+            "label": "Jenis Baterai",
+            "prefix": "Jenis Baterai",
+            "type": "select",
+            "options": [
+              "2V (standar: kurang dari 90mV)",
+              "12V (standar: kurang dari 480mV)"
+            ]
+          }
+        ]
       },
       {
         "id": "i3",
@@ -913,7 +1026,30 @@ export const CATEGORIES = [
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          },
+          {
+            "id": "jenis",
+            "label": "Jenis Baterai",
+            "prefix": "Jenis Baterai",
+            "type": "select",
+            "options": [
+              "2V",
+              "12V"
+            ]
+          }
+        ]
       }
     ],
     "periods": [
@@ -1114,7 +1250,30 @@ export const CATEGORIES = [
         "standar": "Lakukan discharge test dengan beban aktual, melepaskan 30%-40% dari kapasitas nominal baterai",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          },
+          {
+            "id": "pelaksanaan",
+            "label": "Pelaksanaan",
+            "prefix": "Pelaksanaan",
+            "type": "select",
+            "options": [
+              "Telah dilakukan discharge test dengan beban aktual",
+              "Belum dilakukan discharge test dengan beban aktual"
+            ]
+          }
+        ]
       },
       {
         "id": "i2",
@@ -1122,7 +1281,30 @@ export const CATEGORIES = [
         "standar": "2V : Kurang dari 90mV 12V : Kurang dari 480mV",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          },
+          {
+            "id": "jenis",
+            "label": "Jenis Baterai",
+            "prefix": "Jenis Baterai",
+            "type": "select",
+            "options": [
+              "2V (standar: kurang dari 90mV)",
+              "12V (standar: kurang dari 480mV)"
+            ]
+          }
+        ]
       },
       {
         "id": "i3",
@@ -1130,7 +1312,30 @@ export const CATEGORIES = [
         "standar": "2V : 6 tahun sekali 12V : 3 Tahun sekali",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          },
+          {
+            "id": "jenis",
+            "label": "Jenis Baterai",
+            "prefix": "Jenis Baterai",
+            "type": "select",
+            "options": [
+              "2V",
+              "12V"
+            ]
+          }
+        ]
       }
     ],
     "periods": [
@@ -3025,7 +3230,37 @@ export const CATEGORIES = [
         "standar": "Status normal dan catat tegangan output",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
+        "periodMonths": 1,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          },
+          {
+            "id": "output_header",
+            "label": "Output",
+            "type": "section"
+          },
+          {
+            "id": "v",
+            "label": "Tegangan (V)",
+            "prefix": "V",
+            "unit": "V"
+          },
+          {
+            "id": "i",
+            "label": "Arus (I)",
+            "prefix": "I",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i3",
@@ -3083,7 +3318,8 @@ export const CATEGORIES = [
         "standar": "Hasil pengujian baik",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "pemadaman"
       },
       {
         "id": "i8",
@@ -3194,7 +3430,26 @@ export const CATEGORIES = [
         "standar": "Pembatasan arus pengisian baterai adalah 1/10 dari kapasitas baterai",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "nilai",
+            "label": "Current Limiting",
+            "prefix": "Current Limiting",
+            "unit": "A"
+          },
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          }
+        ]
       },
       {
         "id": "i5",
@@ -3202,7 +3457,22 @@ export const CATEGORIES = [
         "standar": "Circuit Breaker minimal bernilai 1,5 kali arus pengukuran",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "hasil_ukur",
+            "label": "Arus Hasil Pengukuran",
+            "prefix": "Arus Hasil Pengukuran",
+            "unit": "A"
+          },
+          {
+            "id": "maks_mcb",
+            "label": "Arus Maksimal MCB/CB",
+            "prefix": "Arus Maksimal MCB/CB",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i6",
@@ -3218,7 +3488,12 @@ export const CATEGORIES = [
         "standar": "Alarm batas bawah tegangan rendah ditetapkan 48V",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "status_only",
+        "statusOptions": [
+          "Sesuai",
+          "Tidak sesuai"
+        ]
       },
       {
         "id": "i8",
@@ -3313,7 +3588,37 @@ export const CATEGORIES = [
         "standar": "Status normal dan catat tegangan output",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
+        "periodMonths": 1,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          },
+          {
+            "id": "output_header",
+            "label": "Output",
+            "type": "section"
+          },
+          {
+            "id": "v",
+            "label": "Tegangan (V)",
+            "prefix": "V",
+            "unit": "V"
+          },
+          {
+            "id": "i",
+            "label": "Arus (I)",
+            "prefix": "I",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i3",
@@ -3371,7 +3676,8 @@ export const CATEGORIES = [
         "standar": "Hasil pengujian baik",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "pemadaman"
       },
       {
         "id": "i8",
@@ -3482,7 +3788,26 @@ export const CATEGORIES = [
         "standar": "Pembatasan arus pengisian baterai adalah 1/10 dari kapasitas baterai",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "nilai",
+            "label": "Current Limiting",
+            "prefix": "Current Limiting",
+            "unit": "A"
+          },
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          }
+        ]
       },
       {
         "id": "i5",
@@ -3490,7 +3815,22 @@ export const CATEGORIES = [
         "standar": "Circuit Breaker minimal bernilai 1,5 kali arus pengukuran",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "hasil_ukur",
+            "label": "Arus Hasil Pengukuran",
+            "prefix": "Arus Hasil Pengukuran",
+            "unit": "A"
+          },
+          {
+            "id": "maks_mcb",
+            "label": "Arus Maksimal MCB/CB",
+            "prefix": "Arus Maksimal MCB/CB",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i6",
@@ -3506,7 +3846,12 @@ export const CATEGORIES = [
         "standar": "Alarm batas bawah tegangan rendah ditetapkan 48V",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "status_only",
+        "statusOptions": [
+          "Sesuai",
+          "Tidak sesuai"
+        ]
       },
       {
         "id": "i8",
@@ -3601,7 +3946,37 @@ export const CATEGORIES = [
         "standar": "Status normal dan catat tegangan output",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
+        "periodMonths": 1,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          },
+          {
+            "id": "output_header",
+            "label": "Output",
+            "type": "section"
+          },
+          {
+            "id": "v",
+            "label": "Tegangan (V)",
+            "prefix": "V",
+            "unit": "V"
+          },
+          {
+            "id": "i",
+            "label": "Arus (I)",
+            "prefix": "I",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i3",
@@ -3659,7 +4034,8 @@ export const CATEGORIES = [
         "standar": "Hasil pengujian baik",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "pemadaman"
       },
       {
         "id": "i8",
@@ -3770,7 +4146,26 @@ export const CATEGORIES = [
         "standar": "Pembatasan arus pengisian baterai adalah 1/10 dari kapasitas baterai",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "nilai",
+            "label": "Current Limiting",
+            "prefix": "Current Limiting",
+            "unit": "A"
+          },
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "select",
+            "options": [
+              "Normal",
+              "Tidak Normal"
+            ]
+          }
+        ]
       },
       {
         "id": "i5",
@@ -3778,7 +4173,22 @@ export const CATEGORIES = [
         "standar": "Circuit Breaker minimal bernilai 1,5 kali arus pengukuran",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "hasil_ukur",
+            "label": "Arus Hasil Pengukuran",
+            "prefix": "Arus Hasil Pengukuran",
+            "unit": "A"
+          },
+          {
+            "id": "maks_mcb",
+            "label": "Arus Maksimal MCB/CB",
+            "prefix": "Arus Maksimal MCB/CB",
+            "unit": "A"
+          }
+        ]
       },
       {
         "id": "i6",
@@ -3794,7 +4204,12 @@ export const CATEGORIES = [
         "standar": "Alarm batas bawah tegangan rendah ditetapkan 48V",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "status_only",
+        "statusOptions": [
+          "Sesuai",
+          "Tidak sesuai"
+        ]
       },
       {
         "id": "i8",
@@ -5150,7 +5565,13 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 1Ω",
         "hasTglCatatan": false,
         "noTglPrefix": false,
-        "periodMonths": 3
+        "periodMonths": 3,
+        "inputType": "status_ohm",
+        "statusOptions": [
+          "Hasil pemeriksaan baik",
+          "Hasil pemeriksaan tidak baik"
+        ],
+        "unit": "Ω"
       },
       {
         "id": "i4",
@@ -5236,7 +5657,13 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik dan tidak lebih dari 10Ω",
         "hasTglCatatan": true,
         "periodMonths": 12,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "status_ohm",
+        "statusOptions": [
+          "Hasil pemeriksaan baik",
+          "Hasil pemeriksaan tidak baik"
+        ],
+        "unit": "Ω"
       },
       {
         "id": "i5",
