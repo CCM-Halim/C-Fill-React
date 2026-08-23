@@ -9,6 +9,7 @@ import MeasurementInput, { serializeMeasurement } from '../components/Measuremen
 import StatusMeasurementInput, { serializeStatusMeasurement } from '../components/StatusMeasurementInput';
 import SensorChecklistInput, { serializeSensorChecklist } from '../components/SensorChecklistInput';
 import StatusOnlyInput from '../components/StatusOnlyInput';
+import PemadamanInput, { serializePemadaman } from '../components/PemadamanInput';
 import MeasurementMultiInput, { serializeMeasurementMulti } from '../components/MeasurementMultiInput';
 import UnitValueTable, { serializeUnitValueTable } from '../components/UnitValueTable';
 
@@ -70,6 +71,10 @@ export default function ChecksheetForm() {
 
   function setSensorChecklistAnswer(itemId, sensors, rawValue) {
     setAnswers((prev) => ({ ...prev, [itemId]: serializeSensorChecklist(sensors, rawValue), [itemId + '__raw']: rawValue }));
+  }
+
+  function setPemadamanAnswer(itemId, rawValue) {
+    setAnswers((prev) => ({ ...prev, [itemId]: serializePemadaman(rawValue), [itemId + '__raw']: rawValue }));
   }
 
   function setStatusOnlyAnswer(itemId, value, noTglPrefix) {
@@ -215,6 +220,14 @@ export default function ChecksheetForm() {
                   statusOptions={it.statusOptions}
                   value={answers[it.id + '__raw']}
                   onChange={(val) => setSensorChecklistAnswer(it.id, it.sensors, val)}
+                />
+              </>
+            ) : it.inputType === 'pemadaman' ? (
+              <>
+                <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
+                <PemadamanInput
+                  value={answers[it.id + '__raw']}
+                  onChange={(val) => setPemadamanAnswer(it.id, val)}
                 />
               </>
             ) : it.inputType === 'status_only' ? (
