@@ -4,7 +4,7 @@
  * .xlsx asli jadi Google Sheets (sekali saja), lalu tulis ke SLOT baris/kolom
  * yang sudah ada di dalamnya - BUKAN menambah baris baru di bawah.
  */
-import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow, findNextEmptyRow, writeEntryExitRow } from './sheetsApi';
+import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow, findNextEmptyRow, writeEntryExitRow, readEntryExitDates } from './sheetsApi';
 import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, uploadPublicImage, findFolderContaining } from './driveApi';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
@@ -173,6 +173,40 @@ export function getCategoriesForSite(siteName) {
 const ENTRY_EXIT_TAB_NAME = 'Entry and exit registration';
 const ENTRY_EXIT_START_ROW = 7; // baris pertama data (baris 1-6 header/judul)
 const ENTRY_EXIT_DATE_COL = 2; // kolom B = Tanggal, dipakai buat deteksi baris kosong
+
+/**
+ * Cek apakah "Entry and exit registration" sudah pernah diisi untuk BULAN
+ * BERJALAN di site ini - dipakai buat wajibkan pengisian sebelum bisa akses
+ * checksheet peralatan (kalau belum, tampilkan form ini duluan).
+ */
+export async function checkEntryExitFilledThisMonth(buildingCategory, siteName) {
+  requireFolderConfig(ROOT_CHECKSHEET_FOLDER_ID, 'VITE_ROOT_CHECKSHEET_FOLDER_ID');
+  const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
+  if (!site) return { filled: false, sheetUrl: null };
+
+  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
+  const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+
+  const nextEmptyRow = await findNextEmptyRow(spreadsheetId, ENTRY_EXIT_TAB_NAME, ENTRY_EXIT_START_ROW, ENTRY_EXIT_DATE_COL);
+  const now = new Date();
+  const currentMonthYear = `${now.getMonth() + 1}/${now.getFullYear()}`;
+
+  // Baca semua baris tanggal yang sudah terisi (dari start row sampai baris kosong
+  // berikutnya), cek apakah ADA yang bulan+tahunnya cocok bulan berjalan.
+  let filled = false;
+  if (nextEmptyRow > ENTRY_EXIT_START_ROW) {
+    const rows = await readEntryExitDates(spreadsheetId, ENTRY_EXIT_TAB_NAME, ENTRY_EXIT_START_ROW, nextEmptyRow - 1);
+    filled = rows.some((dateStr) => {
+      // format tanggal di sheet: "DD/MM/YYYY"
+      const parts = (dateStr || '').split('/');
+      if (parts.length !== 3) return false;
+      return `${parseInt(parts[1], 10)}/${parts[2]}` === currentMonthYear;
+    });
+  }
+
+  const gid = await getSheetGid(spreadsheetId, ENTRY_EXIT_TAB_NAME);
+  return { filled, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid) };
+}
 
 /**
  * Submit 1 baris log "Entry and exit registration" - form keluar-masuk
