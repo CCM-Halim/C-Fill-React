@@ -1,6 +1,6 @@
-// Kategori peralatan + slotMap + semua inputType khusus (battery_table,
-// measurement_ohm, status_ohm, measurement_multi, unit_value_table,
-// sensor_checklist, status_only, pemadaman).
+// Kategori peralatan + slotMap + semua inputType khusus. measurement_multi
+// sekarang bisa punya field 'computed' (dihitung otomatis dari field lain,
+// mis. status Sesuai/Tidak sesuai dari perbandingan CB vs 1,5x arus ukur).
 export const CATEGORIES = [
   {
     "id": "cat01",
@@ -69,16 +69,42 @@ export const CATEGORIES = [
         "label": "Periksa kondisi dan kekuatan koneksi kabel grounding",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
         "hasTglCatatan": true,
-        "periodMonths": 1,
-        "noTglPrefix": true
+        "periodMonths": 12,
+        "noTglPrefix": false
       },
       {
         "id": "i9",
         "label": "Periksa pembagian beban arus dan kapasitas pemutus sirkuit",
         "standar": "Circuit Breaker minimal bernilai 1,5 kali arus pengukuran",
         "hasTglCatatan": true,
-        "periodMonths": 1,
-        "noTglPrefix": true
+        "periodMonths": 12,
+        "noTglPrefix": false,
+        "inputType": "measurement_multi",
+        "measurementFields": [
+          {
+            "id": "hasil_ukur",
+            "label": "Arus Hasil Pengukuran",
+            "prefix": "Arus Hasil Pengukuran",
+            "unit": "A"
+          },
+          {
+            "id": "maks_mcb",
+            "label": "Arus Maksimal MCB/CB",
+            "prefix": "Arus Maksimal MCB/CB",
+            "unit": "A"
+          },
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "computed",
+            "formula": "cb_ge_1_5x",
+            "inputs": [
+              "hasil_ukur",
+              "maks_mcb"
+            ]
+          }
+        ]
       }
     ],
     "periods": [
@@ -141,13 +167,13 @@ export const CATEGORIES = [
           "id": "i8",
           "colStart": 9,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 12
         },
         {
           "id": "i9",
           "colStart": 10,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 12
         }
       ],
       "type": "monthly_slot"
@@ -2342,7 +2368,9 @@ export const CATEGORIES = [
         "standar": "-40ºCº ~ 85ºC",
         "hasTglCatatan": true,
         "periodMonths": 3,
-        "noTglPrefix": false
+        "noTglPrefix": false,
+        "inputType": "measurement_ohm",
+        "unit": "ºC"
       },
       {
         "id": "i5",
@@ -3471,6 +3499,17 @@ export const CATEGORIES = [
             "label": "Arus Maksimal MCB/CB",
             "prefix": "Arus Maksimal MCB/CB",
             "unit": "A"
+          },
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "computed",
+            "formula": "cb_ge_1_5x",
+            "inputs": [
+              "hasil_ukur",
+              "maks_mcb"
+            ]
           }
         ]
       },
@@ -3829,6 +3868,17 @@ export const CATEGORIES = [
             "label": "Arus Maksimal MCB/CB",
             "prefix": "Arus Maksimal MCB/CB",
             "unit": "A"
+          },
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "computed",
+            "formula": "cb_ge_1_5x",
+            "inputs": [
+              "hasil_ukur",
+              "maks_mcb"
+            ]
           }
         ]
       },
@@ -4187,6 +4237,17 @@ export const CATEGORIES = [
             "label": "Arus Maksimal MCB/CB",
             "prefix": "Arus Maksimal MCB/CB",
             "unit": "A"
+          },
+          {
+            "id": "status",
+            "label": "Status",
+            "prefix": "Status",
+            "type": "computed",
+            "formula": "cb_ge_1_5x",
+            "inputs": [
+              "hasil_ukur",
+              "maks_mcb"
+            ]
           }
         ]
       },
