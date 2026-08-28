@@ -189,18 +189,29 @@ export async function checkEntryExitFilledThisMonth(buildingCategory, siteName) 
 
   const nextEmptyRow = await findNextEmptyRow(spreadsheetId, ENTRY_EXIT_TAB_NAME, ENTRY_EXIT_START_ROW, ENTRY_EXIT_DATE_COL);
   const now = new Date();
-  const currentMonthYear = `${now.getMonth() + 1}/${now.getFullYear()}`;
 
   // Baca semua baris tanggal yang sudah terisi (dari start row sampai baris kosong
   // berikutnya), cek apakah ADA yang bulan+tahunnya cocok bulan berjalan.
+  //
+  // PENTING: nggak boleh asumsi urutan "DD/MM/YYYY" yang kaku. Google Sheets
+  // kadang nyimpen/nampilin tanggal dalam format "MM/DD/YYYY" (locale AS) kalau
+  // valueInputOption=USER_ENTERED mem-parsing ulang string yang dikirim -
+  // tergantung setting locale spreadsheet-nya, walau kode kita SELALU ngirim
+  // "DD/MM/YYYY". Makanya di sini dicek dengan cara yang tahan banting: ambil
+  // SEMUA angka di string tanggalnya, terus cek apakah bulan berjalan (dengan
+  // ATAU tanpa nol di depan) DAN tahun berjalan sama-sama ada di situ - nggak
+  // peduli itu di posisi keberapa persisnya.
+  const currentMonth = now.getMonth() + 1;
+  const currentYear = now.getFullYear();
   let filled = false;
   if (nextEmptyRow > ENTRY_EXIT_START_ROW) {
     const rows = await readEntryExitDates(spreadsheetId, ENTRY_EXIT_TAB_NAME, ENTRY_EXIT_START_ROW, nextEmptyRow - 1);
     filled = rows.some((dateStr) => {
-      // format tanggal di sheet: "DD/MM/YYYY"
-      const parts = (dateStr || '').split('/');
-      if (parts.length !== 3) return false;
-      return `${parseInt(parts[1], 10)}/${parts[2]}` === currentMonthYear;
+      const numbers = (dateStr || '').match(/\d+/g);
+      if (!numbers || numbers.length < 3) return false;
+      const hasYear = numbers.includes(String(currentYear));
+      const hasMonth = numbers.some((n) => parseInt(n, 10) === currentMonth && parseInt(n, 10) <= 12);
+      return hasYear && hasMonth;
     });
   }
 
