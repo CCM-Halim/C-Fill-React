@@ -174,7 +174,8 @@ function saveCacheEntry(key, spreadsheetId) {
   }
 }
 
-export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {  const cacheKey = folderId + '|' + originalFileName;
+export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {
+  const cacheKey = folderId + '|' + originalFileName;
   const cache = loadCache();
   if (cache[cacheKey]) {
     return cache[cacheKey];
@@ -182,11 +183,22 @@ export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) { 
 
   const sheetsMime = 'application/vnd.google-apps.spreadsheet';
 
-  // 1. Sudah pernah dikonversi sebelumnya (termasuk dari sesi/browser lain)?
-  const existingSheets = await findFileByExactName(folderId, originalFileName, sheetsMime);
-  if (existingSheets) {
-    saveCacheEntry(cacheKey, existingSheets.id);
-    return existingSheets.id;
+  // 1. Sudah pernah dikonversi sebelumnya (termasuk dari sesi/browser/PWA lain)?
+  // Cache localStorage TIDAK selalu nyambung antara app terinstall (PWA) dan
+  // browser tab biasa (keduanya bisa punya storage terpisah) - jadi pencarian
+  // di sini nggak boleh cuma andalkan cache. Kalau percobaan pertama nggak
+  // ketemu, coba lagi 2x dengan jeda (jaga-jaga index Drive Search belum
+  // update kalau file baru aja dibuat di sesi/perangkat lain sesaat sebelumnya)
+  // - baru dianggap beneran belum ada kalau ketiga percobaan tetap kosong.
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const existingSheets = await findFileByExactName(folderId, originalFileName, sheetsMime);
+    if (existingSheets) {
+      saveCacheEntry(cacheKey, existingSheets.id);
+      return existingSheets.id;
+    }
+    if (attempt < 3) {
+      await new Promise((resolve) => setTimeout(resolve, attempt * 1500));
+    }
   }
 
   // 2. Cari file .xlsx aslinya di folder ini
