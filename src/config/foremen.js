@@ -5,7 +5,7 @@
 // pindah tugas) - tinggal edit array ini, tidak perlu ubah bagian lain kode.
 export const FOREMAN_EMAILS = [
    'dandy.pujist@gmail.com',
-  // 'aziz@contoh.com',
+   'azizfuadtri@gmail.com',
 ];
 
 export function isForemanEmail(email) {
