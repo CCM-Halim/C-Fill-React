@@ -4,7 +4,7 @@
  * .xlsx asli jadi Google Sheets (sekali saja), lalu tulis ke SLOT baris/kolom
  * yang sudah ada di dalamnya - BUKAN menambah baris baru di bawah.
  */
-import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow, findNextEmptyRow, writeEntryExitRow, readEntryExitDates } from './sheetsApi';
+import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow, findNextEmptyRow, writeEntryExitRow, readEntryExitDates, getRowCellValues, resolveTabName } from './sheetsApi';
 import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, uploadPublicImage, findFolderContaining } from './driveApi';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
@@ -22,6 +22,10 @@ const VERIFICATION_TAB_NAME = 'Lembar Verifikasi Pekerjaan';
 const ROOT_CHECKSHEET_FOLDER_ID = import.meta.env.VITE_ROOT_CHECKSHEET_FOLDER_ID;
 const ROOT_INSTRUMEN_FOLDER_ID = import.meta.env.VITE_ROOT_INSTRUMEN_FOLDER_ID;
 const ROOT_DOKUMENTASI_FOLDER_ID = import.meta.env.VITE_ROOT_DOKUMENTASI_FOLDER_ID;
+const FOTO_MASUK_JALUR_FOLDER_ID = import.meta.env.VITE_FOTO_MASUK_JALUR_FOLDER_ID;
+const FOTO_KELUAR_JALUR_FOLDER_ID = import.meta.env.VITE_FOTO_KELUAR_JALUR_FOLDER_ID;
+const REKAMAN_MASUK_JALUR_FOLDER_ID = import.meta.env.VITE_REKAMAN_MASUK_JALUR_FOLDER_ID;
+const REKAMAN_KELUAR_JALUR_FOLDER_ID = import.meta.env.VITE_REKAMAN_KELUAR_JALUR_FOLDER_ID;
 
 const BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
@@ -68,13 +72,43 @@ async function getOrCreateDocumentationFolder(siteName, date = new Date()) {
 }
 
 /**
+ * Cek apakah slot bulan yang sama untuk kategori ini SUDAH ADA isinya - dipanggil
+ * SEBELUM submit sungguhan (lihat ChecksheetForm.jsx). Kalau ada isi lama,
+ * teknisi ditanya dulu: "Perbaikan" (timpa) atau "Perawatan Baru" (isi baru
+ * ditambahkan sebagai riwayat, isi lama tidak hilang) - berlaku utk perawatan
+ * dalam bulan yang sama, karena kadang kerjaan bulan berikutnya sudah dikerjakan
+ * lebih awal (mis. yg harusnya September dikerjakan akhir Agustus).
+ *
+ * Return { hasExisting: boolean, existingValues: {itemId: string} }.
+ */
+export async function checkMonthAlreadyFilled({ buildingCategory, siteName, categoryId, tanggal }) {
+  const category = CATEGORIES.find((c) => c.id === categoryId);
+  if (!category || !category.slotMap || category.slotMap.type === 'matrix') {
+    return { hasExisting: false, existingValues: {} };
+  }
+  const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
+  if (!site) return { hasExisting: false, existingValues: {} };
+
+  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
+  const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const tabName = await resolveTabName(spreadsheetId, category.sheetName);
+  const override = SLOT_MAP_OVERRIDES[site.originalFileName]?.[categoryId];
+  const slotMap = override || category.slotMap;
+
+  const row = computeSlotRow(slotMap, tanggal);
+  const existingValues = await getRowCellValues(spreadsheetId, tabName, row, slotMap.itemColumns);
+  const hasExisting = Object.values(existingValues).some((v) => v && v.trim());
+  return { hasExisting, existingValues };
+}
+
+/**
  * Simpan 1 submission checksheet peralatan, ditulis ke slot bulan yang sesuai
  * di dalam file asli site tsb (dikonversi otomatis jadi Google Sheets kalau
  * belum pernah sebelumnya). File .xlsx asli & hasil konversinya ada LANGSUNG
  * di folder kategori bangunan (mis. "1. BTS Communication Room"), TIDAK di
  * subfolder per-site - mengikuti struktur folder asli kamu.
  */
-export async function submitChecksheet({ buildingCategory, siteName, categoryId, tanggal, petugas, answers }) {
+export async function submitChecksheet({ buildingCategory, siteName, categoryId, tanggal, petugas, answers, writeMode = 'overwrite', existingValues = {} }) {
   requireFolderConfig(ROOT_CHECKSHEET_FOLDER_ID, 'VITE_ROOT_CHECKSHEET_FOLDER_ID');
   const category = CATEGORIES.find((c) => c.id === categoryId);
   if (!category) throw new Error('Kategori tidak ditemukan: ' + categoryId);
@@ -84,10 +118,7 @@ export async function submitChecksheet({ buildingCategory, siteName, categoryId,
 
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
   const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
-  const tabName = category.sheetName;
-
-  // Pakai override kalau file spesifik ini polanya beda dari mayoritas site lain
-  // di kategori yang sama (hasil cross-check ke semua 69 file).
+  const tabName = await resolveTabName(spreadsheetId, category.sheetName);
   const override = SLOT_MAP_OVERRIDES[site.originalFileName]?.[categoryId];
   const slotMap = override || category.slotMap;
 
@@ -97,7 +128,7 @@ export async function submitChecksheet({ buildingCategory, siteName, categoryId,
     return { success: true, fileName: site.originalFileName, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid) };
   }
 
-  const { row } = await writeMonthlySlot(spreadsheetId, tabName, slotMap, { tanggal, petugas, answers });
+  const { row } = await writeMonthlySlot(spreadsheetId, tabName, slotMap, { tanggal, petugas, answers, writeMode, existingValues });
   const gid = await getSheetGid(spreadsheetId, tabName);
   const sheetUrl = getSpreadsheetUrl(spreadsheetId, gid);
 
@@ -118,7 +149,7 @@ export async function submitInstrumentChecksheet({ namaInstrumen, tanggal, petug
   requireFolderConfig(ROOT_INSTRUMEN_FOLDER_ID, 'VITE_ROOT_INSTRUMEN_FOLDER_ID');
   const originalFileName = namaInstrumen + '.xlsx';
   const spreadsheetId = await getOrConvertSiteSpreadsheet(ROOT_INSTRUMEN_FOLDER_ID, originalFileName);
-  const tabName = 'Instrumen Telekomunikasi';
+  const tabName = await resolveTabName(spreadsheetId, 'Instrumen Telekomunikasi');
 
   const { row } = await writeMonthlySlot(spreadsheetId, tabName, INSTRUMENT_SLOT_MAP, { tanggal, petugas, answers });
   const gid = await getSheetGid(spreadsheetId, tabName);
@@ -160,6 +191,62 @@ export async function listDocumentationFiles({ buildingCategory, siteName }) {
   return listFilesInFolder(docFolderId);
 }
 
+/**
+ * ==== Masuk/Keluar Jalur ====
+ * Upload foto + rekaman suara konfirmasi personil & peralatan pas masuk/keluar
+ * restricted area (jalur rel). 4 folder terpisah (foto masuk, foto keluar,
+ * suara masuk, suara keluar) - dulu diisi lewat Google Form, sekarang langsung
+ * dari C-Fill. Folder-folder ini FLAT (nggak ada subfolder bulan/site kayak
+ * Dokumentasi Kegiatan) - jadi nama filenya sendiri yang harus jelas identitasnya.
+ */
+function buildJalurFileName(siteName, tanggal, waktu, nama, ext) {
+  const siteCode = getSiteShortCode(siteName);
+  const safeName = (nama || 'Petugas').replace(/[\\/:*?"<>|]/g, '');
+  return `${siteCode} - ${tanggal} ${waktu || ''} - ${safeName}.${ext}`.replace(/\s+/g, ' ').trim();
+}
+
+export async function submitMasukJalur({ siteName, tanggal, waktu, nama, catatan, fotoFile, suaraFile }) {
+  if (!FOTO_MASUK_JALUR_FOLDER_ID) throw new Error('VITE_FOTO_MASUK_JALUR_FOLDER_ID belum diatur di .env');
+  if (!REKAMAN_MASUK_JALUR_FOLDER_ID) throw new Error('VITE_REKAMAN_MASUK_JALUR_FOLDER_ID belum diatur di .env');
+  return submitJalur({
+    siteName, tanggal, waktu, nama, catatan, fotoFile, suaraFile,
+    fotoFolderId: FOTO_MASUK_JALUR_FOLDER_ID, suaraFolderId: REKAMAN_MASUK_JALUR_FOLDER_ID, label: 'Masuk Jalur'
+  });
+}
+
+export async function submitKeluarJalur({ siteName, tanggal, waktu, nama, catatan, fotoFile, suaraFile }) {
+  if (!FOTO_KELUAR_JALUR_FOLDER_ID) throw new Error('VITE_FOTO_KELUAR_JALUR_FOLDER_ID belum diatur di .env');
+  if (!REKAMAN_KELUAR_JALUR_FOLDER_ID) throw new Error('VITE_REKAMAN_KELUAR_JALUR_FOLDER_ID belum diatur di .env');
+  return submitJalur({
+    siteName, tanggal, waktu, nama, catatan, fotoFile, suaraFile,
+    fotoFolderId: FOTO_KELUAR_JALUR_FOLDER_ID, suaraFolderId: REKAMAN_KELUAR_JALUR_FOLDER_ID, label: 'Keluar Jalur'
+  });
+}
+
+async function submitJalur({ siteName, tanggal, waktu, nama, catatan, fotoFile, suaraFile, fotoFolderId, suaraFolderId, label }) {
+  if (!fotoFile) throw new Error('Foto wajib diisi.');
+
+  const description = `Site: ${siteName}\nTanggal: ${tanggal} ${waktu || ''}\nNama: ${nama || '-'}\nCatatan: ${catatan || '-'}`;
+
+  const fotoExt = (fotoFile.name.split('.').pop() || 'jpg').toLowerCase();
+  const fotoName = buildJalurFileName(siteName, tanggal, waktu, nama, fotoExt);
+  const fotoResult = await uploadFileToFolder(fotoFolderId, new File([fotoFile], fotoName, { type: fotoFile.type }), description);
+
+  let suaraResult = null;
+  if (suaraFile) {
+    const suaraExt = (suaraFile.name.split('.').pop() || 'webm').toLowerCase();
+    const suaraName = buildJalurFileName(siteName, tanggal, waktu, nama, suaraExt);
+    suaraResult = await uploadFileToFolder(suaraFolderId, new File([suaraFile], suaraName, { type: suaraFile.type }), description);
+  }
+
+  logActivity(ROOT_CHECKSHEET_FOLDER_ID, {
+    buildingCategory: 'Jalur', siteName, categoryName: label, tanggal, petugas: nama,
+    email: getCurrentUser()?.email, sheetUrl: fotoResult.webViewLink
+  });
+
+  return { success: true, fotoUrl: fotoResult.webViewLink, suaraUrl: suaraResult?.webViewLink || null };
+}
+
 export function getSitesForBuildingCategory(buildingCategory) {
   return SITES.filter((s) => s.buildingCategory === buildingCategory);
 }
@@ -186,8 +273,9 @@ export async function checkEntryExitFilledThisMonth(buildingCategory, siteName) 
 
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
   const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const tabName = await resolveTabName(spreadsheetId, ENTRY_EXIT_TAB_NAME);
 
-  const nextEmptyRow = await findNextEmptyRow(spreadsheetId, ENTRY_EXIT_TAB_NAME, ENTRY_EXIT_START_ROW, ENTRY_EXIT_DATE_COL);
+  const nextEmptyRow = await findNextEmptyRow(spreadsheetId, tabName, ENTRY_EXIT_START_ROW, ENTRY_EXIT_DATE_COL);
   const now = new Date();
 
   // Baca semua baris tanggal yang sudah terisi (dari start row sampai baris kosong
@@ -205,7 +293,7 @@ export async function checkEntryExitFilledThisMonth(buildingCategory, siteName) 
   const currentYear = now.getFullYear();
   let filled = false;
   if (nextEmptyRow > ENTRY_EXIT_START_ROW) {
-    const rows = await readEntryExitDates(spreadsheetId, ENTRY_EXIT_TAB_NAME, ENTRY_EXIT_START_ROW, nextEmptyRow - 1);
+    const rows = await readEntryExitDates(spreadsheetId, tabName, ENTRY_EXIT_START_ROW, nextEmptyRow - 1);
     filled = rows.some((dateStr) => {
       const numbers = (dateStr || '').match(/\d+/g);
       if (!numbers || numbers.length < 3) return false;
@@ -215,7 +303,7 @@ export async function checkEntryExitFilledThisMonth(buildingCategory, siteName) 
     });
   }
 
-  const gid = await getSheetGid(spreadsheetId, ENTRY_EXIT_TAB_NAME);
+  const gid = await getSheetGid(spreadsheetId, tabName);
   return { filled, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid) };
 }
 
@@ -231,6 +319,7 @@ export async function submitEntryExit({ buildingCategory, siteName, tanggal, wak
 
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
   const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const tabName = await resolveTabName(spreadsheetId, ENTRY_EXIT_TAB_NAME);
 
   let signatureImageUrl = null;
   if (signatureBlob) {
@@ -240,12 +329,12 @@ export async function submitEntryExit({ buildingCategory, siteName, tanggal, wak
     signatureImageUrl = uploaded.imageUrl;
   }
 
-  const row = await findNextEmptyRow(spreadsheetId, ENTRY_EXIT_TAB_NAME, ENTRY_EXIT_START_ROW, ENTRY_EXIT_DATE_COL);
-  await writeEntryExitRow(spreadsheetId, ENTRY_EXIT_TAB_NAME, row, {
+  const row = await findNextEmptyRow(spreadsheetId, tabName, ENTRY_EXIT_START_ROW, ENTRY_EXIT_DATE_COL);
+  await writeEntryExitRow(spreadsheetId, tabName, row, {
     tanggal: formatDateID(tanggal), waktuMasuk, nama, namaUnit, nomorKontak, kegiatan, waktuKeluar, signatureImageUrl
   });
 
-  const gid = await getSheetGid(spreadsheetId, ENTRY_EXIT_TAB_NAME);
+  const gid = await getSheetGid(spreadsheetId, tabName);
   logActivity(ROOT_CHECKSHEET_FOLDER_ID, {
     buildingCategory, siteName, categoryName: 'Entry/Exit Registration', tanggal, petugas: nama,
     email: getCurrentUser()?.email, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid)
@@ -279,18 +368,19 @@ export async function getVerificationStatus(buildingCategory, siteName) {
 
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
   const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const tabName = await resolveTabName(spreadsheetId, VERIFICATION_TAB_NAME);
 
   const result = [];
   for (let i = 0; i < 12; i++) {
     const row = VERIFICATION_SLOT_MAP.slotStartRow + i;
-    const cells = await readSlotRow(spreadsheetId, VERIFICATION_TAB_NAME, row, 6);
+    const cells = await readSlotRow(spreadsheetId, tabName, row, 6);
     result.push({
       bulan: BULAN_LIST[i],
       tanggal: cells[2] || '',
       namaVerifikator: cells[3] || ''
     });
   }
-  const gid = await getSheetGid(spreadsheetId, VERIFICATION_TAB_NAME);
+  const gid = await getSheetGid(spreadsheetId, tabName);
   return { months: result, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid) };
 }
 
@@ -308,6 +398,7 @@ export async function submitVerification({ buildingCategory, siteName, monthInde
 
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
   const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const tabName = await resolveTabName(spreadsheetId, VERIFICATION_TAB_NAME);
   const today = new Date().toISOString().slice(0, 10);
   const namaVerifikator = getCurrentUser()?.name || getCurrentUser()?.email || 'Verifikator';
 
@@ -319,12 +410,12 @@ export async function submitVerification({ buildingCategory, siteName, monthInde
     signatureImageUrl = uploaded.imageUrl;
   }
 
-  const { row } = await writeVerificationRow(spreadsheetId, VERIFICATION_TAB_NAME, VERIFICATION_SLOT_MAP, monthIndex, {
+  const { row } = await writeVerificationRow(spreadsheetId, tabName, VERIFICATION_SLOT_MAP, monthIndex, {
     tanggalVerifikasi: today,
     namaVerifikator,
     signatureImageUrl
   });
 
-  const gid = await getSheetGid(spreadsheetId, VERIFICATION_TAB_NAME);
+  const gid = await getSheetGid(spreadsheetId, tabName);
   return { success: true, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid), row };
 }

@@ -283,9 +283,10 @@ export async function findFolderContaining(parentId, searchTerm) {
 /**
  * Upload 1 file (blob/File dari <input type="file">) ke folder tertentu.
  */
-export async function uploadFileToFolder(folderId, file) {
+export async function uploadFileToFolder(folderId, file, description) {
   const token = await getValidAccessToken();
   const metadata = { name: file.name, parents: [folderId] };
+  if (description) metadata.description = description;
 
   const form = new FormData();
   form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));

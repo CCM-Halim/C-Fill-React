@@ -129,6 +129,20 @@ function formatDateForSheet(dateStr) {
 }
 
 /**
+ * Terapkan mode tulis: 'overwrite' -> pakai nilai baru apa adanya (default).
+ * 'append' -> kalau sel target SUDAH ada isi sebelumnya, isi baru ditulis di
+ * ATAS, isi lama dipindah ke bawah sebagai riwayat (dipisah garis pembatas) -
+ * dipakai saat teknisi pilih "Perawatan Baru" (bukan "Perbaikan") pas ada
+ * isian ganda untuk bulan yang sama, supaya data lama nggak hilang.
+ */
+function applyWriteMode(newValue, writeMode, existingValue) {
+  if (writeMode !== 'append' || !existingValue || !existingValue.trim()) {
+    return newValue;
+  }
+  return `${newValue}\n\n── Riwayat sebelumnya ──\n${existingValue}`;
+}
+
+/**
  * Cek nilai V/R tiap baterai terhadap standar resistansi (beda per kelas
  * tegangan: baterai ~2V pakai batas class2V, baterai ~12V pakai class12V).
  * Return 'Ada temuan' kalau ADA baterai yang R-nya melebihi batas, 'Normal'
@@ -157,6 +171,26 @@ function classifyBatteryFindings(answerArray, standard) {
 }
 
 /**
+ * Baca isi sel-sel item tertentu di 1 baris (dipakai sebelum submit, buat cek
+ * apakah bulan yang sama sudah pernah diisi - kalau iya, ChecksheetForm akan
+ * tanya teknisi dulu: Perbaikan (timpa) atau Perawatan Baru (tambahkan sebagai
+ * riwayat baru di sel yang sama, bukan bikin baris fisik baru - itu bisa
+ * ngerusak susunan baris kategori lain yang berbagi baris yang sama).
+ */
+export async function getRowCellValues(spreadsheetId, tabName, row, itemColumns) {
+  if (!itemColumns.length) return {};
+  const ranges = itemColumns.map((ic) => `'${tabName}'!${colLetter(ic.colStart)}${row}`);
+  const query = ranges.map((r) => `ranges=${encodeURIComponent(r)}`).join('&');
+  const data = await sheetsFetch(`/${spreadsheetId}/values:batchGet?${query}`);
+  const result = {};
+  (data.valueRanges || []).forEach((vr, i) => {
+    const val = vr.values && vr.values[0] && vr.values[0][0];
+    result[itemColumns[i].id] = val || '';
+  });
+  return result;
+}
+
+/**
  * Tulis 1 submission checksheet peralatan ke slot yang sesuai (kategori "monthly_slot"):
  * - kolom tanggal (dateCol) diisi tanggal pemeriksaan
  * - tiap item diisi ke kolom (atau rentang kolom, utk item tabel baterai) miliknya
@@ -166,8 +200,13 @@ function classifyBatteryFindings(answerArray, standard) {
  * dengan bagian "Tgl:" otomatis diisi dari tanggal pemeriksaan - user cuma perlu isi
  * bagian catatannya saja (lihat ChecksheetForm.jsx / InstrumenPage.jsx). Item berbentuk
  * array (tabel baterai V/R) dikecualikan dari format ini, ditulis apa adanya per kolom.
+ *
+ * writeMode: 'overwrite' (default, timpa apa adanya) atau 'append' - kalau 'append'
+ * DAN sel target sudah ada isinya (existingValues), isi baru ditulis di ATAS, isi
+ * lama dipindah ke bawah sebagai riwayat (bukan hilang) - dipakai saat teknisi
+ * memilih "Perawatan Baru" (bukan "Perbaikan") pas ada isian ganda di bulan sama.
  */
-export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tanggal, petugas, answers }) {
+export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tanggal, petugas, answers, writeMode = 'overwrite', existingValues = {} }) {
   const row = computeSlotRow(slotMap, tanggal);
   const data = [];
   const formattedDate = formatDateForSheet(tanggal);
@@ -228,15 +267,16 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
       // - ditulis apa adanya, TIDAK dibungkus prefix "Tgl: ..." otomatis.
       data.push({
         range: `'${tabName}'!${colLetter(itemCol.colStart)}${itemRow}`,
-        values: [[answer.__rawText]]
+        values: [[applyWriteMode(answer.__rawText, writeMode, existingValues[itemCol.id])]]
       });
     } else {
       // Item teks biasa -> otomatis dibungkus format "Tgl: <tanggal>\nCatatan:\n<isian>"
       // (VERTIKAL, pakai baris baru - bukan 1 baris disambung spasi) sesuai pola
       // tampilan data lama di template asli. User cuma perlu isi bagian catatannya.
+      const newValue = `Tgl: ${formattedDate}\nCatatan:\n${answer}`;
       data.push({
         range: `'${tabName}'!${colLetter(itemCol.colStart)}${itemRow}`,
-        values: [[`Tgl: ${formattedDate}\nCatatan:\n${answer}`]]
+        values: [[applyWriteMode(newValue, writeMode, existingValues[itemCol.id])]]
       });
     }
   });
@@ -349,6 +389,48 @@ export async function getSheetGid(spreadsheetId, tabName) {
   const meta = await sheetsFetch(`/${spreadsheetId}?fields=sheets.properties`);
   const found = meta.sheets.find((s) => s.properties.title === tabName);
   return found ? found.properties.sheetId : 0;
+}
+
+/**
+ * Cari nama tab yang SEBENARNYA ada di spreadsheet, toleran terhadap variasi
+ * kecil (spasi beda, dll) - mis. data kita simpan "Baterai HFSPS Grup 1
+ * (1M,3M)" tapi beberapa file aslinya ternyata "Grup1" (tanpa spasi). Kalau
+ * ditulis pakai nama yang PERSIS beda spasi begini, Google Sheets API gagal
+ * total ("Unable to parse range") karena dianggap sheet itu nggak ada.
+ *
+ * Perbandingan dilakukan setelah SEMUA SPASI dihapus & disamakan huruf kecil,
+ * jadi "Grup 1" vs "Grup1" vs "GRUP 1" semua dianggap cocok. Di-cache di
+ * memori per sesi (folderId+expectedName) biar nggak fetch metadata berulang
+ * tiap submit ke kategori yang sama.
+ */
+const tabNameCache = new Map();
+
+export async function resolveTabName(spreadsheetId, expectedTabName) {
+  const cacheKey = spreadsheetId + '|' + expectedTabName;
+  if (tabNameCache.has(cacheKey)) return tabNameCache.get(cacheKey);
+
+  const meta = await sheetsFetch(`/${spreadsheetId}?fields=sheets.properties`);
+  const titles = meta.sheets.map((s) => s.properties.title);
+
+  // 1. Cocok persis - kasus normal, paling umum
+  if (titles.includes(expectedTabName)) {
+    tabNameCache.set(cacheKey, expectedTabName);
+    return expectedTabName;
+  }
+
+  // 2. Cocok setelah spasi & huruf besar/kecil dinormalisasi
+  const normalize = (s) => s.replace(/\s+/g, '').toLowerCase();
+  const normalizedExpected = normalize(expectedTabName);
+  const match = titles.find((t) => normalize(t) === normalizedExpected);
+  if (match) {
+    tabNameCache.set(cacheKey, match);
+    return match;
+  }
+
+  // 3. Tidak ketemu sama sekali - pakai nama asli, biar error yang muncul
+  // tetap jelas ("sheet tidak ditemukan") daripada disamarkan jadi error lain.
+  tabNameCache.set(cacheKey, expectedTabName);
+  return expectedTabName;
 }
 
 /**
