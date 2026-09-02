@@ -13,6 +13,7 @@ import ChecksheetForm from './pages/ChecksheetForm';
 import InstrumenPage from './pages/InstrumenPage';
 import DokumentasiPage from './pages/DokumentasiPage';
 import EntryExitPage from './pages/EntryExitPage';
+import MasukKeluarJalurPage from './pages/MasukKeluarJalurPage';
 import VerifikasiIndex from './pages/VerifikasiIndex';
 import VerifikasiSite from './pages/VerifikasiSite';
 
@@ -37,6 +38,7 @@ function AppShell() {
           <Route path="/instrumen" element={<InstrumenPage />} />
           <Route path="/dokumentasi" element={<DokumentasiPage />} />
           <Route path="/entry-exit" element={<EntryExitPage />} />
+          <Route path="/jalur" element={<MasukKeluarJalurPage />} />
           {isForeman ? (
             <>
               <Route path="/verifikasi" element={<VerifikasiIndex />} />
