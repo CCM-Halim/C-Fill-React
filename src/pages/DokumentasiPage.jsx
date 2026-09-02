@@ -2,6 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { BUILDING_CATEGORIES } from '../config/sites';
 import { getSitesForBuildingCategory, uploadDocumentation, listDocumentationFiles } from '../lib/cfillService';
 import { useToast } from '../components/Toast';
+import { compressImageIfNeeded, blobToFile } from '../lib/imageCompression';
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
 
 export default function DokumentasiPage() {
   const showToast = useToast();
@@ -53,8 +60,21 @@ export default function DokumentasiPage() {
 
     for (let i = 0; i < files.length; i++) {
       try {
-        await uploadDocumentation({ buildingCategory, siteName, file: files[i] });
-        rows[i] = { name: files[i].name, status: '✅ berhasil' };
+        const original = files[i];
+        rows[i] = { name: original.name, status: 'Mengompres...' };
+        setUploadRows([...rows]);
+
+        const compressedBlob = await compressImageIfNeeded(original);
+        const fileToUpload = compressedBlob === original ? original : blobToFile(compressedBlob, original.name);
+        const savedInfo = compressedBlob !== original
+          ? ` (${formatSize(original.size)} → ${formatSize(fileToUpload.size)})`
+          : '';
+
+        rows[i] = { name: original.name, status: 'Mengupload...' + savedInfo };
+        setUploadRows([...rows]);
+
+        await uploadDocumentation({ buildingCategory, siteName, file: fileToUpload });
+        rows[i] = { name: original.name, status: '✅ berhasil' + savedInfo };
       } catch (e) {
         rows[i] = { name: files[i].name, status: '❌ gagal: ' + e.message };
       }
@@ -75,6 +95,8 @@ export default function DokumentasiPage() {
           File akan tersimpan otomatis di folder <strong>Dokumentasi Kegiatan</strong>,
           mengikuti struktur <strong>Bulan &gt; Nama Site (tanggal)</strong>. Kalau folder
           site untuk bulan ini sudah ada, file akan ditambahkan ke situ (bukan bikin folder baru).
+          Foto otomatis dikompres kalau ukurannya lebih dari 800 KB (kualitas & resolusi
+          diturunkan bertahap seminimal mungkin, bukan dokumen/PDF - itu diupload apa adanya).
         </p>
 
         <div className="field-grid">

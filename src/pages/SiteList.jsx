@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { SITES } from '../config/sites';
+import { getSiteBackground } from '../config/backgrounds';
+import { PhotoCard } from '../components/PhotoCard';
 
 export default function SiteList() {
   const { buildingCategory } = useParams();
@@ -30,11 +32,12 @@ export default function SiteList() {
           <Link
             key={s.siteName}
             to={`/peralatan/${encodeURIComponent(buildingCategory)}/${encodeURIComponent(s.siteName)}`}
-            className="card clickable-card"
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
-            <div className="card-title-sm">{s.siteName}</div>
-            <div className="muted">{s.categoryIds.length} kategori peralatan</div>
+            <PhotoCard photoUrl={getSiteBackground(s.siteName, decoded)}>
+              <div className="card-title-sm">{s.siteName}</div>
+              <div className="muted">{s.categoryIds.length} kategori peralatan</div>
+            </PhotoCard>
           </Link>
         ))}
         {sites.length === 0 && <div className="muted">Tidak ada site yang cocok.</div>}

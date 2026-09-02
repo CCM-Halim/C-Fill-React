@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { BUILDING_CATEGORIES, SITES } from '../config/sites';
+import { getSiteBackground, getBuildingBackground } from '../config/backgrounds';
+import { PhotoCard } from '../components/PhotoCard';
 
 export default function PeralatanIndex() {
   const [search, setSearch] = useState('');
@@ -41,12 +43,13 @@ export default function PeralatanIndex() {
               <Link
                 key={s.buildingCategory + s.siteName}
                 to={`/peralatan/${encodeURIComponent(s.buildingCategory)}/${encodeURIComponent(s.siteName)}`}
-                className="card clickable-card"
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
-                <div className="card-title-sm">{s.siteName}</div>
-                <div className="muted">{s.buildingCategory.replace(/^\d+\.\s*/, '')}</div>
-                <div className="badges"><span className="badge">{s.categoryIds.length} kategori</span></div>
+                <PhotoCard photoUrl={getSiteBackground(s.siteName, s.buildingCategory)}>
+                  <div className="card-title-sm">{s.siteName}</div>
+                  <div className="muted">{s.buildingCategory.replace(/^\d+\.\s*/, '')}</div>
+                  <div className="badges"><span className="badge">{s.categoryIds.length} kategori</span></div>
+                </PhotoCard>
               </Link>
             ))}
             {matchingSites.length === 0 && (
@@ -61,9 +64,11 @@ export default function PeralatanIndex() {
             {filteredCategories.map((bc) => {
               const count = SITES.filter((s) => s.buildingCategory === bc).length;
               return (
-                <Link key={bc} to={`/peralatan/${encodeURIComponent(bc)}`} className="card clickable-card" style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <div className="card-title-sm">{bc}</div>
-                  <div className="muted">{count} site</div>
+                <Link key={bc} to={`/peralatan/${encodeURIComponent(bc)}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <PhotoCard photoUrl={getBuildingBackground(bc)}>
+                    <div className="card-title-sm">{bc}</div>
+                    <div className="muted">{count} site</div>
+                  </PhotoCard>
                 </Link>
               );
             })}

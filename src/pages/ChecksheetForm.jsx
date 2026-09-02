@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
-import { submitChecksheet, previewSlot } from '../lib/cfillService';
+import { submitChecksheet, checkMonthAlreadyFilled, previewSlot } from '../lib/cfillService';
 import { useToast } from '../components/Toast';
 import BatteryTable from '../components/BatteryTable';
 import MeasurementInput, { serializeMeasurement } from '../components/MeasurementInput';
@@ -12,6 +12,8 @@ import StatusOnlyInput from '../components/StatusOnlyInput';
 import PemadamanInput, { serializePemadaman } from '../components/PemadamanInput';
 import MeasurementMultiInput, { serializeMeasurementMulti } from '../components/MeasurementMultiInput';
 import UnitValueTable, { serializeUnitValueTable } from '../components/UnitValueTable';
+import { HeroHeader } from '../components/PhotoCard';
+import { getSiteBackground, getEquipmentBackground } from '../config/backgrounds';
 
 const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
@@ -40,6 +42,7 @@ export default function ChecksheetForm() {
   const [petugas, setPetugas] = useState('');
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState(null); // { existingValues } kalau perlu tanya Perbaikan/Perawatan Baru
 
   if (!category) {
     return <div className="muted">Kategori tidak ditemukan.</div>;
@@ -108,6 +111,27 @@ export default function ChecksheetForm() {
     }
     setSubmitting(true);
     try {
+      // Cek dulu apakah slot bulan ini sudah ada isinya - kalau ada, tanya
+      // dulu Perbaikan (timpa) atau Perawatan Baru (isi baru ditambahkan,
+      // isi lama nggak hilang) sebelum benar-benar nulis.
+      const check = await checkMonthAlreadyFilled({
+        buildingCategory: decodedBc, siteName: decodedSite, categoryId: category.id, tanggal
+      });
+      if (check.hasExisting) {
+        setSubmitting(false);
+        setConfirmDialog({ existingValues: check.existingValues });
+        return;
+      }
+      await doSubmit('overwrite', {});
+    } catch (e) {
+      showToast('Gagal menyimpan: ' + e.message, true);
+      setSubmitting(false);
+    }
+  }
+
+  async function doSubmit(writeMode, existingValues) {
+    setSubmitting(true);
+    try {
       // buang key bantu "__raw" sebelum dikirim
       const cleanAnswers = {};
       Object.entries(answers).forEach(([k, v]) => { if (!k.endsWith('__raw')) cleanAnswers[k] = v; });
@@ -118,7 +142,9 @@ export default function ChecksheetForm() {
         categoryId: category.id,
         tanggal,
         petugas: petugas.trim(),
-        answers: cleanAnswers
+        answers: cleanAnswers,
+        writeMode,
+        existingValues
       });
       showToast(
         `Checksheet "${category.short_name}" tersimpan ke baris bulan ${BULAN[bulanIndex]} di "${res.fileName}" ✅`,
@@ -131,6 +157,7 @@ export default function ChecksheetForm() {
       showToast('Gagal menyimpan: ' + e.message, true);
     } finally {
       setSubmitting(false);
+      setConfirmDialog(null);
     }
   }
 
@@ -141,6 +168,12 @@ export default function ChecksheetForm() {
         <Link to={`/peralatan/${buildingCategory}`}>{decodedBc}</Link> /{' '}
         <Link to={`/peralatan/${buildingCategory}/${siteName}`}>{decodedSite}</Link> / {category.short_name}
       </div>
+
+      <HeroHeader
+        photoUrl={getEquipmentBackground(category.id) || getEquipmentBackground(category.short_name) || getSiteBackground(decodedSite, decodedBc)}
+        eyebrow={decodedSite}
+        title={category.short_name}
+      />
 
       <div className="card form-card">
         <div className="card-title">{category.short_name}</div>
@@ -267,6 +300,36 @@ export default function ChecksheetForm() {
           {submitting ? 'Menyimpan...' : 'Simpan Checksheet'}
         </button>
       </div>
+
+      {confirmDialog && (
+        <div className="modal-overlay" onClick={() => setConfirmDialog(null)}>
+          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+            <div className="card-title">Bulan {BULAN[bulanIndex]} sudah pernah diisi</div>
+            <p className="muted" style={{ marginBottom: 16 }}>
+              Sudah ada isian untuk kategori ini di bulan {BULAN[bulanIndex]}. Apakah pengisian ini untuk:
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button
+                className="btn btn-primary"
+                onClick={() => doSubmit('overwrite', {})}
+                disabled={submitting}
+              >
+                Perbaikan — timpa isian sebelumnya
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => doSubmit('append', confirmDialog.existingValues)}
+                disabled={submitting}
+              >
+                Perawatan Baru — simpan sebagai riwayat baru (isian lama tetap ada)
+              </button>
+              <button className="btn btn-ghost" onClick={() => setConfirmDialog(null)} disabled={submitting}>
+                Batal
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

@@ -1,23 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getCategoriesForSite, checkEntryExitFilledThisMonth } from '../lib/cfillService';
+import { getCategoriesForSite } from '../lib/cfillService';
 import EntryExitForm from '../components/EntryExitForm';
+import { HeroHeader, PhotoCard } from '../components/PhotoCard';
+import { getSiteBackground, getEquipmentBackground } from '../config/backgrounds';
 
+/**
+ * Entry/Exit Registration WAJIB diisi tiap kali site ini dibuka - bukan cuma
+ * sekali per bulan. Ini sengaja begini karena Entry/Exit itu LOG KUNJUNGAN,
+ * bukan checklist bulanan - tiap kunjungan (kapanpun tanggalnya, walau di
+ * bulan yang sama dengan kunjungan sebelumnya) dicatat sendiri-sendiri.
+ * State `entrySubmitted` cuma hidup selama sesi ini (reset kalau halaman
+ * di-refresh/dibuka ulang) - begitu diisi 1x, baru lanjut ke daftar kategori.
+ */
 export default function SiteCategoryList() {
   const { buildingCategory, siteName } = useParams();
   const decodedBc = decodeURIComponent(buildingCategory);
   const decodedSite = decodeURIComponent(siteName);
   const categories = getCategoriesForSite(decodedSite);
+  const heroPhoto = getSiteBackground(decodedSite, decodedBc);
 
-  const [entryExitStatus, setEntryExitStatus] = useState(null); // null = loading, {filled, sheetUrl}, atau {error}
-
-  useEffect(() => {
-    setEntryExitStatus(null);
-    checkEntryExitFilledThisMonth(decodedBc, decodedSite)
-      .then(setEntryExitStatus)
-      .catch((e) => setEntryExitStatus({ error: e.message }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [decodedBc, decodedSite]);
+  const [entrySubmitted, setEntrySubmitted] = useState(false);
 
   const breadcrumb = (
     <div className="breadcrumb">
@@ -26,29 +29,15 @@ export default function SiteCategoryList() {
     </div>
   );
 
-  if (entryExitStatus === null) {
+  if (!entrySubmitted) {
     return (
       <section>
         {breadcrumb}
-        <div className="muted">Memeriksa status Entry/Exit Registration bulan ini...</div>
-      </section>
-    );
-  }
-
-  if (entryExitStatus.error) {
-    // Gagal cek status - jangan blokir user, langsung tampilkan checksheet
-    // seperti biasa (fail-open), tapi kasih tau ada masalah di background.
-    console.warn('Gagal cek status Entry/Exit:', entryExitStatus.error);
-  }
-
-  if (!entryExitStatus.error && !entryExitStatus.filled) {
-    return (
-      <section>
-        {breadcrumb}
+        <HeroHeader photoUrl={heroPhoto} eyebrow="Checksheet Peralatan" title={decodedSite} />
         <EntryExitForm
           site={{ buildingCategory: decodedBc, siteName: decodedSite }}
           mandatory
-          onSuccess={() => setEntryExitStatus({ filled: true, sheetUrl: entryExitStatus.sheetUrl })}
+          onSuccess={() => setEntrySubmitted(true)}
         />
       </section>
     );
@@ -57,19 +46,21 @@ export default function SiteCategoryList() {
   return (
     <section>
       {breadcrumb}
+      <HeroHeader photoUrl={heroPhoto} eyebrow="Checksheet Peralatan" title={decodedSite} />
       <div className="grid grid-3 card-grid">
         {categories.map((c) => (
           <Link
             key={c.id}
             to={`/peralatan/${buildingCategory}/${siteName}/${c.id}`}
-            className="card clickable-card"
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
-            <div className="card-title-sm">{c.short_name}</div>
-            <div className="muted">{c.items.length} item pemeriksaan</div>
-            <div className="badges">
-              {(c.periods || []).map((p) => <span key={p} className="badge">{p}</span>)}
-            </div>
+            <PhotoCard photoUrl={getEquipmentBackground(c.id) || getEquipmentBackground(c.short_name)}>
+              <div className="card-title-sm">{c.short_name}</div>
+              <div className="muted">{c.items.length} item pemeriksaan</div>
+              <div className="badges">
+                {(c.periods || []).map((p) => <span key={p} className="badge">{p}</span>)}
+              </div>
+            </PhotoCard>
           </Link>
         ))}
         {categories.length === 0 && <div className="muted">Tidak ada kategori terdaftar untuk site ini.</div>}
