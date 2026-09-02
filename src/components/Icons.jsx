@@ -72,6 +72,16 @@ export function IconLogInOut() {
   );
 }
 
+export function IconTrackInOut() {
+  return (
+    <svg {...common}>
+      <path d="M4 4v16" />
+      <path d="M4 8l16-4v16l-16-4" />
+      <circle cx="9" cy="9" r="1" />
+    </svg>
+  );
+}
+
 export function IconArrowLeft() {
   return (
     <svg {...common}>
