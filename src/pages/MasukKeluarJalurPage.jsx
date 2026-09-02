@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { SITES } from '../config/sites';
 import { submitMasukJalur, submitKeluarJalur } from '../lib/cfillService';
 import { useToast } from '../components/Toast';
@@ -36,6 +36,8 @@ export default function MasukKeluarJalurPage() {
   const [fotoPreview, setFotoPreview] = useState(null);
   const [suaraFile, setSuaraFile] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const cameraInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
 
   const q = search.trim().toLowerCase();
   const matchingSites = q ? SITES.filter((s) => s.siteName.toLowerCase().includes(q)) : [];
@@ -160,7 +162,19 @@ export default function MasukKeluarJalurPage() {
           <label style={{ display: 'block', marginBottom: 8, fontSize: 13, fontWeight: 600 }}>
             Foto {arah === 'masuk' ? 'Masuk' : 'Keluar'} Jalur <span style={{ color: 'var(--danger, #B4302F)' }}>*wajib</span>
           </label>
-          <input type="file" accept="image/*" capture="environment" className="input" onChange={handleFotoChange} />
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button type="button" className="btn btn-secondary" onClick={() => cameraInputRef.current?.click()}>
+              📷 Ambil Foto
+            </button>
+            <button type="button" className="btn btn-ghost" onClick={() => galleryInputRef.current?.click()}>
+              🖼️ Upload dari Galeri
+            </button>
+          </div>
+          {/* Input kamera: capture="environment" bikin browser LANGSUNG buka kamera,
+              tanpa opsi lain - makanya dipisah dari input galeri (yang TANPA capture,
+              biar browser nampilin file picker biasa dgn opsi galeri/file manager). */}
+          <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={handleFotoChange} />
+          <input ref={galleryInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFotoChange} />
           {fotoPreview && (
             <img src={fotoPreview} alt="Preview foto" style={{ marginTop: 10, maxWidth: 260, maxHeight: 200, borderRadius: 10, border: '1px solid var(--border)' }} />
           )}
