@@ -4,7 +4,7 @@
  * .xlsx asli jadi Google Sheets (sekali saja), lalu tulis ke SLOT baris/kolom
  * yang sudah ada di dalamnya - BUKAN menambah baris baru di bawah.
  */
-import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow, findNextEmptyRow, writeEntryExitRow, readEntryExitDates, getRowCellValues, resolveTabName, readRawRange } from './sheetsApi';
+import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow, findNextEmptyRow, writeEntryExitRow, readEntryExitDates, getRowCellValues, resolveTabName, readRawRange, listSheetTabs } from './sheetsApi';
 import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, uploadPublicImage, findFolderContaining } from './driveApi';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
@@ -21,6 +21,7 @@ const VERIFICATION_TAB_NAME = 'Lembar Verifikasi Pekerjaan';
 
 const ROOT_CHECKSHEET_FOLDER_ID = import.meta.env.VITE_ROOT_CHECKSHEET_FOLDER_ID;
 const JADWAL_KUNJUNGAN_FOLDER_ID = import.meta.env.VITE_JADWAL_KUNJUNGAN_FOLDER_ID;
+const LOG_GANGGUAN_FILE_ID = import.meta.env.VITE_LOG_GANGGUAN_FILE_ID;
 const ROOT_INSTRUMEN_FOLDER_ID = import.meta.env.VITE_ROOT_INSTRUMEN_FOLDER_ID;
 const ROOT_DOKUMENTASI_FOLDER_ID = import.meta.env.VITE_ROOT_DOKUMENTASI_FOLDER_ID;
 const FOTO_MASUK_JALUR_FOLDER_ID = import.meta.env.VITE_FOTO_MASUK_JALUR_FOLDER_ID;
@@ -495,6 +496,27 @@ export async function getJadwalKunjunganBulanIni() {
     });
   }
 
+  // Progress per PERIODE (1M/3M/6M/1Y) - 1 baris bisa mencakup beberapa periode
+  // sekaligus (kolom "Kegiatan" isinya mis. "1M, 3M, 6M" dipisah koma), jadi
+  // tiap periode yang disebut di baris itu dihitung masing-masing (total +
+  // selesai kalau statusnya "Finish"). Ini DIHITUNG SENDIRI dari kolom
+  // Kegiatan+Status, bukan dari kolom M:P (1M/3M/6M/1Y) di sheet - kolom itu
+  // cuma angka kumulatif total per periode, nggak ada breakdown selesai/belum.
+  const PERIODS = ['1M', '3M', '6M', '1Y'];
+  const periodBreakdown = {};
+  PERIODS.forEach((p) => { periodBreakdown[p] = { total: 0, finished: 0 }; });
+
+  for (const it of items) {
+    if (!it.kegiatan) continue;
+    const tags = it.kegiatan.split(',').map((t) => t.trim().toUpperCase());
+    for (const tag of tags) {
+      if (periodBreakdown[tag]) {
+        periodBreakdown[tag].total += 1;
+        if (it.status.toLowerCase() === 'finish') periodBreakdown[tag].finished += 1;
+      }
+    }
+  }
+
   const finished = items.filter((it) => it.status.toLowerCase() === 'finish');
   const notYet = items.filter((it) => it.status.toLowerCase() !== 'finish');
 
@@ -507,7 +529,42 @@ export async function getJadwalKunjunganBulanIni() {
     total: items.length,
     finishedCount: finished.length,
     notYetCount: notYet.length,
+    periodBreakdown,
     notYetItems: notYet,
     allItems: items
   };
+}
+
+/**
+ * ==== Dashboard: Log Gangguan ====
+ * Baca daftar tab yang ada di file Log Gangguan (buat filter "dari sheet
+ * apa"), lalu baca & filter datanya per tab/bulan. Kolom yang diambil (sesuai
+ * struktur "Log Book Gangguan Dept Telco Halim"): E=Lokasi Gangguan,
+ * G=Waktu Gangguan (tanggal alarm), H=Waktu Pemulihan (tanggal dipulihkan),
+ * P=Sistem Terkait (kategori), B=Status (Open/Close).
+ */
+export async function getLogGangguanTabs() {
+  if (!LOG_GANGGUAN_FILE_ID) return { available: false, reason: 'VITE_LOG_GANGGUAN_FILE_ID belum diatur di .env' };
+  const tabs = await listSheetTabs(LOG_GANGGUAN_FILE_ID);
+  return { available: true, tabs };
+}
+
+export async function getLogGangguanData(tabName) {
+  if (!LOG_GANGGUAN_FILE_ID) return { available: false, reason: 'VITE_LOG_GANGGUAN_FILE_ID belum diatur di .env' };
+  const resolvedTab = await resolveTabName(LOG_GANGGUAN_FILE_ID, tabName);
+  const rows = await readRawRange(LOG_GANGGUAN_FILE_ID, resolvedTab, 'B3:P500');
+
+  const items = [];
+  for (const r of rows) {
+    const lokasi = (r[3] || '').trim(); // E (index 3 dari kolom B)
+    if (!lokasi) continue;
+    items.push({
+      status: (r[0] || '').trim(),           // B
+      tanggalAlarm: (r[5] || '').trim(),      // G
+      lokasi,                                 // E
+      tanggalPulih: (r[6] || '').trim(),      // H
+      kategori: (r[14] || '').trim()          // P
+    });
+  }
+  return { available: true, items };
 }

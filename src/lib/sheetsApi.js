@@ -392,6 +392,16 @@ export async function getSheetGid(spreadsheetId, tabName) {
 }
 
 /**
+ * Ambil daftar SEMUA nama tab di 1 spreadsheet - dipakai buat filter "dari
+ * sheet apa" di daftar Temuan & Gangguan (Dashboard), karena 1 file log bisa
+ * punya beberapa tab (mis. per periode/kategori).
+ */
+export async function listSheetTabs(spreadsheetId) {
+  const meta = await sheetsFetch(`/${spreadsheetId}?fields=sheets.properties`);
+  return meta.sheets.map((s) => s.properties.title);
+}
+
+/**
  * Baca 1 blok range mentah dari sheet manapun - dipakai buat parsing "Jadwal
  * Kunjungan MR" di Dashboard (bukan slot tetap kayak checksheet, jadi baca
  * apa adanya lalu di-parse di lapisan atas / cfillService.js).
