@@ -496,6 +496,18 @@ export async function getJadwalKunjunganBulanIni() {
     });
   }
 
+  if (items.length === 0) {
+    // Diagnostik: file & tab ketemu tapi nggak ada baris kerjaan yang kebaca -
+    // tampilkan info teknis biar gampang dilacak, daripada nampilin 0/0 yang
+    // menyesatkan (seolah-olah beneran nggak ada kerjaan bulan ini).
+    return {
+      available: false,
+      reason: `File "${target.name}" ditemukan, tab "${tabName}" terbaca, tapi 0 baris data kerjaan ketemu ` +
+        `(dari ${rows.length} baris mentah yang dibaca). Kemungkinan struktur kolom di file ini beda dari yang diharapkan, ` +
+        `atau akun ini nggak punya akses baca isi selnya (walau bisa lihat file-nya ada).`
+    };
+  }
+
   // Progress per PERIODE (1M/3M/6M/1Y) - 1 baris bisa mencakup beberapa periode
   // sekaligus (kolom "Kegiatan" isinya mis. "1M, 3M, 6M" dipisah koma), jadi
   // tiap periode yang disebut di baris itu dihitung masing-masing (total +
