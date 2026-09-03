@@ -550,7 +550,12 @@ export async function getJadwalKunjunganBulanIni() {
     notYetCount: notYet.length,
     periodBreakdown,
     notYetItems: notYet,
-    allItems: items
+    allItems: items,
+    // Diagnostik sementara: sample 5 item pertama apa adanya (kegiatan +
+    // status persis seperti yang kebaca) - dipakai buat lacak kalau donut
+    // masih 0/0 padahal items nggak kosong (berarti masalahnya di pencocokan
+    // tag Kegiatan, bukan di pembacaan baris).
+    debugSample: items.slice(0, 5).map((it) => ({ lokasi: it.lokasi, kegiatan: it.kegiatan, status: it.status }))
   };
 }
 
