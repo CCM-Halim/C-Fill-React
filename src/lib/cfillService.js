@@ -502,9 +502,11 @@ export async function getJadwalKunjunganBulanIni() {
   // selesai kalau statusnya "Finish"). Ini DIHITUNG SENDIRI dari kolom
   // Kegiatan+Status, bukan dari kolom M:P (1M/3M/6M/1Y) di sheet - kolom itu
   // cuma angka kumulatif total per periode, nggak ada breakdown selesai/belum.
+  // Selain angka, disimpan juga DAFTAR lokasinya (finishedItems/notYetItems) -
+  // dipakai buat pop-up daftar site pas donut chart di Dashboard diklik.
   const PERIODS = ['1M', '3M', '6M', '1Y'];
   const periodBreakdown = {};
-  PERIODS.forEach((p) => { periodBreakdown[p] = { total: 0, finished: 0 }; });
+  PERIODS.forEach((p) => { periodBreakdown[p] = { total: 0, finished: 0, finishedItems: [], notYetItems: [] }; });
 
   for (const it of items) {
     if (!it.kegiatan) continue;
@@ -512,7 +514,12 @@ export async function getJadwalKunjunganBulanIni() {
     for (const tag of tags) {
       if (periodBreakdown[tag]) {
         periodBreakdown[tag].total += 1;
-        if (it.status.toLowerCase() === 'finish') periodBreakdown[tag].finished += 1;
+        if (it.status.toLowerCase() === 'finish') {
+          periodBreakdown[tag].finished += 1;
+          periodBreakdown[tag].finishedItems.push(it);
+        } else {
+          periodBreakdown[tag].notYetItems.push(it);
+        }
       }
     }
   }
