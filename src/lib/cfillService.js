@@ -458,11 +458,20 @@ export async function getJadwalKunjunganBulanIni() {
   const namaBulan = BULAN_ID[now.getMonth()];
   const tahun = now.getFullYear();
 
-  const files = await listFilesInFolder(JADWAL_KUNJUNGAN_FOLDER_ID);
-  // Cocokkan file yang namanya MENGANDUNG nama bulan + tahun berjalan (toleran
-  // variasi kecil penulisan, mis. "Jadwal Kunjungan MR September 2026" atau
-  // "Jadwal Kunjungan MR - September 2026").
-  const target = files.find((f) => f.name.includes(namaBulan) && f.name.includes(String(tahun)));
+  // Struktur folder: [Root] / [Bulan, mis. "9. September"] / [file jadwal] -
+  // ada 1 lapis folder bulan dulu SEBELUM file-nya, jadi cari folder bulan ini
+  // dulu, baru cari file di dalamnya (bukan cari file langsung di folder root).
+  const entries = await listFilesInFolder(JADWAL_KUNJUNGAN_FOLDER_ID);
+  const monthFolder = entries.find((f) => f.name.includes(namaBulan));
+  if (!monthFolder) {
+    return { available: false, reason: `Folder bulan "${namaBulan}" belum ditemukan di folder Jadwal Kunjungan. Pastikan ada folder yang namanya mengandung "${namaBulan}".` };
+  }
+
+  const filesInMonth = await listFilesInFolder(monthFolder.id);
+  // Cocokkan file yang namanya mengandung tahun berjalan (toleran variasi kecil
+  // penulisan) - kalau nggak ketemu tapi cuma ada 1 file di folder itu, pakai itu saja.
+  let target = filesInMonth.find((f) => f.name.includes(String(tahun)));
+  if (!target && filesInMonth.length === 1) target = filesInMonth[0];
   if (!target) {
     return { available: false, reason: `File jadwal untuk ${namaBulan} ${tahun} belum ditemukan di folder. Pastikan namanya mengandung "${namaBulan}" dan "${tahun}".` };
   }
