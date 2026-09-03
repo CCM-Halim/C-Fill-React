@@ -4,7 +4,7 @@
  * .xlsx asli jadi Google Sheets (sekali saja), lalu tulis ke SLOT baris/kolom
  * yang sudah ada di dalamnya - BUKAN menambah baris baru di bawah.
  */
-import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow, findNextEmptyRow, writeEntryExitRow, readEntryExitDates, getRowCellValues, resolveTabName } from './sheetsApi';
+import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow, findNextEmptyRow, writeEntryExitRow, readEntryExitDates, getRowCellValues, resolveTabName, readRawRange } from './sheetsApi';
 import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, uploadPublicImage, findFolderContaining } from './driveApi';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
@@ -20,6 +20,7 @@ const VERIFICATION_SLOT_MAP = { slotStartRow: 6, slotStep: 1, dateCol: 3, namaCo
 const VERIFICATION_TAB_NAME = 'Lembar Verifikasi Pekerjaan';
 
 const ROOT_CHECKSHEET_FOLDER_ID = import.meta.env.VITE_ROOT_CHECKSHEET_FOLDER_ID;
+const JADWAL_KUNJUNGAN_FOLDER_ID = import.meta.env.VITE_JADWAL_KUNJUNGAN_FOLDER_ID;
 const ROOT_INSTRUMEN_FOLDER_ID = import.meta.env.VITE_ROOT_INSTRUMEN_FOLDER_ID;
 const ROOT_DOKUMENTASI_FOLDER_ID = import.meta.env.VITE_ROOT_DOKUMENTASI_FOLDER_ID;
 const FOTO_MASUK_JALUR_FOLDER_ID = import.meta.env.VITE_FOTO_MASUK_JALUR_FOLDER_ID;
@@ -194,15 +195,30 @@ export async function listDocumentationFiles({ buildingCategory, siteName }) {
 /**
  * ==== Masuk/Keluar Jalur ====
  * Upload foto + rekaman suara konfirmasi personil & peralatan pas masuk/keluar
- * restricted area (jalur rel). 4 folder terpisah (foto masuk, foto keluar,
+ * restricted area (jalur rel). 4 folder ROOT terpisah (foto masuk, foto keluar,
  * suara masuk, suara keluar) - dulu diisi lewat Google Form, sekarang langsung
- * dari C-Fill. Folder-folder ini FLAT (nggak ada subfolder bulan/site kayak
- * Dokumentasi Kegiatan) - jadi nama filenya sendiri yang harus jelas identitasnya.
+ * dari C-Fill. Di dalam tiap folder root, file diorganisir per BULAN lalu per
+ * LOKASI (mengikuti struktur folder lama dari Google Form: "1. Januari",
+ * "8. Agustus", dst - TANPA nol di depan, beda dari folder Dokumentasi Kegiatan
+ * yang pakai nol di depan "09. September" - supaya konsisten sama isi lama).
  */
-function buildJalurFileName(siteName, tanggal, waktu, nama, ext) {
-  const siteCode = getSiteShortCode(siteName);
+function buildJalurFileName(waktu, nama, ext) {
   const safeName = (nama || 'Petugas').replace(/[\\/:*?"<>|]/g, '');
-  return `${siteCode} - ${tanggal} ${waktu || ''} - ${safeName}.${ext}`.replace(/\s+/g, ' ').trim();
+  return `${waktu || 'waktu'} - ${safeName}.${ext}`.replace(/\s+/g, ' ').trim();
+}
+
+async function getOrCreateJalurFolder(rootFolderId, siteName, tanggal) {
+  // tanggal format "DD/MM/YYYY" (lihat formatDateID di MasukKeluarJalurPage.jsx)
+  const [, monthStr] = tanggal.split('/');
+  const monthIndex = parseInt(monthStr, 10) - 1;
+  const monthFolderName = `${monthIndex + 1}. ${BULAN_ID[monthIndex]}`; // "9. September" - TANPA nol di depan
+  const monthFolderId = await getOrCreateSubfolder(rootFolderId, monthFolderName);
+
+  const siteCode = getSiteShortCode(siteName);
+  const existingFolderId = await findFolderContaining(monthFolderId, siteCode);
+  if (existingFolderId) return existingFolderId;
+
+  return getOrCreateSubfolder(monthFolderId, siteCode);
 }
 
 export async function submitMasukJalur({ siteName, tanggal, waktu, nama, catatan, fotoFile, suaraFile }) {
@@ -210,7 +226,7 @@ export async function submitMasukJalur({ siteName, tanggal, waktu, nama, catatan
   if (!REKAMAN_MASUK_JALUR_FOLDER_ID) throw new Error('VITE_REKAMAN_MASUK_JALUR_FOLDER_ID belum diatur di .env');
   return submitJalur({
     siteName, tanggal, waktu, nama, catatan, fotoFile, suaraFile,
-    fotoFolderId: FOTO_MASUK_JALUR_FOLDER_ID, suaraFolderId: REKAMAN_MASUK_JALUR_FOLDER_ID, label: 'Masuk Jalur'
+    fotoRootFolderId: FOTO_MASUK_JALUR_FOLDER_ID, suaraRootFolderId: REKAMAN_MASUK_JALUR_FOLDER_ID, label: 'Masuk Jalur'
   });
 }
 
@@ -219,23 +235,25 @@ export async function submitKeluarJalur({ siteName, tanggal, waktu, nama, catata
   if (!REKAMAN_KELUAR_JALUR_FOLDER_ID) throw new Error('VITE_REKAMAN_KELUAR_JALUR_FOLDER_ID belum diatur di .env');
   return submitJalur({
     siteName, tanggal, waktu, nama, catatan, fotoFile, suaraFile,
-    fotoFolderId: FOTO_KELUAR_JALUR_FOLDER_ID, suaraFolderId: REKAMAN_KELUAR_JALUR_FOLDER_ID, label: 'Keluar Jalur'
+    fotoRootFolderId: FOTO_KELUAR_JALUR_FOLDER_ID, suaraRootFolderId: REKAMAN_KELUAR_JALUR_FOLDER_ID, label: 'Keluar Jalur'
   });
 }
 
-async function submitJalur({ siteName, tanggal, waktu, nama, catatan, fotoFile, suaraFile, fotoFolderId, suaraFolderId, label }) {
+async function submitJalur({ siteName, tanggal, waktu, nama, catatan, fotoFile, suaraFile, fotoRootFolderId, suaraRootFolderId, label }) {
   if (!fotoFile) throw new Error('Foto wajib diisi.');
 
   const description = `Site: ${siteName}\nTanggal: ${tanggal} ${waktu || ''}\nNama: ${nama || '-'}\nCatatan: ${catatan || '-'}`;
 
+  const fotoFolderId = await getOrCreateJalurFolder(fotoRootFolderId, siteName, tanggal);
   const fotoExt = (fotoFile.name.split('.').pop() || 'jpg').toLowerCase();
-  const fotoName = buildJalurFileName(siteName, tanggal, waktu, nama, fotoExt);
+  const fotoName = buildJalurFileName(waktu, nama, fotoExt);
   const fotoResult = await uploadFileToFolder(fotoFolderId, new File([fotoFile], fotoName, { type: fotoFile.type }), description);
 
   let suaraResult = null;
   if (suaraFile) {
+    const suaraFolderId = await getOrCreateJalurFolder(suaraRootFolderId, siteName, tanggal);
     const suaraExt = (suaraFile.name.split('.').pop() || 'webm').toLowerCase();
-    const suaraName = buildJalurFileName(siteName, tanggal, waktu, nama, suaraExt);
+    const suaraName = buildJalurFileName(waktu, nama, suaraExt);
     suaraResult = await uploadFileToFolder(suaraFolderId, new File([suaraFile], suaraName, { type: suaraFile.type }), description);
   }
 
@@ -418,4 +436,69 @@ export async function submitVerification({ buildingCategory, siteName, monthInde
 
   const gid = await getSheetGid(spreadsheetId, tabName);
   return { success: true, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid), row };
+}
+
+/**
+ * ==== Dashboard: Jadwal Kunjungan MR ====
+ * Baca file bulanan "Jadwal Kunjungan MR <Bulan> <Tahun>" dari folder yang
+ * dikonfigurasi, cari file yang namanya cocok BULAN BERJALAN (dicari via
+ * substring match, toleran kalau ada variasi kecil di penulisan), lalu parse
+ * tab "Jadwal Kunjungan MR" jadi ringkasan progress + daftar kerjaan yang
+ * belum selesai. Kolom di sheet (dari B, kolom A "No" dilewati):
+ * B=Hari&Tanggal, C=Jam, D=Lokasi, E=(kosong), F=Kegiatan, G=Detail,
+ * H=PIC, I=Temuan, J=Realisasi, K=Status Kegiatan, L=Keterangan.
+ */
+
+export async function getJadwalKunjunganBulanIni() {
+  if (!JADWAL_KUNJUNGAN_FOLDER_ID) {
+    return { available: false, reason: 'VITE_JADWAL_KUNJUNGAN_FOLDER_ID belum diatur di .env' };
+  }
+
+  const now = new Date();
+  const namaBulan = BULAN_ID[now.getMonth()];
+  const tahun = now.getFullYear();
+
+  const files = await listFilesInFolder(JADWAL_KUNJUNGAN_FOLDER_ID);
+  // Cocokkan file yang namanya MENGANDUNG nama bulan + tahun berjalan (toleran
+  // variasi kecil penulisan, mis. "Jadwal Kunjungan MR September 2026" atau
+  // "Jadwal Kunjungan MR - September 2026").
+  const target = files.find((f) => f.name.includes(namaBulan) && f.name.includes(String(tahun)));
+  if (!target) {
+    return { available: false, reason: `File jadwal untuk ${namaBulan} ${tahun} belum ditemukan di folder. Pastikan namanya mengandung "${namaBulan}" dan "${tahun}".` };
+  }
+
+  const tabName = await resolveTabName(target.id, 'Jadwal Kunjungan MR');
+  const rows = await readRawRange(target.id, tabName, 'B3:L120');
+
+  const items = [];
+  for (const r of rows) {
+    const lokasi = (r[2] || '').trim();
+    if (!lokasi) continue; // baris kosong / bukan entri kerjaan beneran
+    items.push({
+      tanggal: (r[0] || '').trim(),
+      jam: (r[1] || '').trim(),
+      lokasi,
+      kegiatan: (r[4] || '').trim(),
+      pic: (r[6] || '').trim(),
+      temuan: (r[7] || '').trim(),
+      status: (r[9] || '').trim(),
+      keterangan: (r[10] || '').trim()
+    });
+  }
+
+  const finished = items.filter((it) => it.status.toLowerCase() === 'finish');
+  const notYet = items.filter((it) => it.status.toLowerCase() !== 'finish');
+
+  return {
+    available: true,
+    bulan: namaBulan,
+    tahun,
+    fileName: target.name,
+    sheetUrl: `https://docs.google.com/spreadsheets/d/${target.id}/edit`,
+    total: items.length,
+    finishedCount: finished.length,
+    notYetCount: notYet.length,
+    notYetItems: notYet,
+    allItems: items
+  };
 }

@@ -392,6 +392,16 @@ export async function getSheetGid(spreadsheetId, tabName) {
 }
 
 /**
+ * Baca 1 blok range mentah dari sheet manapun - dipakai buat parsing "Jadwal
+ * Kunjungan MR" di Dashboard (bukan slot tetap kayak checksheet, jadi baca
+ * apa adanya lalu di-parse di lapisan atas / cfillService.js).
+ */
+export async function readRawRange(spreadsheetId, tabName, range) {
+  const data = await sheetsFetch(`/${spreadsheetId}/values/${encodeURIComponent(`'${tabName}'!${range}`)}`);
+  return data.values || [];
+}
+
+/**
  * Cari nama tab yang SEBENARNYA ada di spreadsheet, toleran terhadap variasi
  * kecil (spasi beda, dll) - mis. data kita simpan "Baterai HFSPS Grup 1
  * (1M,3M)" tapi beberapa file aslinya ternyata "Grup1" (tanpa spasi). Kalau
