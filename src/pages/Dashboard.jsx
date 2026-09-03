@@ -5,8 +5,11 @@ import { getJadwalKunjunganBulanIni, getLogGangguanTabs, getLogGangguanData } fr
 
 const BULAN_ID = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
-/** Donut kecil per periode (1M/3M/6M/1Y) - pakai CSS conic-gradient, tanpa library. */
-function PeriodDonut({ label, total, finished }) {
+/** Donut kecil per periode (1M/3M/6M/1Y) - pakai CSS conic-gradient, tanpa library.
+ * Bagian "Selesai" dan "Belum" masing-masing bisa diklik terpisah buat buka
+ * pop-up daftar lokasinya (lihat onClickFinished/onClickNotYet). */
+function PeriodDonut({ label, total, finished, onClickFinished, onClickNotYet }) {
+  const notYet = total - finished;
   const pct = total > 0 ? Math.round((finished / total) * 100) : 0;
   const bg = total > 0
     ? `conic-gradient(var(--accent) ${pct}%, #F0DCCB ${pct}% 100%)`
@@ -25,6 +28,14 @@ function PeriodDonut({ label, total, finished }) {
         </div>
       </div>
       <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-soft)' }}>{label}</div>
+      <div style={{ display: 'flex', gap: 6, fontSize: 10.5 }}>
+        <span className="link-like" onClick={onClickFinished} style={{ color: 'var(--accent-strong)' }}>
+          {finished} selesai
+        </span>
+        <span className="link-like" onClick={onClickNotYet} style={{ color: '#B4302F' }}>
+          {notYet} belum
+        </span>
+      </div>
     </div>
   );
 }
@@ -41,6 +52,7 @@ export default function Dashboard() {
   const [gangguanItems, setGangguanItems] = useState(null);
   const [gangguanLoading, setGangguanLoading] = useState(false);
   const [gangguanError, setGangguanError] = useState(null);
+  const [periodModal, setPeriodModal] = useState(null); // { label, status, items } kalau lagi buka pop-up
 
   useEffect(() => {
     getJadwalKunjunganBulanIni().then(setJadwal).catch((e) => setJadwalError(e.message));
@@ -94,7 +106,14 @@ export default function Dashboard() {
 
           <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', marginBottom: 6 }}>
             {['1M', '3M', '6M', '1Y'].map((p) => (
-              <PeriodDonut key={p} label={p} total={jadwal.periodBreakdown[p].total} finished={jadwal.periodBreakdown[p].finished} />
+              <PeriodDonut
+                key={p}
+                label={p}
+                total={jadwal.periodBreakdown[p].total}
+                finished={jadwal.periodBreakdown[p].finished}
+                onClickFinished={() => setPeriodModal({ label: p, status: 'Selesai', items: jadwal.periodBreakdown[p].finishedItems })}
+                onClickNotYet={() => setPeriodModal({ label: p, status: 'Belum Selesai', items: jadwal.periodBreakdown[p].notYetItems })}
+              />
             ))}
           </div>
 
@@ -154,6 +173,29 @@ export default function Dashboard() {
           <button className="btn btn-secondary" onClick={() => navigate('/dokumentasi')}>Upload Dokumentasi</button>
         </div>
       </div>
+
+      {periodModal && (
+        <div className="modal-overlay" onClick={() => setPeriodModal(null)}>
+          <div className="modal-box" onClick={(e) => e.stopPropagation()} style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+            <div className="card-title">{periodModal.label} — {periodModal.status} ({periodModal.items.length})</div>
+            {periodModal.items.length === 0 ? (
+              <div className="muted" style={{ marginTop: 10 }}>Tidak ada data.</div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
+                {periodModal.items.map((it, i) => (
+                  <div key={i} style={{ borderBottom: '1px solid var(--border-soft)', paddingBottom: 8 }}>
+                    <div style={{ fontWeight: 700, fontSize: 13.5 }}>{it.lokasi}</div>
+                    <div className="muted" style={{ fontSize: 12 }}>
+                      {it.tanggal} {it.jam && `· ${it.jam}`} {it.pic && `· PIC: ${it.pic}`}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            <button className="btn btn-ghost" style={{ marginTop: 16, width: '100%' }} onClick={() => setPeriodModal(null)}>Tutup</button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
