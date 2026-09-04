@@ -5,14 +5,29 @@ import EntryExitForm from '../components/EntryExitForm';
 import { HeroHeader, PhotoCard } from '../components/PhotoCard';
 import { getSiteBackground, getEquipmentBackground } from '../config/backgrounds';
 
+function todayStr() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
 /**
- * Entry/Exit Registration WAJIB diisi tiap kali site ini dibuka - bukan cuma
- * sekali per bulan. Ini sengaja begini karena Entry/Exit itu LOG KUNJUNGAN,
- * bukan checklist bulanan - tiap kunjungan (kapanpun tanggalnya, walau di
- * bulan yang sama dengan kunjungan sebelumnya) dicatat sendiri-sendiri.
- * State `entrySubmitted` cuma hidup selama sesi ini (reset kalau halaman
- * di-refresh/dibuka ulang) - begitu diisi 1x, baru lanjut ke daftar kategori.
+ * Entry/Exit Registration WAJIB diisi tiap kunjungan (per site per hari) -
+ * bukan cuma sekali per bulan, karena ini LOG KUNJUNGAN bukan checklist
+ * bulanan.
+ *
+ * PENTING: status "sudah diisi hari ini" disimpan di sessionStorage (bukan
+ * cuma React state biasa) supaya BERTAHAN walau teknisi pindah ke halaman
+ * checksheet lain terus balik lagi ke sini (component ini remount tiap
+ * navigasi - kalau statusnya cuma React state lokal, dia reset ke false lagi
+ * dan minta isi Entry/Exit ULANG padahal baru aja diisi di kunjungan yang
+ * sama). sessionStorage bertahan selama tab browser masih terbuka, otomatis
+ * "reset" sendiri kalau tab ditutup/besok dibuka lagi (kunjungan baru).
  */
+function entryExitSessionKey(siteName) {
+  return `cfill_entryexit_${siteName}_${todayStr()}`;
+}
+
 export default function SiteCategoryList() {
   const { buildingCategory, siteName } = useParams();
   const decodedBc = decodeURIComponent(buildingCategory);
@@ -20,7 +35,14 @@ export default function SiteCategoryList() {
   const categories = getCategoriesForSite(decodedSite);
   const heroPhoto = getSiteBackground(decodedSite, decodedBc);
 
-  const [entrySubmitted, setEntrySubmitted] = useState(false);
+  const [entrySubmitted, setEntrySubmitted] = useState(
+    () => sessionStorage.getItem(entryExitSessionKey(decodedSite)) === 'true'
+  );
+
+  function handleEntryExitSuccess() {
+    sessionStorage.setItem(entryExitSessionKey(decodedSite), 'true');
+    setEntrySubmitted(true);
+  }
 
   const breadcrumb = (
     <div className="breadcrumb">
@@ -37,7 +59,7 @@ export default function SiteCategoryList() {
         <EntryExitForm
           site={{ buildingCategory: decodedBc, siteName: decodedSite }}
           mandatory
-          onSuccess={() => setEntrySubmitted(true)}
+          onSuccess={handleEntryExitSuccess}
         />
       </section>
     );
