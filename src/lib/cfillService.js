@@ -285,6 +285,46 @@ const ENTRY_EXIT_DATE_COL = 2; // kolom B = Tanggal, dipakai buat deteksi baris 
  * BERJALAN di site ini - dipakai buat wajibkan pengisian sebelum bisa akses
  * checksheet peralatan (kalau belum, tampilkan form ini duluan).
  */
+/**
+ * Cek apakah Entry/Exit Registration SUDAH ADA buat site + TANGGAL SPESIFIK
+ * tertentu (beda dari checkEntryExitFilledThisMonth yang cek per-bulan) -
+ * dipakai buat nentuin apakah dialog "Perbaikan/Perawatan Baru" perlu
+ * ditampilkan pas submit checksheet (cuma relevan kalau lokasi itu emang
+ * beneran ada kunjungan tercatat di tanggal yang sama dgn checksheet-nya).
+ */
+export async function checkEntryExitFilledOnDate(buildingCategory, siteName, tanggal) {
+  const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
+  if (!site) return false;
+
+  const [year, month, day] = tanggal.split('-').map(Number); // tanggal format "YYYY-MM-DD"
+  if (!year || !month || !day) return false;
+
+  try {
+    const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
+    const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+    const tabName = await resolveTabName(spreadsheetId, ENTRY_EXIT_TAB_NAME);
+    const nextEmptyRow = await findNextEmptyRow(spreadsheetId, tabName, ENTRY_EXIT_START_ROW, ENTRY_EXIT_DATE_COL);
+    if (nextEmptyRow <= ENTRY_EXIT_START_ROW) return false;
+
+    const rows = await readEntryExitDates(spreadsheetId, tabName, ENTRY_EXIT_START_ROW, nextEmptyRow - 1);
+    // Sama seperti checkEntryExitFilledThisMonth - cek fleksibel (nggak asumsi
+    // urutan DD/MM/YYYY yang kaku), tapi kali ini cocokkan hari+bulan+tahun
+    // TIGA-TIGANYA (bukan cuma bulan+tahun).
+    return rows.some((dateStr) => {
+      const numbers = (dateStr || '').match(/\d+/g);
+      if (!numbers || numbers.length < 3) return false;
+      const hasYear = numbers.includes(String(year));
+      const hasMonth = numbers.some((n) => parseInt(n, 10) === month && parseInt(n, 10) <= 12);
+      const hasDay = numbers.some((n) => parseInt(n, 10) === day);
+      return hasYear && hasMonth && hasDay;
+    });
+  } catch {
+    // Gagal cek (mis. site belum ada Entry/Exit sama sekali) - fail-safe ke
+    // false, biar dialog konfirmasi cuma nggak muncul (bukan nge-block submit).
+    return false;
+  }
+}
+
 export async function checkEntryExitFilledThisMonth(buildingCategory, siteName) {
   requireFolderConfig(ROOT_CHECKSHEET_FOLDER_ID, 'VITE_ROOT_CHECKSHEET_FOLDER_ID');
   const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
