@@ -146,18 +146,31 @@ export function silentLogin() {
 
 /**
  * Memicu popup login Google. Resolve dengan { token, user } kalau berhasil.
+ * Kalau gagal, reject dengan error message yang jelas.
  */
 export function login() {
   return new Promise((resolve, reject) => {
     initTokenClient((token, error) => {
+      console.log('[googleAuth] Token client callback:', { token, error });
+      
       if (error || !token) {
-        reject(new Error(error || 'Login dibatalkan.'));
+        reject(new Error(error || 'Login dibatalkan oleh pengguna atau error teknis'));
         return;
       }
+      
       localStorage.setItem(HAS_LOGGED_IN_BEFORE_KEY, 'true');
       resolve({ token, user: currentUser });
     });
-    tokenClient.requestAccessToken({ prompt: currentUser ? '' : 'select_account' });
+    
+    try {
+      // Di mobile/tablet, pakai prompt='select_account' untuk pastikan popup muncul
+      const prompt = currentUser ? '' : 'select_account';
+      console.log('[googleAuth] Calling requestAccessToken with prompt:', prompt);
+      tokenClient.requestAccessToken({ prompt: prompt });
+    } catch (e) {
+      console.error('[googleAuth] Error calling requestAccessToken:', e);
+      reject(new Error('Gagal memicu popup login Google. Pastikan JavaScript aktif & bukan blocked by browser.'));
+    }
   });
 }
 

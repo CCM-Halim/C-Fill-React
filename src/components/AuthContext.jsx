@@ -20,54 +20,53 @@ export function AuthProvider({ children }) {
   const [error, setError] = useState(null);
 
   async function handleLogin() {
+    console.log('[CCM Fill] Starting login...');
     setLoading(true);
     setError(null);
     
-    // Timeout handler - kalau hang > 30 detik, stop otomatis
-    let timedOut = false;
-    const timeoutId = setTimeout(() => {
-      timedOut = true;
-      setError('Waktu habis. Coba login ulang.');
-      setLoading(false);
-    }, 30000);
-    
+    // Lebih robust: gunakan Promise.race + timeout 30s
     try {
+      console.log('[CCM Fill] Calling googleLogin()...');
+      
       const result = await Promise.race([
         googleLogin(),
         new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout menunggu Google')), 30000)
+          setTimeout(() => reject(new Error('Timeout menunggu Google — silakan refresh dan coba lagi')), 30000)
         )
       ]);
       
-      clearTimeout(timeoutId);
+      console.log('[CCM Fill] Login resolved:', result?.user?.email);
       
       if (!result || !result.user) {
-        throw new Error('Google login gagal - tidak ada user returned');
+        throw new Error('Google login gagal - tidak ada data user');
       }
       
       localStorage.setItem('cfill_has_logged_in_before', 'true');
       
       if (!isAllowedEmail(result.user.email)) {
+        console.error('[CCM Fill] Access denied:', result.user.email);
         setError(ACCESS_DENIED_MESSAGE);
         googleLogout();
-        clearTimeout(timeoutId);
         return;
       }
       
+      console.log('[CCM Fill] Setting user:', result.user.email);
       setUser(result.user);
+      setError(null); // Clear any previous errors
     } catch (e) {
-      clearTimeout(timeoutId);
       console.error('[CCM Fill] Login error:', e.message);
-      setError(e.message || 'Login gagal.');
-      googleLogout();
+      setError(e.message);
+      googleLogout(); // Clean up failed session
     } finally {
       setLoading(false);
     }
   }
 
   function handleLogout() {
+    console.log('[CCM Fill] Logout clicked');
     googleLogout();
     setUser(null);
+    setError(null);
   }
 
   const isForeman = isForemanEmail(user?.email);
