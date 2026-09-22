@@ -4,8 +4,8 @@
 // Ganti/tambah email di sini sesuai kebutuhan (misal ada Foreman baru, atau
 // pindah tugas) - tinggal edit array ini, tidak perlu ubah bagian lain kode.
 export const FOREMAN_EMAILS = [
-  // 'dandy@contoh.com',
-  // 'aziz@contoh.com',
+   'dandy.pujist@gmail.com',
+   'azizfuadtri@gmail.com',
 ];
 
 export function isForemanEmail(email) {

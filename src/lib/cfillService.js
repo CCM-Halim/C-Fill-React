@@ -5,7 +5,7 @@
  * yang sudah ada di dalamnya - BUKAN menambah baris baru di bawah.
  */
 import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow, findNextEmptyRow, writeEntryExitRow, readEntryExitDates, getRowCellValues, resolveTabName, readRawRange, listSheetTabs } from './sheetsApi';
-import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, uploadPublicImage, findFolderContaining } from './driveApi';
+import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, uploadPublicImage, findFolderContaining, replaceFileContent, makeFilePublic } from './driveApi';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
 import { INSTRUMENT_SLOT_MAP } from '../config/instruments';
@@ -631,4 +631,25 @@ export async function getLogGangguanData(tabName) {
     });
   }
   return { available: true, items };
+}
+
+/**
+ * ==== Admin: Ganti Foto Header Login ====
+ * Timpa isi file gambar header login (ID file-nya sudah tetap/tidak berubah,
+ * lihat config/loginHeader.js) - cuma boleh dipanggil oleh admin. Kalau
+ * VITE_LOGIN_HEADER_FILE_ID belum diatur (belum pernah setup pertama kali),
+ * fungsi ini nggak bisa jalan - perlu setup manual sekali oleh admin
+ * (upload 1 file ke Drive, share publik, catat ID-nya ke .env).
+ */
+export async function updateLoginHeaderImage(imageFile) {
+  const fileId = import.meta.env.VITE_LOGIN_HEADER_FILE_ID;
+  if (!fileId) {
+    throw new Error(
+      'VITE_LOGIN_HEADER_FILE_ID belum diatur. Upload 1 foto dulu manual ke Google Drive, ' +
+      'share sebagai "Anyone with the link - Viewer", lalu catat ID file-nya (dari URL) ke Environment Variable ini.'
+    );
+  }
+  await replaceFileContent(fileId, imageFile);
+  await makeFilePublic(fileId); // jaga-jaga kalau permission publiknya kehapus manual
+  return { success: true };
 }

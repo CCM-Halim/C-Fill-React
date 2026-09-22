@@ -327,3 +327,40 @@ export async function listFilesInFolder(folderId) {
   );
   return list.files || [];
 }
+
+/**
+ * Timpa ISI file yang SUDAH ADA (media re-upload) - ID & link publik file itu
+ * TIDAK BERUBAH walau isinya diganti. Dipakai buat fitur "Ganti Foto Header
+ * Login" (admin) - foto baru langsung tampil ke semua orang tanpa perlu
+ * update konfigurasi/link apapun, karena ID file-nya tetap sama.
+ */
+export async function replaceFileContent(fileId, file) {
+  const token = await getValidAccessToken();
+  const res = await fetch(
+    `${UPLOAD_BASE}/files/${fileId}?uploadType=media&${DRIVE_SUPPORT_PARAMS}`,
+    {
+      method: 'PATCH',
+      headers: { Authorization: 'Bearer ' + token, 'Content-Type': file.type },
+      body: file
+    }
+  );
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error('Gagal mengganti isi file (' + res.status + '): ' + body);
+  }
+  return res.json();
+}
+
+/**
+ * Pastikan sebuah file bisa diakses PUBLIK (anyone with link, view only) -
+ * dipakai supaya foto header login bisa ditampilkan di halaman login TANPA
+ * perlu login dulu (halaman login itu sendiri belum ada akses token Google).
+ */
+export async function makeFilePublic(fileId) {
+  const token = await getValidAccessToken();
+  await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}/permissions?${DRIVE_SUPPORT_PARAMS}`, {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ role: 'reader', type: 'anyone' })
+  });
+}

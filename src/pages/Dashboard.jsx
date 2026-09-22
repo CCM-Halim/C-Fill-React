@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext';
-import { getJadwalKunjunganBulanIni, getLogGangguanTabs, getLogGangguanData } from '../lib/cfillService';
+import { getJadwalKunjunganBulanIni, getLogGangguanTabs, getLogGangguanData, updateLoginHeaderImage } from '../lib/cfillService';
+import { useToast } from '../components/Toast';
+import { LOGIN_HEADER_IMAGE_URL } from '../config/loginHeader';
+
+const ADMIN_EMAIL = 'dandy.pujist@gmail.com';
 
 const BULAN_ID = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
@@ -43,6 +47,9 @@ function PeriodDonut({ label, total, finished, onClickFinished, onClickNotYet })
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const showToast = useToast();
+  const isAdmin = user?.email === ADMIN_EMAIL;
+  const [uploadingHeader, setUploadingHeader] = useState(false);
   const [jadwal, setJadwal] = useState(null);
   const [jadwalError, setJadwalError] = useState(null);
 
@@ -120,6 +127,15 @@ export default function Dashboard() {
           <a href={jadwal.sheetUrl} target="_blank" rel="noreferrer" className="link-like" style={{ display: 'inline-block', marginTop: 14, fontSize: 13 }}>
             Buka jadwal lengkap di Google Sheets →
           </a>
+
+          {jadwal.total > 0 && jadwal.periodBreakdown['1M'].total === 0 && jadwal.periodBreakdown['3M'].total === 0 && (
+            <div className="notice-box" style={{ marginTop: 14, fontSize: 11.5 }}>
+              🔧 Diagnostik sementara — {jadwal.total} baris kebaca tapi periode semuanya 0. Sample data mentah:
+              <pre style={{ whiteSpace: 'pre-wrap', marginTop: 6, fontSize: 10.5 }}>
+                {JSON.stringify(jadwal.debugSample, null, 1)}
+              </pre>
+            </div>
+          )}
         </div>
       )}
 
@@ -173,6 +189,37 @@ export default function Dashboard() {
           <button className="btn btn-secondary" onClick={() => navigate('/dokumentasi')}>Upload Dokumentasi</button>
         </div>
       </div>
+
+      {isAdmin && (
+        <div className="card" style={{ marginTop: 20 }}>
+          <div className="card-title">🔧 Admin — Ganti Foto Header Login</div>
+          <p className="muted" style={{ marginBottom: 12 }}>
+            Foto ini tampil di bagian atas halaman login semua orang. Ganti kapan saja - link-nya nggak berubah.
+          </p>
+          <img src={LOGIN_HEADER_IMAGE_URL} alt="Header login saat ini" style={{ width: '100%', maxWidth: 320, borderRadius: 10, marginBottom: 12, border: '1px solid var(--border)' }} />
+          <input
+            type="file"
+            accept="image/*"
+            className="input"
+            disabled={uploadingHeader}
+            onChange={async (e) => {
+              const file = e.target.files[0];
+              if (!file) return;
+              setUploadingHeader(true);
+              try {
+                await updateLoginHeaderImage(file);
+                showToast('Foto header login berhasil diganti ✅ (mungkin perlu beberapa menit sebelum berubah di semua HP)', false);
+              } catch (err) {
+                showToast('Gagal ganti foto: ' + err.message, true);
+              } finally {
+                setUploadingHeader(false);
+                e.target.value = '';
+              }
+            }}
+          />
+          {uploadingHeader && <div className="muted" style={{ marginTop: 8 }}>Mengupload...</div>}
+        </div>
+      )}
 
       {periodModal && (
         <div className="modal-overlay" onClick={() => setPeriodModal(null)}>

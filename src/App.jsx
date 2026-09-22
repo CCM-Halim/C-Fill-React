@@ -18,7 +18,13 @@ import VerifikasiIndex from './pages/VerifikasiIndex';
 import VerifikasiSite from './pages/VerifikasiSite';
 
 function AppShell() {
-  const { user, isForeman } = useAuth();
+  const { user, isForeman, checkingSilent } = useAuth();
+
+  if (checkingSilent) {
+    // Lagi nyoba pulihkan sesi diam-diam (silent login) - jangan kelip ke
+    // layar login dulu, cukup layar kosong sebentar (biasanya <1 detik).
+    return <div className="app-loading-blank" />;
+  }
 
   if (!user) {
     return <LoginScreen />;

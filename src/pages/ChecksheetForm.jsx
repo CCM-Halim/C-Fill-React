@@ -160,6 +160,12 @@ export default function ChecksheetForm() {
         res.sheetUrl,
         'Buka & cek di Google Sheets →'
       );
+      if (res.duplicateWarning) {
+        // Toast kedua, terpisah dari toast sukses di atas - biar keduanya
+        // kebaca (showToast biasanya cuma nampilin 1 di satu waktu, jadi kasih
+        // jeda dikit sebelum toast peringatan muncul).
+        setTimeout(() => showToast('⚠️ ' + res.duplicateWarning, true), 3500);
+      }
       navigate(`/peralatan/${buildingCategory}/${siteName}`);
     } catch (e) {
       showToast('Gagal menyimpan: ' + e.message, true);
