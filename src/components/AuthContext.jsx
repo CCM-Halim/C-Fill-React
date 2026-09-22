@@ -1,8 +1,28 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { login as googleLogin, logout as googleLogout, getCurrentUser, silentLogin, hasLoggedInBefore } from '../lib/googleAuth';
 import { isForemanEmail } from '../config/foremen';
+import { isAllowedEmail } from '../config/access';
 
 const AuthContext = createContext(null);
+
+// Pesan seragam untuk akun yang tidak ada di daftar izin (config/access.js).
+const ACCESS_DENIED_MESSAGE =
+  'Akun ini tidak memiliki akses ke aplikasi C-Fill. ' +
+  'Hubungi admin untuk didaftarkan.';
+
+/**
+ * Gerbang akses: hanya email di daftar ALLOWED_EMAILS (foremen.js +
+ * EXTRA_ALLOWED_EMAILS di config/access.js) yang boleh masuk. Kalau ditolak,
+ * sesi Google-nya sekalian di-logout supaya tidak nyangkut (kalau tidak,
+ * restoreSession di googleAuth.js akan memulihkan user terblokir itu lagi
+ * setiap halaman dibuka — jadi blokirnya harus disertai logout).
+ */
+function enforceAccess(currentUser) {
+  if (!currentUser) return null;
+  if (isAllowedEmail(currentUser.email)) return currentUser;
+  googleLogout();
+  return null;
+}
 
 export function AuthProvider({ children }) {
   // Lazy initializer (bukan useState(null) + useEffect) - biar sesi yang udah
@@ -10,7 +30,7 @@ export function AuthProvider({ children }) {
   // render apapun) langsung kepakai di render PERTAMA. Kalau pakai useEffect,
   // ada jeda sekilas nampilin layar login dulu baru "berkedip" ke halaman
   // asli begitu efeknya jalan.
-  const [user, setUser] = useState(() => getCurrentUser());
+  const [user, setUser] = useState(() => enforceAccess(getCurrentUser()));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   // Cuma nunggu proses silent-check kalau MEMANG akan dicoba (device ini
@@ -34,7 +54,14 @@ export function AuthProvider({ children }) {
     let cancelled = false;
     silentLogin().then((result) => {
       if (cancelled) return;
-      if (result?.user) setUser(result.user);
+      // Cek akses — kalau tidak diizinkan, logout sesi Google-nya
+      if (!result?.user || !isAllowedEmail(result.user.email)) {
+        setUser(null); // reset state
+        googleLogout(); // sekalian clear sesi agar tidak restore lagi nanti
+        setError(ACCESS_DENIED_MESSAGE);
+        return;
+      }
+      setUser(result.user);
       setCheckingSilent(false);
     });
     return () => { cancelled = true; };
@@ -46,9 +73,21 @@ export function AuthProvider({ children }) {
     setError(null);
     try {
       const { user } = await googleLogin();
+      // Cek akses di sini — kalau tidak diizinkan, logout Google session-nya
+      if (!isAllowedEmail(user.email)) {
+        setError(ACCESS_DENIED_MESSAGE);
+        googleLogout(); // sekalian clear sesi agar tidak restore lagi
+        return; // jangan set user
+      }
       setUser(user);
     } catch (e) {
-      setError(e.message);
+      // Cek apakah error karena access denied
+      setError(e.message || ACCESS_DENIED_MESSAGE);
+      if (e.message === 'Google API error' && !user.email) {
+        googleLogout();
+      } else {
+        setError(e.message || ACCESS_DENIED_MESSAGE);
+      }
     } finally {
       setLoading(false);
     }
