@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext';
-import { getJadwalKunjunganBulanIni, getLogGangguanTabs, getLogGangguanData, setJadwalKunjunganOverride } from '../lib/cfillService';
-import { useToast } from '../components/Toast';
-
-const ADMIN_EMAIL = 'dandy.pujist@gmail.com';
+import { getJadwalKunjunganBulanIni, getLogGangguanTabs, getLogGangguanData } from '../lib/cfillService';
 
 const BULAN_ID = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
@@ -46,11 +43,8 @@ function PeriodDonut({ label, total, finished, onClickFinished, onClickNotYet })
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const showToast = useToast();
-  const isAdmin = user?.email === ADMIN_EMAIL;
   const [jadwal, setJadwal] = useState(null);
   const [jadwalError, setJadwalError] = useState(null);
-
   const [gangguanTabs, setGangguanTabs] = useState(null);
   const [selectedTab, setSelectedTab] = useState('');
   const [selectedBulan, setSelectedBulan] = useState(new Date().getMonth());
@@ -58,30 +52,7 @@ export default function Dashboard() {
   const [gangguanLoading, setGangguanLoading] = useState(false);
   const [gangguanError, setGangguanError] = useState(null);
   const [periodModal, setPeriodModal] = useState(null); // { label, status, items } kalau lagi buka pop-up
-  const [jadwalLink, setJadwalLink] = useState('');
-  const [savingJadwalLink, setSavingJadwalLink] = useState(false);
 
-  function reloadJadwal() {
-    setJadwal(null);
-    setJadwalError(null);
-    getJadwalKunjunganBulanIni().then(setJadwal).catch((e) => setJadwalError(e.message));
-  }
-
-  async function handleSaveJadwalLink() {
-    if (!jadwalLink.trim()) { showToast('Tempel link Google Sheets dulu.', true); return; }
-    setSavingJadwalLink(true);
-    try {
-      const now = new Date();
-      await setJadwalKunjunganOverride(now.getMonth(), now.getFullYear(), jadwalLink.trim());
-      showToast('Link jadwal berhasil disimpan ✅ Progress diperbarui.', false);
-      setJadwalLink('');
-      reloadJadwal();
-    } catch (e) {
-      showToast('Gagal menyimpan link: ' + e.message, true);
-    } finally {
-      setSavingJadwalLink(false);
-    }
-  }
 
   useEffect(() => {
     getJadwalKunjunganBulanIni().then(setJadwal).catch((e) => setJadwalError(e.message));
@@ -211,30 +182,6 @@ export default function Dashboard() {
           <button className="btn btn-secondary" onClick={() => navigate('/dokumentasi')}>Upload Dokumentasi</button>
         </div>
       </div>
-
-      {isAdmin && (
-        <div className="card" style={{ marginTop: 20 }}>
-          <div className="card-title">🔧 Admin — Link Jadwal Kunjungan Bulan Ini</div>
-          <p className="muted" style={{ marginBottom: 12 }}>
-            Tempel link Google Sheets "Jadwal Kunjungan MR" buat bulan ini ({BULAN_ID[new Date().getMonth()]} {new Date().getFullYear()}) -
-            progress Dashboard langsung update pakai file ini, nggak perlu atur folder Drive manual lagi.
-          </p>
-          <input
-            className="input"
-            placeholder="https://docs.google.com/spreadsheets/d/..."
-            value={jadwalLink}
-            onChange={(e) => setJadwalLink(e.target.value)}
-            style={{ marginBottom: 10 }}
-          />
-          <button className="btn btn-primary" onClick={handleSaveJadwalLink} disabled={savingJadwalLink}>
-            {savingJadwalLink ? <span className="spinner" /> : null}
-            {savingJadwalLink ? 'Menyimpan...' : 'Simpan Link'}
-          </button>
-          {jadwal?.available && jadwal.fileName.includes('link manual admin') && (
-            <div className="muted" style={{ marginTop: 10, fontSize: 12 }}>✅ Sedang pakai link manual untuk bulan ini.</div>
-          )}
-        </div>
-      )}
 
       {periodModal && (
         <div className="modal-overlay" onClick={() => setPeriodModal(null)}>
