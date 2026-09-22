@@ -2,6 +2,12 @@ import React from 'react';
 import { useAuth } from './AuthContext';
 import { LOGIN_HEADER_IMAGE_URL } from '../config/loginHeader';
 
+// Identitas aplikasi — dipakai di footer card login.
+// APP_VERSION sengaja ditulis manual (bukan tanggal build otomatis) supaya
+// nomor versi = penanda rilis yang dikendalikan admin, bukan berubah tiap deploy.
+const APP_NAME_FULL = 'Communication Comprehensive Maintenance Halim';
+const APP_VERSION = 'v1.0';
+
 function GoogleIcon() {
   return (
     <svg width="19" height="19" viewBox="0 0 48 48">
@@ -23,8 +29,8 @@ export default function LoginScreen() {
         <div className="login-hero-fade" />
         <div className="login-hero-text">
           <div className="login-hero-brand">CCM Halim</div>
-          <div className="login-hero-tagline">Communication &amp; Checksheet Maintenance</div>
-          <div className="login-hero-sub">Telecommunication Maintenance Team — CCM Halim Karawang</div>
+          <div className="login-hero-tagline">Menjaga Keandalan Komunikasi Jalur Kereta Cepat</div>
+          <div className="login-hero-sub">Communication Comprehensive Maintenance — Halim, Karawang</div>
         </div>
       </div>
 
@@ -52,7 +58,10 @@ export default function LoginScreen() {
 
           {error ? <div className="login-error">{error}</div> : null}
 
-          <div className="login-panel-footer">C-Fill v1.0 &copy; CCM Halim</div>
+          <div className="login-panel-footer">
+            <span className="login-footer-app">C-Fill {APP_VERSION}</span>
+            <span className="login-footer-copy">&copy; {APP_NAME_FULL}</span>
+          </div>
         </div>
       </div>
     </div>

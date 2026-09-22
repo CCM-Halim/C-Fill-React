@@ -291,11 +291,16 @@ a{color:var(--accent);}
 .login-welcome{font-family:'Space Grotesk',sans-serif;font-size:23px;font-weight:700;color:var(--ink);margin-bottom:6px;}
 .login-panel .login-desc{font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:24px;}
 .login-panel .login-error{margin-top:14px;font-size:12.5px;color:#B4302F;text-align:center;}
-/* Footer meta: garis pemisah + rata kiri/kanan, meniru footer card referensi */
+/* Footer meta: garis pemisah, nama app di kiri + copyright di kanan
+   (meniru footer card referensi). Nama lengkapnya panjang, jadi di layar
+   sempit turun jadi 2 baris rata tengah alih-alih berdesakan. */
 .login-panel-footer{
   margin-top:26px;padding-top:16px;border-top:1px solid var(--border-soft);
-  font-size:11.5px;color:var(--ink-faint);text-align:center;letter-spacing:.01em;
+  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px;
+  font-size:11.5px;color:var(--ink-faint);letter-spacing:.01em;
 }
+.login-footer-app{font-weight:600;color:var(--ink-soft);white-space:nowrap;}
+.login-footer-copy{text-align:right;line-height:1.45;}
 
 .account-signin-btn{
   width:100%;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;
@@ -317,8 +322,10 @@ a{color:var(--accent);}
   }
   .login-hero-text{left:44px;right:44px;bottom:42px;max-width:430px;}
   .login-hero-brand{font-size:13.5px;}
-  .login-hero-tagline{font-size:30px;line-height:1.14;margin-top:11px;}
-  .login-hero-sub{font-size:14px;margin-top:9px;}
+  /* Tagline corporate lebih panjang dari versi lama — 27px biar muat 2-3 baris
+     tanpa mendominasi panel foto. */
+  .login-hero-tagline{font-size:27px;line-height:1.18;margin-top:11px;}
+  .login-hero-sub{font-size:13.5px;margin-top:9px;}
 
   .login-panel{width:50%;height:100vh;height:100dvh;overflow-y:auto;padding:40px;}
   .login-panel-inner{max-width:460px;padding:46px 42px;border-radius:18px;}
