@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { login as googleLogin, logout as googleLogout, getCurrentUser, silentLogin } from '../lib/googleAuth';
+import { login as googleLogin, logout as googleLogout, getCurrentUser, silentLogin, hasLoggedInBefore } from '../lib/googleAuth';
 import { isForemanEmail } from '../config/foremen';
 
 const AuthContext = createContext(null);
@@ -13,16 +13,24 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => getCurrentUser());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [checkingSilent, setCheckingSilent] = useState(!getCurrentUser());
+  // Cuma nunggu proses silent-check kalau MEMANG akan dicoba (device ini
+  // pernah login sebelumnya) - kalau user baru, checkingSilent langsung false
+  // dari awal (tidak ada apapun buat ditunggu, halaman login muncul langsung).
+  const [checkingSilent, setCheckingSilent] = useState(!getCurrentUser() && hasLoggedInBefore());
 
   // Kalau nggak ada sesi valid tersimpan (mis. access token udah kedaluwarsa -
   // token Google cuma tahan ~1 jam, sedangkan sessionStorage bertahan sampai
-  // tab ditutup), coba SILENT LOGIN dulu di background sebelum benar-benar
-  // nampilin layar login - manfaatin sesi Google browser yang mungkin masih
+  // tab ditutup) DAN device ini PERNAH login sebelumnya, coba SILENT LOGIN
+  // dulu di background - manfaatin sesi Google browser yang mungkin masih
   // aktif + consent yang udah pernah diberikan, biar teknisi nggak perlu klik
   // tombol login manual tiap kali refresh setelah >1 jam.
+  //
+  // PENTING: untuk user yang BELUM PERNAH login sama sekali di device ini,
+  // silentLogin() SENGAJA TIDAK dicoba - itu yang sebelumnya bikin popup
+  // Google muncul sendiri begitu halaman dibuka, sebelum user sempat klik
+  // apapun (nggak semestinya kejadian buat first-time user).
   useEffect(() => {
-    if (user) { setCheckingSilent(false); return; }
+    if (user || !hasLoggedInBefore()) { setCheckingSilent(false); return; }
     let cancelled = false;
     silentLogin().then((result) => {
       if (cancelled) return;

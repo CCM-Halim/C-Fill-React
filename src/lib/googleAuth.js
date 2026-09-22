@@ -12,6 +12,7 @@
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const SESSION_KEY = 'cfill_auth_session_v1';
+const HAS_LOGGED_IN_BEFORE_KEY = 'cfill_has_logged_in_before'; // localStorage (bukan sessionStorage) - bertahan lintas sesi, biar tau apakah device ini PERNAH login sebelumnya
 
 const SCOPES = [
   'https://www.googleapis.com/auth/spreadsheets',
@@ -60,8 +61,34 @@ function ensureClientIdConfigured() {
   }
 }
 
-function initTokenClient(onToken) {
+let gisScriptPromise = null;
+
+/**
+ * Muat script Google Identity Services SECARA DINAMIS, cuma dipanggil pas
+ * user beneran klik "Masuk dengan Gmail" (bukan dimuat statis dari index.html
+ * di setiap halaman) - biar nggak ada auto-prompt "Sign in with Google" yang
+ * muncul sendiri sebelum user klik apapun (perilaku FedCM di beberapa browser
+ * begitu script ini kedeteksi ada di halaman).
+ */
+function loadGisScript() {
+  if (window.google?.accounts?.oauth2) return Promise.resolve();
+  if (gisScriptPromise) return gisScriptPromise;
+
+  gisScriptPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Gagal memuat Google Identity Services. Cek koneksi internet.'));
+    document.head.appendChild(script);
+  });
+  return gisScriptPromise;
+}
+
+async function initTokenClient(onToken) {
   ensureClientIdConfigured();
+  await loadGisScript();
   if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
     throw new Error('Google Identity Services belum termuat. Cek koneksi internet & reload halaman.');
   }
@@ -127,10 +154,21 @@ export function login() {
         reject(new Error(error || 'Login dibatalkan.'));
         return;
       }
+      localStorage.setItem(HAS_LOGGED_IN_BEFORE_KEY, 'true');
       resolve({ token, user: currentUser });
     });
     tokenClient.requestAccessToken({ prompt: currentUser ? '' : 'select_account' });
   });
+}
+
+/**
+ * Apakah device/browser ini PERNAH berhasil login sebelumnya - dipakai buat
+ * mutuskan apakah aman coba silentLogin() otomatis pas app dibuka (aman buat
+ * yang udah pernah kasih consent, TAPI JANGAN buat user baru yang belum
+ * pernah - itu yang bikin popup Google muncul sendiri sebelum user klik apapun).
+ */
+export function hasLoggedInBefore() {
+  return localStorage.getItem(HAS_LOGGED_IN_BEFORE_KEY) === 'true';
 }
 
 export function logout() {

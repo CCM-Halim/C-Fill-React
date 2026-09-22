@@ -5,7 +5,7 @@
  * yang sudah ada di dalamnya - BUKAN menambah baris baru di bawah.
  */
 import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow, findNextEmptyRow, writeEntryExitRow, readEntryExitDates, getRowCellValues, resolveTabName, readRawRange, listSheetTabs } from './sheetsApi';
-import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, uploadPublicImage, findFolderContaining, replaceFileContent, makeFilePublic } from './driveApi';
+import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, uploadPublicImage, findFolderContaining, replaceFileContent, makeFilePublic, readFileContentAsText, writeFileContentAsText, extractDriveFileId } from './driveApi';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
 import { INSTRUMENT_SLOT_MAP } from '../config/instruments';
@@ -490,31 +490,81 @@ export async function submitVerification({ buildingCategory, siteName, monthInde
  * H=PIC, I=Temuan, J=Realisasi, K=Status Kegiatan, L=Keterangan.
  */
 
-export async function getJadwalKunjunganBulanIni() {
-  if (!JADWAL_KUNJUNGAN_FOLDER_ID) {
-    return { available: false, reason: 'VITE_JADWAL_KUNJUNGAN_FOLDER_ID belum diatur di .env' };
-  }
+const JADWAL_CONFIG_FILE_ID = import.meta.env.VITE_JADWAL_CONFIG_FILE_ID;
 
+/**
+ * Baca config override link jadwal bulanan (diatur admin lewat Dashboard) -
+ * format isinya JSON `{ "2026-9": "<driveFileId>" }`. Return {} kalau file
+ * config belum diatur atau isinya masih kosong.
+ */
+async function getJadwalConfig() {
+  if (!JADWAL_CONFIG_FILE_ID) return {};
+  try {
+    const raw = await readFileContentAsText(JADWAL_CONFIG_FILE_ID);
+    return JSON.parse(raw || '{}');
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * Admin tempel link Google Sheets jadwal kunjungan buat bulan tertentu -
+ * disimpan sebagai OVERRIDE, jadi nggak perlu lagi taruh file ke folder
+ * dengan struktur nama yang pas persis. Sekali di-set, getJadwalKunjunganBulanIni
+ * pakai file ini LANGSUNG (skip pencarian folder bulanan sama sekali).
+ */
+export async function setJadwalKunjunganOverride(bulanIndex, tahun, driveLinkOrId) {
+  if (!JADWAL_CONFIG_FILE_ID) {
+    throw new Error(
+      'VITE_JADWAL_CONFIG_FILE_ID belum diatur. Buat 1 file teks kosong (isi awal: {}) di Google Drive, ' +
+      'catat ID-nya (dari URL), lalu tambahkan sebagai Environment Variable ini.'
+    );
+  }
+  const fileId = extractDriveFileId(driveLinkOrId);
+  if (!fileId) throw new Error('Link/ID Google Sheets tidak valid.');
+
+  const config = await getJadwalConfig();
+  const key = `${tahun}-${bulanIndex + 1}`;
+  config[key] = fileId;
+  await writeFileContentAsText(JADWAL_CONFIG_FILE_ID, JSON.stringify(config, null, 1));
+  return { success: true };
+}
+
+export async function getJadwalKunjunganBulanIni() {
   const now = new Date();
   const namaBulan = BULAN_ID[now.getMonth()];
   const tahun = now.getFullYear();
 
-  // Struktur folder: [Root] / [Bulan, mis. "9. September"] / [file jadwal] -
-  // ada 1 lapis folder bulan dulu SEBELUM file-nya, jadi cari folder bulan ini
-  // dulu, baru cari file di dalamnya (bukan cari file langsung di folder root).
-  const entries = await listFilesInFolder(JADWAL_KUNJUNGAN_FOLDER_ID);
-  const monthFolder = entries.find((f) => f.name.includes(namaBulan));
-  if (!monthFolder) {
-    return { available: false, reason: `Folder bulan "${namaBulan}" belum ditemukan di folder Jadwal Kunjungan. Pastikan ada folder yang namanya mengandung "${namaBulan}".` };
-  }
+  // 1. Cek dulu apakah admin sudah nempel link override buat bulan ini - kalau
+  // ada, pakai LANGSUNG, skip pencarian folder sama sekali (lebih cepat & pasti).
+  const config = await getJadwalConfig();
+  const overrideFileId = config[`${tahun}-${now.getMonth() + 1}`];
 
-  const filesInMonth = await listFilesInFolder(monthFolder.id);
-  // Cocokkan file yang namanya mengandung tahun berjalan (toleran variasi kecil
-  // penulisan) - kalau nggak ketemu tapi cuma ada 1 file di folder itu, pakai itu saja.
-  let target = filesInMonth.find((f) => f.name.includes(String(tahun)));
-  if (!target && filesInMonth.length === 1) target = filesInMonth[0];
-  if (!target) {
-    return { available: false, reason: `File jadwal untuk ${namaBulan} ${tahun} belum ditemukan di folder. Pastikan namanya mengandung "${namaBulan}" dan "${tahun}".` };
+  let target;
+  if (overrideFileId) {
+    target = { id: overrideFileId, name: `(link manual admin) — ${namaBulan} ${tahun}` };
+  } else {
+    if (!JADWAL_KUNJUNGAN_FOLDER_ID) {
+      return { available: false, reason: 'VITE_JADWAL_KUNJUNGAN_FOLDER_ID belum diatur di .env, dan admin belum tempel link manual buat bulan ini.' };
+    }
+
+    // Struktur folder: [Root] / [Bulan, mis. "9. September"] / [file jadwal] -
+    // ada 1 lapis folder bulan dulu SEBELUM file-nya, jadi cari folder bulan ini
+    // dulu, baru cari file di dalamnya (bukan cari file langsung di folder root).
+    const entries = await listFilesInFolder(JADWAL_KUNJUNGAN_FOLDER_ID);
+    const monthFolder = entries.find((f) => f.name.includes(namaBulan));
+    if (!monthFolder) {
+      return { available: false, reason: `Folder bulan "${namaBulan}" belum ditemukan di folder Jadwal Kunjungan, dan admin belum tempel link manual. Pastikan ada folder yang namanya mengandung "${namaBulan}", atau minta admin tempel link lewat Dashboard.` };
+    }
+
+    const filesInMonth = await listFilesInFolder(monthFolder.id);
+    // Cocokkan file yang namanya mengandung tahun berjalan (toleran variasi kecil
+    // penulisan) - kalau nggak ketemu tapi cuma ada 1 file di folder itu, pakai itu saja.
+    target = filesInMonth.find((f) => f.name.includes(String(tahun)));
+    if (!target && filesInMonth.length === 1) target = filesInMonth[0];
+    if (!target) {
+      return { available: false, reason: `File jadwal untuk ${namaBulan} ${tahun} belum ditemukan di folder, dan admin belum tempel link manual lewat Dashboard.` };
+    }
   }
 
   const tabName = await resolveTabName(target.id, 'Jadwal Kunjungan MR');

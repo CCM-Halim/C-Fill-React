@@ -364,3 +364,48 @@ export async function makeFilePublic(fileId) {
     body: JSON.stringify({ role: 'reader', type: 'anyone' })
   });
 }
+
+/**
+ * Baca ISI MENTAH (teks) 1 file Drive biasa (bukan Google Sheets) - dipakai
+ * buat baca file config kecil (mis. JSON penyimpan link override jadwal
+ * bulanan yang diatur admin).
+ */
+export async function readFileContentAsText(fileId) {
+  const token = await getValidAccessToken();
+  const res = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&${DRIVE_SUPPORT_PARAMS}`, {
+    headers: { Authorization: 'Bearer ' + token }
+  });
+  if (!res.ok) {
+    throw new Error('Gagal membaca file (' + res.status + ')');
+  }
+  return res.text();
+}
+
+/**
+ * Timpa isi file teks/JSON biasa dengan konten baru (string).
+ */
+export async function writeFileContentAsText(fileId, content, mimeType = 'application/json') {
+  const token = await getValidAccessToken();
+  const res = await fetch(`${UPLOAD_BASE}/files/${fileId}?uploadType=media&${DRIVE_SUPPORT_PARAMS}`, {
+    method: 'PATCH',
+    headers: { Authorization: 'Bearer ' + token, 'Content-Type': mimeType },
+    body: content
+  });
+  if (!res.ok) {
+    throw new Error('Gagal menulis file (' + res.status + ')');
+  }
+  return res.json();
+}
+
+/**
+ * Ekstrak file ID dari berbagai bentuk URL Google Sheets/Drive, atau kalau
+ * inputnya udah berupa ID polos (bukan URL), pakai apa adanya.
+ */
+export function extractDriveFileId(urlOrId) {
+  const trimmed = (urlOrId || '').trim();
+  const match = trimmed.match(/\/d\/([a-zA-Z0-9_-]{15,})/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]{15,})/);
+  if (match) return match[1];
+  if (/^[a-zA-Z0-9_-]{15,}$/.test(trimmed)) return trimmed; // sudah berupa ID polos
+  return null;
+}
+

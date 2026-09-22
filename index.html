@@ -14,7 +14,13 @@
   <meta name="description" content="Aplikasi pengisian checksheet peralatan komunikasi & instrumen" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Script Google Identity Services SENGAJA TIDAK dimuat statis di sini lagi -
+       kalau dimuat di setiap load halaman (termasuk halaman login sebelum user
+       klik apapun), beberapa browser (terutama Chrome dgn FedCM) bisa otomatis
+       munculin prompt "Sign in with Google" sendiri begitu script ini kedeteksi
+       ada di halaman, walau aplikasi belum manggil apapun. Sekarang script ini
+       baru dimuat secara dinamis pas user BENERAN klik "Masuk dengan Gmail"
+       (lihat lib/googleAuth.js loadGisScript()). -->
   <title>C-Fill | Communication Fillment</title>
 </head>
 <body>
