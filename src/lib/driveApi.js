@@ -178,7 +178,7 @@ export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {
   const cacheKey = folderId + '|' + originalFileName;
   const cache = loadCache();
   if (cache[cacheKey]) {
-    return cache[cacheKey];
+    return { spreadsheetId: cache[cacheKey], duplicateWarning: null };
   }
 
   const sheetsMime = 'application/vnd.google-apps.spreadsheet';
@@ -191,10 +191,20 @@ export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {
   // update kalau file baru aja dibuat di sesi/perangkat lain sesaat sebelumnya)
   // - baru dianggap beneran belum ada kalau ketiga percobaan tetap kosong.
   for (let attempt = 1; attempt <= 3; attempt++) {
-    const existingSheets = await findFileByExactName(folderId, originalFileName, sheetsMime);
-    if (existingSheets) {
-      saveCacheEntry(cacheKey, existingSheets.id);
-      return existingSheets.id;
+    const allSheets = await findAllFilesByName(folderId, originalFileName, sheetsMime);
+    if (allSheets.length > 0) {
+      const chosen = allSheets[0]; // paling lama dibuat (lihat findAllFilesByName) - konsisten dipakai terus
+      saveCacheEntry(cacheKey, chosen.id);
+      // PENTING: kalau ketemu LEBIH DARI 1 file Sheets dengan nama sama, ini
+      // tanda ada duplikat (mis. teknisi manual "Save as Google Sheets" dari
+      // file .xlsx asli, bukan edit ke Sheets yang udah ada). App SELALU
+      // pakai yang PALING LAMA dibuat secara konsisten - tapi kalau ada yang
+      // manual edit ke duplikat yang lebih baru, editan itu nggak akan pernah
+      // kepakai/kelihatan di app. Kasih tau biar bisa di-cleanup manual.
+      const duplicateWarning = allSheets.length > 1
+        ? `Ditemukan ${allSheets.length} file Google Sheets dengan nama sama di folder ini. Aplikasi selalu memakai yang paling lama dibuat - kalau ada yang mengedit salinan lain secara manual, editan itu tidak akan terbaca. Sebaiknya hapus salinan duplikat dan gabungkan datanya secara manual.`
+        : null;
+      return { spreadsheetId: chosen.id, duplicateWarning };
     }
     if (attempt < 3) {
       await new Promise((resolve) => setTimeout(resolve, attempt * 1500));
@@ -214,7 +224,7 @@ export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {
   // 3. Konversi (sekali saja - hasilnya langsung di-cache, tidak perlu search lagi)
   const converted = await convertXlsxToSheets(originalXlsx.id, folderId, originalFileName);
   saveCacheEntry(cacheKey, converted.id);
-  return converted.id;
+  return { spreadsheetId: converted.id, duplicateWarning: null };
 }
 
 /**

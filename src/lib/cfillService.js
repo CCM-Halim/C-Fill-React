@@ -92,7 +92,7 @@ export async function checkMonthAlreadyFilled({ buildingCategory, siteName, cate
   if (!site) return { hasExisting: false, existingValues: {} };
 
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-  const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
   const tabName = await resolveTabName(spreadsheetId, category.sheetName);
   const override = SLOT_MAP_OVERRIDES[site.originalFileName]?.[categoryId];
   const slotMap = override || category.slotMap;
@@ -119,7 +119,7 @@ export async function submitChecksheet({ buildingCategory, siteName, categoryId,
   if (!category.slotMap) throw new Error(`Kategori "${category.short_name}" belum punya peta slot.`);
 
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-  const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
   const tabName = await resolveTabName(spreadsheetId, category.sheetName);
   const override = SLOT_MAP_OVERRIDES[site.originalFileName]?.[categoryId];
   const slotMap = override || category.slotMap;
@@ -127,7 +127,7 @@ export async function submitChecksheet({ buildingCategory, siteName, categoryId,
   if (slotMap.type === 'matrix') {
     await writeMatrixSlot(spreadsheetId, tabName, slotMap, { tanggal, matrixAnswers: answers, unitCount: slotMap.defaultUnitCount });
     const gid = await getSheetGid(spreadsheetId, tabName);
-    return { success: true, fileName: site.originalFileName, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid) };
+    return { success: true, fileName: site.originalFileName, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid), duplicateWarning };
   }
 
   const { row } = await writeMonthlySlot(spreadsheetId, tabName, slotMap, { tanggal, petugas, answers, writeMode, existingValues });
@@ -139,7 +139,7 @@ export async function submitChecksheet({ buildingCategory, siteName, categoryId,
     email: getCurrentUser()?.email, sheetUrl
   });
 
-  return { success: true, fileName: site.originalFileName, row, sheetUrl };
+  return { success: true, fileName: site.originalFileName, row, sheetUrl, duplicateWarning };
 }
 
 /**
@@ -150,7 +150,7 @@ export async function submitChecksheet({ buildingCategory, siteName, categoryId,
 export async function submitInstrumentChecksheet({ namaInstrumen, tanggal, petugas, answers }) {
   requireFolderConfig(ROOT_INSTRUMEN_FOLDER_ID, 'VITE_ROOT_INSTRUMEN_FOLDER_ID');
   const originalFileName = namaInstrumen + '.xlsx';
-  const spreadsheetId = await getOrConvertSiteSpreadsheet(ROOT_INSTRUMEN_FOLDER_ID, originalFileName);
+  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(ROOT_INSTRUMEN_FOLDER_ID, originalFileName);
   const tabName = await resolveTabName(spreadsheetId, 'Instrumen Telekomunikasi');
 
   const { row } = await writeMonthlySlot(spreadsheetId, tabName, INSTRUMENT_SLOT_MAP, { tanggal, petugas, answers });
@@ -301,7 +301,7 @@ export async function checkEntryExitFilledOnDate(buildingCategory, siteName, tan
 
   try {
     const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-    const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+    const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
     const tabName = await resolveTabName(spreadsheetId, ENTRY_EXIT_TAB_NAME);
     const nextEmptyRow = await findNextEmptyRow(spreadsheetId, tabName, ENTRY_EXIT_START_ROW, ENTRY_EXIT_DATE_COL);
     if (nextEmptyRow <= ENTRY_EXIT_START_ROW) return false;
@@ -331,7 +331,7 @@ export async function checkEntryExitFilledThisMonth(buildingCategory, siteName) 
   if (!site) return { filled: false, sheetUrl: null };
 
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-  const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
   const tabName = await resolveTabName(spreadsheetId, ENTRY_EXIT_TAB_NAME);
 
   const nextEmptyRow = await findNextEmptyRow(spreadsheetId, tabName, ENTRY_EXIT_START_ROW, ENTRY_EXIT_DATE_COL);
@@ -377,7 +377,7 @@ export async function submitEntryExit({ buildingCategory, siteName, tanggal, wak
   if (!site) throw new Error('Site tidak ditemukan: ' + siteName);
 
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-  const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
   const tabName = await resolveTabName(spreadsheetId, ENTRY_EXIT_TAB_NAME);
 
   let signatureImageUrl = null;
@@ -426,7 +426,7 @@ export async function getVerificationStatus(buildingCategory, siteName) {
   if (!site) throw new Error('Site tidak ditemukan: ' + siteName);
 
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-  const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
   const tabName = await resolveTabName(spreadsheetId, VERIFICATION_TAB_NAME);
 
   const result = [];
@@ -456,7 +456,7 @@ export async function submitVerification({ buildingCategory, siteName, monthInde
   if (!site) throw new Error('Site tidak ditemukan: ' + siteName);
 
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-  const spreadsheetId = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
   const tabName = await resolveTabName(spreadsheetId, VERIFICATION_TAB_NAME);
   const today = new Date().toISOString().slice(0, 10);
   const namaVerifikator = getCurrentUser()?.name || getCurrentUser()?.email || 'Verifikator';
