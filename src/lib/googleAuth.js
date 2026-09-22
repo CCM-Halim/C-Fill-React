@@ -3,13 +3,15 @@
  * Login & manajemen access token pakai Google Identity Services (GIS).
  *
  * Pola yang dipakai: OAuth 2.0 Token Client (implicit-ish, tapi lewat GIS resmi,
- * bukan deprecated gapi.auth2). Access token disimpan di memori (bukan
- * localStorage) untuk keamanan; kalau halaman di-refresh, user perlu login ulang
- * (klik 1 tombol, biasanya langsung tanpa perlu pilih akun lagi kalau browser
- * masih ingat sesi Google-nya).
+ * bukan deprecated gapi.auth2). Token & info user disimpan di sessionStorage
+ * (bukan localStorage) - jadi REFRESH halaman nggak perlu login ulang (sesi
+ * tetap ada selama tab ini masih terbuka), tapi begitu tab/browser ditutup
+ * total, sesi otomatis hilang (lebih aman drpd localStorage yang bertahan
+ * selamanya sampai dihapus manual).
  */
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const SESSION_KEY = 'cfill_auth_session_v1';
 
 const SCOPES = [
   'https://www.googleapis.com/auth/spreadsheets',
@@ -21,6 +23,33 @@ const SCOPES = [
 let tokenClient = null;
 let currentToken = null; // { access_token, expires_at }
 let currentUser = null;  // { email, name, picture }
+
+// Pulihkan sesi dari sessionStorage begitu module ini dimuat (sebelum React
+// sempat render apapun) - biar refresh halaman nggak sempat kelihatan layar
+// login sama sekali kalau sesi lama masih valid.
+(function restoreSession() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (saved.token && saved.token.expires_at > Date.now()) {
+      currentToken = saved.token;
+      currentUser = saved.user;
+    } else {
+      sessionStorage.removeItem(SESSION_KEY);
+    }
+  } catch {
+    sessionStorage.removeItem(SESSION_KEY);
+  }
+})();
+
+function persistSession() {
+  if (currentToken && currentUser) {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ token: currentToken, user: currentUser }));
+  } else {
+    sessionStorage.removeItem(SESSION_KEY);
+  }
+}
 
 function ensureClientIdConfigured() {
   if (!CLIENT_ID) {
@@ -48,7 +77,10 @@ function initTokenClient(onToken) {
         access_token: resp.access_token,
         expires_at: Date.now() + (resp.expires_in * 1000) - 60000 // buffer 1 menit
       };
-      fetchUserInfo().then(() => onToken(currentToken, null));
+      fetchUserInfo().then(() => {
+        persistSession();
+        onToken(currentToken, null);
+      });
     }
   });
 }
@@ -61,6 +93,28 @@ async function fetchUserInfo() {
     currentUser = await res.json();
   }
   return currentUser;
+}
+
+/**
+ * Coba dapetin token TANPA popup (silent) - manfaatin sesi Google browser yang
+ * masih aktif + consent yang udah pernah diberikan sebelumnya. Dipanggil pas
+ * aplikasi baru dibuka/di-refresh, biar teknisi nggak perlu klik "Login
+ * dengan Google" ulang tiap kali refresh halaman. Resolve `null` (BUKAN
+ * reject) kalau gagal - ini emang cuma "coba dulu diam-diam", gagalnya wajar
+ * (mis. sesi Google browser udah habis / belum pernah login sama sekali) dan
+ * BUKAN error yang perlu ditampilkan - biarkan fallback ke tombol login biasa.
+ */
+export function silentLogin() {
+  return new Promise((resolve) => {
+    try {
+      initTokenClient((token) => {
+        resolve(token ? { token, user: currentUser } : null);
+      });
+      tokenClient.requestAccessToken({ prompt: '' });
+    } catch {
+      resolve(null);
+    }
+  });
 }
 
 /**
@@ -85,6 +139,7 @@ export function logout() {
   }
   currentToken = null;
   currentUser = null;
+  persistSession();
 }
 
 export function getCurrentUser() {
@@ -110,6 +165,7 @@ export async function getValidAccessToken() {
         reject(new Error('Sesi login berakhir. Silakan login ulang.'));
         return;
       }
+      persistSession();
       resolve(token.access_token);
     });
     tokenClient.requestAccessToken({ prompt: '' });

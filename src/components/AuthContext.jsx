@@ -1,18 +1,36 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { login as googleLogin, logout as googleLogout, getCurrentUser } from '../lib/googleAuth';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { login as googleLogin, logout as googleLogout, getCurrentUser, silentLogin } from '../lib/googleAuth';
 import { isForemanEmail } from '../config/foremen';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  // Lazy initializer (bukan useState(null) + useEffect) - biar sesi yang udah
+  // dipulihkan googleAuth.js (saat module itu dimuat, sebelum React sempat
+  // render apapun) langsung kepakai di render PERTAMA. Kalau pakai useEffect,
+  // ada jeda sekilas nampilin layar login dulu baru "berkedip" ke halaman
+  // asli begitu efeknya jalan.
+  const [user, setUser] = useState(() => getCurrentUser());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [checkingSilent, setCheckingSilent] = useState(!getCurrentUser());
 
+  // Kalau nggak ada sesi valid tersimpan (mis. access token udah kedaluwarsa -
+  // token Google cuma tahan ~1 jam, sedangkan sessionStorage bertahan sampai
+  // tab ditutup), coba SILENT LOGIN dulu di background sebelum benar-benar
+  // nampilin layar login - manfaatin sesi Google browser yang mungkin masih
+  // aktif + consent yang udah pernah diberikan, biar teknisi nggak perlu klik
+  // tombol login manual tiap kali refresh setelah >1 jam.
   useEffect(() => {
-    // Cek apakah GIS script sudah termuat; kalau belum, tunggu sebentar.
-    const existing = getCurrentUser();
-    if (existing) setUser(existing);
+    if (user) { setCheckingSilent(false); return; }
+    let cancelled = false;
+    silentLogin().then((result) => {
+      if (cancelled) return;
+      if (result?.user) setUser(result.user);
+      setCheckingSilent(false);
+    });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleLogin() {
@@ -36,7 +54,7 @@ export function AuthProvider({ children }) {
   const isForeman = isForemanEmail(user?.email);
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, login: handleLogin, logout: handleLogout, isForeman }}>
+    <AuthContext.Provider value={{ user, loading, error, checkingSilent, login: handleLogin, logout: handleLogout, isForeman }}>
       {children}
     </AuthContext.Provider>
   );
