@@ -16,7 +16,9 @@ export default defineConfig({
         display: 'standalone',
         background_color: '#F6F4EE',
         theme_color: '#256D5C',
-        orientation: 'portrait',
+        // 'any' (bukan 'portrait') - biar aplikasi bisa dipakai di orientasi
+        // apapun, penting buat tablet/HP yang sering dipegang landscape.
+        orientation: 'any',
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
