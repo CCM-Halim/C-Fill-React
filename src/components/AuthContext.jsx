@@ -59,6 +59,7 @@ export function AuthProvider({ children }) {
         setUser(null); // reset state
         googleLogout(); // sekalian clear sesi agar tidak restore lagi nanti
         setError(ACCESS_DENIED_MESSAGE);
+        setCheckingSilent(false); // ← PENTING: stop infinite waiting
         return;
       }
       setUser(result.user);
@@ -72,22 +73,22 @@ export function AuthProvider({ children }) {
     setLoading(true);
     setError(null);
     try {
-      const { user } = await googleLogin();
+      const { user: loginResultUser } = await googleLogin();
+      localStorage.setItem(HAS_LOGGED_IN_BEFORE_KEY, 'true');
       // Cek akses di sini — kalau tidak diizinkan, logout Google session-nya
-      if (!isAllowedEmail(user.email)) {
+      if (!isAllowedEmail(loginResultUser.email)) {
         setError(ACCESS_DENIED_MESSAGE);
         googleLogout(); // sekalian clear sesi agar tidak restore lagi
+        setCheckingSilent(false); // ← stop waiting immediately
         return; // jangan set user
       }
-      setUser(user);
+      setUser(loginResultUser);
+      setCheckingSilent(false); // ← KUNCI PERBAIKAN: stop waiting
     } catch (e) {
-      // Cek apakah error karena access denied
-      setError(e.message || ACCESS_DENIED_MESSAGE);
-      if (e.message === 'Google API error' && !user.email) {
-        googleLogout();
-      } else {
-        setError(e.message || ACCESS_DENIED_MESSAGE);
-      }
+      // Login failed - show actual error message
+      setError(e.message || 'Login gagal.');
+      googleLogout(); // clear bad session
+      setCheckingSilent(false); // ← also stop waiting on error
     } finally {
       setLoading(false);
     }
