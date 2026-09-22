@@ -31,23 +31,38 @@ export function AuthProvider({ children }) {
   const [error, setError] = useState(null);
 
   async function handleLogin() {
+    console.log('✅ AUTH CONTEXT: handleLogin called');
     setLoading(true);
     setError(null);
+    
     try {
-      const { user: loginResultUser } = await googleLogin();
+      console.log('AUTH CONTEXT: Calling googleLogin()...');
+      const result = await googleLogin();
+      console.log('✅ AUTH CONTEXT: googleLogin() resolved:', result);
+      
+      if (!result || !result.user) {
+        throw new Error('googleLogin returned no user');
+      }
+      
       localStorage.setItem('cfill_has_logged_in_before', 'true');
+      
       // Cek akses di sini — kalau tidak diizinkan, logout Google session-nya
-      if (!isAllowedEmail(loginResultUser.email)) {
+      if (!isAllowedEmail(result.user.email)) {
+        console.error('❌ AUTH CONTEXT: Access denied for', result.user.email);
         setError(ACCESS_DENIED_MESSAGE);
         googleLogout(); // sekalian clear sesi agar tidak restore lagi
         return; // jangan set user
       }
-      setUser(loginResultUser);
+      
+      console.log('✅ AUTH CONTEXT: Setting user to:', result.user);
+      setUser(result.user);
     } catch (e) {
+      console.error('❌ AUTH CONTEXT: Login error:', e.message || e);
       // Login failed - show actual error message
       setError(e.message || 'Login gagal.');
       googleLogout(); // clear bad session
     } finally {
+      console.log('✅ AUTH CONTEXT: Loading complete');
       setLoading(false);
     }
   }
