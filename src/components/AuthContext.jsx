@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { login as googleLogin, logout as googleLogout, getCurrentUser, silentLogin, hasLoggedInBefore } from '../lib/googleAuth';
+import React, { createContext, useContext, useState } from 'react';
+import { login as googleLogin, logout as googleLogout, getCurrentUser } from '../lib/googleAuth';
 import { isForemanEmail } from '../config/foremen';
 import { isAllowedEmail } from '../config/access';
 
@@ -25,70 +25,28 @@ function enforceAccess(currentUser) {
 }
 
 export function AuthProvider({ children }) {
-  // Lazy initializer (bukan useState(null) + useEffect) - biar sesi yang udah
-  // dipulihkan googleAuth.js (saat module itu dimuat, sebelum React sempat
-  // render apapun) langsung kepakai di render PERTAMA. Kalau pakai useEffect,
-  // ada jeda sekilas nampilin layar login dulu baru "berkedip" ke halaman
-  // asli begitu efeknya jalan.
+  // Sesi sudah di-restore oleh googleAuth.js via sessionStorage sebelum React render
   const [user, setUser] = useState(() => enforceAccess(getCurrentUser()));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  // Cuma nunggu proses silent-check kalau MEMANG akan dicoba (device ini
-  // pernah login sebelumnya) - kalau user baru, checkingSilent langsung false
-  // dari awal (tidak ada apapun buat ditunggu, halaman login muncul langsung).
-  const [checkingSilent, setCheckingSilent] = useState(!getCurrentUser() && hasLoggedInBefore());
-
-  // Kalau nggak ada sesi valid tersimpan (mis. access token udah kedaluwarsa -
-  // token Google cuma tahan ~1 jam, sedangkan sessionStorage bertahan sampai
-  // tab ditutup) DAN device ini PERNAH login sebelumnya, coba SILENT LOGIN
-  // dulu di background - manfaatin sesi Google browser yang mungkin masih
-  // aktif + consent yang udah pernah diberikan, biar teknisi nggak perlu klik
-  // tombol login manual tiap kali refresh setelah >1 jam.
-  //
-  // PENTING: untuk user yang BELUM PERNAH login sama sekali di device ini,
-  // silentLogin() SENGAJA TIDAK dicoba - itu yang sebelumnya bikin popup
-  // Google muncul sendiri begitu halaman dibuka, sebelum user sempat klik
-  // apapun (nggak semestinya kejadian buat first-time user).
-  useEffect(() => {
-    if (user || !hasLoggedInBefore()) { setCheckingSilent(false); return; }
-    let cancelled = false;
-    silentLogin().then((result) => {
-      if (cancelled) return;
-      // Cek akses — kalau tidak diizinkan, logout sesi Google-nya
-      if (!result?.user || !isAllowedEmail(result.user.email)) {
-        setUser(null); // reset state
-        googleLogout(); // sekalian clear sesi agar tidak restore lagi nanti
-        setError(ACCESS_DENIED_MESSAGE);
-        setCheckingSilent(false); // ← PENTING: stop infinite waiting
-        return;
-      }
-      setUser(result.user);
-      setCheckingSilent(false);
-    });
-    return () => { cancelled = true; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   async function handleLogin() {
     setLoading(true);
     setError(null);
     try {
       const { user: loginResultUser } = await googleLogin();
-      localStorage.setItem(HAS_LOGGED_IN_BEFORE_KEY, 'true');
+      localStorage.setItem('cfill_has_logged_in_before', 'true');
       // Cek akses di sini — kalau tidak diizinkan, logout Google session-nya
       if (!isAllowedEmail(loginResultUser.email)) {
         setError(ACCESS_DENIED_MESSAGE);
         googleLogout(); // sekalian clear sesi agar tidak restore lagi
-        setCheckingSilent(false); // ← stop waiting immediately
         return; // jangan set user
       }
       setUser(loginResultUser);
-      setCheckingSilent(false); // ← KUNCI PERBAIKAN: stop waiting
     } catch (e) {
       // Login failed - show actual error message
       setError(e.message || 'Login gagal.');
       googleLogout(); // clear bad session
-      setCheckingSilent(false); // ← also stop waiting on error
     } finally {
       setLoading(false);
     }
@@ -102,7 +60,7 @@ export function AuthProvider({ children }) {
   const isForeman = isForemanEmail(user?.email);
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, checkingSilent, login: handleLogin, logout: handleLogout, isForeman }}>
+    <AuthContext.Provider value={{ user, loading, error, checkingSilent: false, login: handleLogin, logout: handleLogout, isForeman }}>
       {children}
     </AuthContext.Provider>
   );
