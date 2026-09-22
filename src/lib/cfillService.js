@@ -683,23 +683,8 @@ export async function getLogGangguanData(tabName) {
   return { available: true, items };
 }
 
-/**
- * ==== Admin: Ganti Foto Header Login ====
- * Timpa isi file gambar header login (ID file-nya sudah tetap/tidak berubah,
- * lihat config/loginHeader.js) - cuma boleh dipanggil oleh admin. Kalau
- * VITE_LOGIN_HEADER_FILE_ID belum diatur (belum pernah setup pertama kali),
- * fungsi ini nggak bisa jalan - perlu setup manual sekali oleh admin
- * (upload 1 file ke Drive, share publik, catat ID-nya ke .env).
- */
-export async function updateLoginHeaderImage(imageFile) {
-  const fileId = import.meta.env.VITE_LOGIN_HEADER_FILE_ID;
-  if (!fileId) {
-    throw new Error(
-      'VITE_LOGIN_HEADER_FILE_ID belum diatur. Upload 1 foto dulu manual ke Google Drive, ' +
-      'share sebagai "Anyone with the link - Viewer", lalu catat ID file-nya (dari URL) ke Environment Variable ini.'
-    );
-  }
-  await replaceFileContent(fileId, imageFile);
-  await makeFilePublic(fileId); // jaga-jaga kalau permission publiknya kehapus manual
-  return { success: true };
-}
+/* Fitur "Ganti Foto Header Login" DIHAPUS (22 Sep 2026 - permintaan Jo).
+   Foto header login sekarang statis dari /public/backgrounds/station-halim.jpg
+   (foto menara telekomunikasi + teknisi memanjat). Tidak perlu env var
+   VITE_LOGIN_HEADER_FILE_ID lagi. Lihat config/loginHeader.js. */
+
