@@ -24,21 +24,39 @@ export function AuthProvider({ children }) {
     setLoading(true);
     setError(null);
     
-    // Lebih robust: gunakan Promise.race + timeout 30s
+    // Timeout handler
+    let timeoutId;
+    const timeoutPromise = new Promise((_, reject) => {
+      timeoutId = setTimeout(() => {
+        // Fallback: cek apakah Google auth sudah selesai tapi promise tidak resolve
+        const restoredUser = getCurrentUser();
+        console.log('[CCM Fill] TIMEOUT! Checking sessionStorage for restored user:', restoredUser?.email || 'none');
+        
+        if (restoredUser && isAllowedEmail(restoredUser.email)) {
+          console.log('[CCM Fill] User already in session! Using it directly.');
+          setUser(restoredUser);
+          localStorage.setItem('cfill_has_logged_in_before', 'true');
+          clearTimeout(timeoutId);
+          setLoading(false);
+          return; // EXIT EARLY
+        }
+        
+        reject(new Error('Timeout menunggu Google'));
+      }, 5000); // Kurangi ke 5s saja karena kalau sukses, user akan auto-restored
+    });
+    
     try {
-      console.log('[CCM Fill] Calling googleLogin()...');
-      
+      // Race between actual login AND timeout-with-fallback
       const result = await Promise.race([
-        googleLogin(),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout menunggu Google — silakan refresh dan coba lagi')), 30000)
-        )
+        googleLogin().then(res => {
+          console.log('[CCM Fill] googleLogin() succeeded:', res.user?.email);
+          return res;
+        }),
+        timeoutPromise
       ]);
       
-      console.log('[CCM Fill] Login resolved:', result?.user?.email);
-      
       if (!result || !result.user) {
-        throw new Error('Google login gagal - tidak ada data user');
+        throw new Error('Google login gagal - tidak ada user returned');
       }
       
       localStorage.setItem('cfill_has_logged_in_before', 'true');
@@ -47,16 +65,18 @@ export function AuthProvider({ children }) {
         console.error('[CCM Fill] Access denied:', result.user.email);
         setError(ACCESS_DENIED_MESSAGE);
         googleLogout();
+        clearTimeout(timeoutId);
         return;
       }
       
       console.log('[CCM Fill] Setting user:', result.user.email);
       setUser(result.user);
-      setError(null); // Clear any previous errors
+      clearTimeout(timeoutId); // Clear timeout jika berhasil
+      setError(null);
     } catch (e) {
       console.error('[CCM Fill] Login error:', e.message);
       setError(e.message);
-      googleLogout(); // Clean up failed session
+      googleLogout();
     } finally {
       setLoading(false);
     }
