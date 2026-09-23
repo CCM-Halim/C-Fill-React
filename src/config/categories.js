@@ -23,8 +23,8 @@ export const CATEGORIES = [
         "standar": "Hasil Pemeriksaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i3",
@@ -32,8 +32,8 @@ export const CATEGORIES = [
         "standar": "Hasil Pemeriksaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i4",
@@ -233,8 +233,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -341,8 +341,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -449,8 +449,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -843,8 +843,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -852,8 +852,8 @@ export const CATEGORIES = [
         "standar": "Tidak ada kerusakan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i3",
@@ -861,8 +861,8 @@ export const CATEGORIES = [
         "standar": "Tidak ada kebocoran",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i4",
@@ -870,8 +870,8 @@ export const CATEGORIES = [
         "standar": "Tidak ada kelonggaran",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i5",
@@ -1133,8 +1133,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -1142,8 +1142,8 @@ export const CATEGORIES = [
         "standar": "Tidak ada kerusakan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i3",
@@ -1151,8 +1151,8 @@ export const CATEGORIES = [
         "standar": "Tidak ada kebocoran",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i4",
@@ -1160,8 +1160,8 @@ export const CATEGORIES = [
         "standar": "Tidak ada kelonggaran",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i5",
@@ -1423,8 +1423,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -1432,8 +1432,8 @@ export const CATEGORIES = [
         "standar": "Tidak ada kerusakan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i3",
@@ -1441,8 +1441,8 @@ export const CATEGORIES = [
         "standar": "Tidak ada kebocoran",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i4",
@@ -1450,8 +1450,8 @@ export const CATEGORIES = [
         "standar": "Tidak ada kelonggaran",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i5",
@@ -1625,8 +1625,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -1634,8 +1634,8 @@ export const CATEGORIES = [
         "standar": "Tidak ada kerusakan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i3",
@@ -1643,8 +1643,8 @@ export const CATEGORIES = [
         "standar": "Tidak ada kebocoran",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i4",
@@ -1652,8 +1652,8 @@ export const CATEGORIES = [
         "standar": "Tidak ada kelonggaran",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i5",
@@ -2366,8 +2366,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -2375,8 +2375,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik (catat nilai sambaran)",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i3",
@@ -2384,8 +2384,8 @@ export const CATEGORIES = [
         "standar": "Sama dengan waktu Jakarta",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i4",
@@ -3275,8 +3275,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -3322,8 +3322,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan Baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i4",
@@ -3646,8 +3646,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -3693,8 +3693,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan Baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i4",
@@ -4017,8 +4017,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -4064,8 +4064,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan Baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i4",
@@ -4388,8 +4388,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -4397,8 +4397,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan dan patok sudah kokoh",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i3",
@@ -4508,8 +4508,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -4550,8 +4550,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i4",
@@ -4559,8 +4559,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i5",
@@ -4568,8 +4568,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i6",
@@ -4577,8 +4577,8 @@ export const CATEGORIES = [
         "standar": "Catat tanggal kadaluarsa",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       }
     ],
     "periods": [
@@ -4842,8 +4842,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -4851,8 +4851,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i3",
@@ -4860,8 +4860,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i4",
@@ -5147,8 +5147,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan, status operasi normal tidak ada alarm",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -5156,8 +5156,8 @@ export const CATEGORIES = [
         "standar": "Sama dengan waktu jakarta",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i3",
@@ -5281,8 +5281,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan, status operasi normal tidak ada alarm",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -5290,8 +5290,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i3",
@@ -6448,8 +6448,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
@@ -6495,8 +6495,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
-        "inputType": "yes_no",
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i4",
