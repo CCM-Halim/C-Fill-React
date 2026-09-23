@@ -12,6 +12,7 @@ import StatusOnlyInput from '../components/StatusOnlyInput';
 import PemadamanInput, { serializePemadaman } from '../components/PemadamanInput';
 import MeasurementMultiInput, { serializeMeasurementMulti } from '../components/MeasurementMultiInput';
 import UnitValueTable, { serializeUnitValueTable } from '../components/UnitValueTable';
+import YesNoInput, { serializeYesNo } from '../components/YesNoInput';
 import { HeroHeader } from '../components/PhotoCard';
 import { getSiteBackground, getEquipmentBackground } from '../config/backgrounds';
 
@@ -140,9 +141,34 @@ export default function ChecksheetForm() {
   async function doSubmit(writeMode, existingValues) {
     setSubmitting(true);
     try {
-      // buang key bantu "__raw" sebelum dikirim
+      // Serialize answers - khusus untuk inputType yes_no
       const cleanAnswers = {};
-      Object.entries(answers).forEach(([k, v]) => { if (!k.endsWith('__raw')) cleanAnswers[k] = v; });
+      const categoryItemMap = new Map(category.items.map(it => [it.id, it]));
+      
+      Object.entries(answers).forEach(([key, value]) => {
+        // Skip raw storage keys
+        if (key.endsWith('__raw')) return;
+        
+        cleanAnswers[key] = value;
+      });
+      
+      // Process yes_no inputs to serialize into proper text
+      category.items.forEach(item => {
+        const rawKey = item.id + '__raw';
+        const rawValue = answers[rawKey];
+        
+        if (item.inputType === 'yes_no' && rawValue !== undefined && rawValue !== null) {
+          // Serialize using helper function
+          const serializedText = serializeYesNo(rawValue, item);
+          
+          // Format with date prefix as normal text items
+          const formattedText = item.noTglPrefix 
+            ? serializedText 
+            : `Tgl: ${tanggal}\nCatatan:\n${serializedText}`;
+          
+          cleanAnswers[item.id] = formattedText;
+        }
+      });
 
       const res = await submitChecksheet({
         buildingCategory: decodedBc,
@@ -278,7 +304,7 @@ export default function ChecksheetForm() {
                 />
               </>
             ) : it.inputType === 'status_only' ? (
-              <>
+              <></>
                 {!it.noTglPrefix && (
                   <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
                 )}
@@ -288,6 +314,11 @@ export default function ChecksheetForm() {
                   onChange={(val) => setStatusOnlyAnswer(it.id, val, it.noTglPrefix)}
                 />
               </>
+            ) : it.inputType === 'yes_no' ? (
+              <YesNoInput
+                value={answers[it.id + '__raw'] || null}
+                onChange={(val) => setAnswers({ ...answers, [it.id + '__raw']: val })}
+              />
             ) : (
               <>
                 {!it.noTglPrefix && (

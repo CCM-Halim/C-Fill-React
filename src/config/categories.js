@@ -14,7 +14,8 @@ export const CATEGORIES = [
         "standar": "Sudah dibersihkan",
         "hasTglCatatan": false,
         "noTglPrefix": true,
-        "periodMonths": 1
+        "periodMonths": 1,
+        "inputType": "yes_no"
       },
       {
         "id": "i2",
