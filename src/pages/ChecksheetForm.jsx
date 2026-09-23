@@ -304,7 +304,7 @@ export default function ChecksheetForm() {
                 />
               </>
             ) : it.inputType === 'status_only' ? (
-              <></>
+              <React.Fragment>
                 {!it.noTglPrefix && (
                   <div className="tgl-prefix">Tgl: <span className="mono">{formatDateDisplay(tanggal)}</span> Catatan:</div>
                 )}
@@ -313,7 +313,7 @@ export default function ChecksheetForm() {
                   value={answers[it.id + '__raw']}
                   onChange={(val) => setStatusOnlyAnswer(it.id, val, it.noTglPrefix)}
                 />
-              </>
+              </React.Fragment>
             ) : it.inputType === 'yes_no' ? (
               <YesNoInput
                 value={answers[it.id + '__raw'] || null}
