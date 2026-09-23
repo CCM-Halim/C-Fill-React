@@ -128,55 +128,64 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i8",
           "colStart": 9,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i9",
           "colStart": 10,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -293,37 +302,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -401,37 +416,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -509,37 +530,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -648,31 +675,36 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
@@ -692,7 +724,8 @@ export const CATEGORIES = [
           "id": "i7",
           "colStart": 19,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -813,19 +846,22 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -938,31 +974,36 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
@@ -982,7 +1023,8 @@ export const CATEGORIES = [
           "id": "i7",
           "colStart": 19,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -1103,19 +1145,22 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -1228,31 +1273,36 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
@@ -1272,7 +1322,8 @@ export const CATEGORIES = [
           "id": "i7",
           "colStart": 19,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -1393,19 +1444,22 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -1507,31 +1561,36 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
@@ -1595,19 +1654,22 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 36
+          "periodMonths": 36,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -1709,31 +1771,36 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
@@ -1797,19 +1864,22 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 36
+          "periodMonths": 36,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -1907,31 +1977,36 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
@@ -1995,19 +2070,22 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 36
+          "periodMonths": 36,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -2081,31 +2159,36 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -2206,55 +2289,64 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i8",
           "colStart": 9,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i9",
           "colStart": 10,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -2324,31 +2416,36 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -2445,43 +2542,50 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -2573,49 +2677,57 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i8",
           "colStart": 9,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -2676,25 +2788,29 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -2778,43 +2894,50 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -2874,25 +2997,29 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -2993,55 +3120,64 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i8",
           "colStart": 9,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i9",
           "colStart": 10,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -3119,37 +3255,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 24
+          "periodMonths": 24,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -3227,37 +3369,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 24
+          "periodMonths": 24,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -3401,49 +3549,57 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i8",
           "colStart": 9,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -3586,49 +3742,57 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i8",
           "colStart": 9,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -3772,49 +3936,57 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i8",
           "colStart": 9,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -3957,49 +4129,57 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i8",
           "colStart": 9,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -4143,49 +4323,57 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i8",
           "colStart": 9,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -4328,49 +4516,57 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i8",
           "colStart": 9,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -4442,31 +4638,36 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -4596,37 +4797,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -4758,73 +4965,85 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i8",
           "colStart": 9,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i9",
           "colStart": 10,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i10",
           "colStart": 11,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i11",
           "colStart": 12,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i12",
           "colStart": 13,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -4950,67 +5169,78 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i8",
           "colStart": 9,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i9",
           "colStart": 10,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i10",
           "colStart": 11,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i11",
           "colStart": 12,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -5099,37 +5329,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -5233,37 +5469,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -5362,43 +5604,50 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i7",
           "colStart": 8,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -5477,37 +5726,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -5560,19 +5815,22 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -5625,19 +5883,22 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -5655,7 +5916,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan dalam keadaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": false,
-        "periodMonths": 3
+        "periodMonths": 3,
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -5663,7 +5925,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan dalam keadaan baik",
         "hasTglCatatan": false,
         "noTglPrefix": false,
-        "periodMonths": 3
+        "periodMonths": 3,
+        "inputType": "yes_no",
       },
       {
         "id": "i3",
@@ -5685,7 +5948,8 @@ export const CATEGORIES = [
         "standar": "Hasil pemeriksaan lampu dalam kondisi baik",
         "hasTglCatatan": false,
         "noTglPrefix": false,
-        "periodMonths": 3
+        "periodMonths": 3,
+        "inputType": "yes_no",
       }
     ],
     "periods": [
@@ -5703,25 +5967,29 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -5796,31 +6064,36 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -5912,37 +6185,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -6034,37 +6313,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -6156,37 +6441,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -6278,37 +6569,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -6400,37 +6697,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -6560,37 +6863,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 1
+          "periodMonths": 1,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -6667,37 +6976,43 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 6
+          "periodMonths": 6,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i4",
           "colStart": 5,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i5",
           "colStart": 6,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         },
         {
           "id": "i6",
           "colStart": 7,
           "colWidth": 1,
-          "periodMonths": 12
+          "periodMonths": 12,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
@@ -6752,19 +7067,22 @@ export const CATEGORIES = [
           "id": "i1",
           "colStart": 2,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i2",
           "colStart": 3,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         },
         {
           "id": "i3",
           "colStart": 4,
           "colWidth": 1,
-          "periodMonths": 3
+          "periodMonths": 3,
+          "inputType": "yes_no",
         }
       ],
       "type": "monthly_slot"
