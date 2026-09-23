@@ -24,7 +24,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i3",
@@ -33,7 +33,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i4",
@@ -234,7 +234,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -342,7 +342,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -450,7 +450,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -844,7 +844,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -853,7 +853,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i3",
@@ -862,7 +862,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i4",
@@ -871,7 +871,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i5",
@@ -1134,7 +1134,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -1143,7 +1143,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i3",
@@ -1152,7 +1152,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i4",
@@ -1161,7 +1161,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i5",
@@ -1424,7 +1424,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -1433,7 +1433,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i3",
@@ -1442,7 +1442,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i4",
@@ -1451,7 +1451,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i5",
@@ -1626,7 +1626,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -1635,7 +1635,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i3",
@@ -1644,7 +1644,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i4",
@@ -1653,7 +1653,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i5",
@@ -2367,7 +2367,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -2376,7 +2376,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i3",
@@ -2385,7 +2385,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i4",
@@ -3276,7 +3276,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -3323,7 +3323,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i4",
@@ -3647,7 +3647,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -3694,7 +3694,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i4",
@@ -4018,7 +4018,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -4065,7 +4065,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i4",
@@ -4389,7 +4389,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -4398,7 +4398,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i3",
@@ -4509,7 +4509,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -4551,7 +4551,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i4",
@@ -4560,7 +4560,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i5",
@@ -4569,7 +4569,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i6",
@@ -4578,7 +4578,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       }
     ],
     "periods": [
@@ -4843,7 +4843,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -4852,7 +4852,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i3",
@@ -4861,7 +4861,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i4",
@@ -5148,7 +5148,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -5157,7 +5157,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i3",
@@ -5282,7 +5282,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -5291,7 +5291,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i3",
@@ -6449,7 +6449,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i2",
@@ -6496,7 +6496,7 @@ export const CATEGORIES = [
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1
-        inputType: "yes_no",
+        "inputType": "yes_no",
       },
       {
         "id": "i4",
