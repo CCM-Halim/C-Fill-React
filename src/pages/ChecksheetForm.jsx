@@ -316,6 +316,7 @@ export default function ChecksheetForm() {
               </React.Fragment>
             ) : it.inputType === 'yes_no' ? (
               <YesNoInput
+                itemId={it.id}
                 value={answers[it.id + '__raw'] || null}
                 onChange={(val) => setAnswers({ ...answers, [it.id + '__raw']: val })}
               />

@@ -11,13 +11,13 @@ import React from 'react';
  * - TIDAK → belum (negatif): "Belum dibersihkan", "Tidak ada hasil pemeriksaan"
  */
 
-export default function YesNoInput({ value, onChange }) {
+export default function YesNoInput({ itemId, value, onChange }) {
   return (
     <div style={{ display: 'flex', gap: '16px', marginTop: '8px' }}>
       <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
         <input
           type="radio"
-          name={`yeshot-${value?.id}`}
+          name={`yesno-${itemId}`}
           checked={value === 'YA'}
           onChange={() => onChange('YA')}
           style={{ cursor: 'pointer' }}
@@ -28,7 +28,7 @@ export default function YesNoInput({ value, onChange }) {
       <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
         <input
           type="radio"
-          name={`yeshot-${value?.id}`}
+          name={`yesno-${itemId}`}
           checked={value === 'TIDAK'}
           onChange={() => onChange('TIDAK')}
           style={{ cursor: 'pointer' }}
