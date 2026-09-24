@@ -13,27 +13,27 @@ import React from 'react';
 
 export default function YesNoInput({ itemId, value, onChange }) {
   return (
-    <div style={{ display: 'flex', gap: '16px', marginTop: '8px' }}>
-      <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+    <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+      <label style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '3px', fontSize: '13px' }}>
         <input
           type="radio"
           name={`yesno-${itemId}`}
           checked={value === 'YA'}
           onChange={() => onChange('YA')}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', marginRight: '2px', width: '12px', height: '12px' }}
         />
-        <span style={{ fontWeight: 500 }}>✅ YA</span>
+        <span style={{ fontWeight: 500, fontSize: '13px' }}>✓</span>
       </label>
       
-      <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+      <label style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '3px', fontSize: '13px' }}>
         <input
           type="radio"
           name={`yesno-${itemId}`}
           checked={value === 'TIDAK'}
           onChange={() => onChange('TIDAK')}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', marginRight: '2px', width: '12px', height: '12px' }}
         />
-        <span style={{ fontWeight: 500 }}>❌ TIDAK</span>
+        <span style={{ fontWeight: 500, fontSize: '13px' }}>✗</span>
       </label>
     </div>
   );
