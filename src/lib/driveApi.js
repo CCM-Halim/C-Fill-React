@@ -99,6 +99,44 @@ export async function findFileByExactName(folderId, name, mimeType) {
 }
 
 /**
+ * PENTING - INI PENYEBAB UTAMA FILE MENUMPUK DI DRIVE:
+ * Google Drive MEMBUANG ekstensi ".xlsx" saat file .xlsx dikonversi jadi
+ * Google Sheets. File "K10+200 Base Station 2.xlsx" hasil konversinya bernama
+ * "K10+200 Base Station 2" (TANPA .xlsx). Kalau pencariannya memakai nama
+ * ".xlsx" apa adanya, file hasil konversi TIDAK PERNAH ketemu - jadi aplikasi
+ * menganggap "belum pernah dibuat", lalu meng-KONVERSI ULANG dan lahirlah
+ * file baru, berulang setiap kali checksheet diisi.
+ *
+ * Fungsi ini mencari KEDUA varian nama sekaligus (dengan & tanpa .xlsx),
+ * digabung lalu diurutkan dari yang paling lama dibuat - supaya file yang
+ * sudah ada selalu ketemu.
+ */
+export async function findAllSheetsForName(folderId, originalFileName) {
+  const SHEETS_MIME = 'application/vnd.google-apps.spreadsheet';
+  const withoutExt = originalFileName.replace(/\.xlsx$/i, '');
+
+  const names = withoutExt === originalFileName ? [originalFileName] : [originalFileName, withoutExt];
+
+  const results = await Promise.all(
+    names.map((n) => findAllFilesByName(folderId, n, SHEETS_MIME))
+  );
+
+  // Gabung + buang duplikat id (kalau ada file yang cocok di kedua varian)
+  const merged = [];
+  const seen = new Set();
+  for (const list of results) {
+    for (const f of list) {
+      if (!seen.has(f.id)) {
+        seen.add(f.id);
+        merged.push(f);
+      }
+    }
+  }
+  // Paling lama dibuat di urutan pertama - konsisten dipakai terus
+  return merged.sort((a, b) => new Date(a.createdTime) - new Date(b.createdTime));
+}
+
+/**
  * Pindahkan file ke Trash (bisa dipulihkan dari Drive selama ~30 hari).
  * Dipakai HANYA untuk membuang salinan Google Sheets yang baru saja dibuat
  * sendiri saat ternyata perangkat lain sudah lebih dulu membuatnya - jadi
@@ -239,9 +277,12 @@ async function resolveSiteSpreadsheet(folderId, originalFileName, cacheKey) {
   const MAX_SEARCH_ROUNDS = 3;
 
   for (let round = 1; round <= MAX_SEARCH_ROUNDS; round++) {
-    const allSheets = await findAllFilesByName(folderId, originalFileName, sheetsMime);
+    // findAllSheetsForName mencari nama DENGAN dan TANPA ".xlsx" sekaligus -
+    // Drive membuang ekstensi itu saat konversi, itu sebabnya file hasil
+    // konversi sebelumnya selalu dianggap "tidak ada".
+    const allSheets = await findAllSheetsForName(folderId, originalFileName);
     if (allSheets.length > 0) {
-      // findAllFilesByName sudah mengurutkan dari yang PALING LAMA dibuat,
+      // findAllSheetsForName sudah mengurutkan dari yang PALING LAMA dibuat,
       // jadi salinan pertama (yang dipakai terus oleh semua perangkat) selalu
       // terpilih - bukan hasil acak.
       const chosen = allSheets[0];
@@ -274,7 +315,7 @@ async function resolveSiteSpreadsheet(folderId, originalFileName, cacheKey) {
     // cek di luar cache: kalau ternyata perangkat lain sudah membuatnya, pakai
     // file ITU (app tidak pernah membuat salinan kedua).
     await sleep(1200);
-    const afterWait = await findAllFilesByName(folderId, originalFileName, sheetsMime);
+    const afterWait = await findAllSheetsForName(folderId, originalFileName);
     if (afterWait.length > 0) {
       const chosen = afterWait[0];
       saveCacheEntry(cacheKey, chosen.id);
@@ -296,7 +337,7 @@ async function resolveSiteSpreadsheet(folderId, originalFileName, cacheKey) {
     let verify = [];
     for (let wait = 1; wait <= 6; wait++) {
       await sleep(wait * 1200);
-      verify = await findAllFilesByName(folderId, originalFileName, sheetsMime);
+      verify = await findAllSheetsForName(folderId, originalFileName);
       if (verify.some((f) => f.id === converted.id)) break; // index sudah menangkap file kita
     }
 
