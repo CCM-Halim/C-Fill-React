@@ -5,6 +5,10 @@ import { isAllowedEmail } from '../config/access';
 
 const AuthContext = createContext(null);
 const ACCESS_DENIED_MESSAGE = 'Akun ini tidak memiliki akses ke aplikasi C-Fill. Hubungi admin untuk didaftarkan.';
+// Batas tunggu login: 60 detik. Setelah user pilih akun, GIS masih perlu
+// tukar token + fetch userinfo via jaringan — di HP lemot bisa >5 detik,
+// jadi timeout pendek justru membunuh login yang sebenarnya berhasil.
+const LOGIN_TIMEOUT_MS = 60000;
 
 /** Gerbang akses whitelist */
 function enforceAccess(currentUser) {
@@ -24,25 +28,14 @@ export function AuthProvider({ children }) {
     setLoading(true);
     setError(null);
     
-    // Timeout handler
+    // Timeout handler — pengaman kalau popup Google tidak pernah merespons
+    // (mis. diblokir browser / user menutup popup). 60 detik cukup untuk
+    // jaringan HP paling lemot sekalipun.
     let timeoutId;
     const timeoutPromise = new Promise((_, reject) => {
       timeoutId = setTimeout(() => {
-        // Fallback: cek apakah Google auth sudah selesai tapi promise tidak resolve
-        const restoredUser = getCurrentUser();
-        console.log('[CCM Fill] TIMEOUT! Checking sessionStorage for restored user:', restoredUser?.email || 'none');
-        
-        if (restoredUser && isAllowedEmail(restoredUser.email)) {
-          console.log('[CCM Fill] User already in session! Using it directly.');
-          setUser(restoredUser);
-          localStorage.setItem('cfill_has_logged_in_before', 'true');
-          clearTimeout(timeoutId);
-          setLoading(false);
-          return; // EXIT EARLY
-        }
-        
         reject(new Error('Timeout menunggu Google'));
-      }, 5000); // Kurangi ke 5s saja karena kalau sukses, user akan auto-restored
+      }, LOGIN_TIMEOUT_MS);
     });
     
     try {

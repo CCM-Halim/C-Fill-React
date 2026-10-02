@@ -86,38 +86,81 @@ function loadGisScript() {
   return gisScriptPromise;
 }
 
-async function initTokenClient(onToken) {
+async function ensureTokenClient() {
   ensureClientIdConfigured();
   await loadGisScript();
-  if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
+  if (!window.google?.accounts?.oauth2) {
     throw new Error('Google Identity Services belum termuat. Cek koneksi internet & reload halaman.');
   }
-  tokenClient = window.google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: SCOPES,
-    callback: (resp) => {
-      if (resp.error) {
-        onToken(null, resp.error);
-        return;
+  if (!tokenClient) {
+    tokenClient = window.google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+      callback: (resp) => {
+        const pending = pendingAuth;
+        pendingAuth = null;
+        if (!pending) return;
+        if (resp && resp.error) {
+          pending.reject(resp.error);
+          return;
+        }
+        currentToken = {
+          access_token: resp.access_token,
+          expires_at: Date.now() + (resp.expires_in * 1000) - 60000 // buffer 1 menit
+        };
+        fetchUserInfo().then(() => {
+          if (!currentUser || !currentUser.email) {
+            // Token didapat tapi info user gagal diambil (jaringan). Tanpa email
+            // kita tidak bisa cek whitelist, jadi jangan lanjutkan diam-diam.
+            pending.reject('Gagal mengambil data akun Google. Cek koneksi lalu coba lagi.');
+            return;
+          }
+          persistSession();
+          try { localStorage.setItem(HAS_LOGGED_IN_BEFORE_KEY, 'true'); } catch { /* abaikan */ }
+          pending.resolve({ token: currentToken, user: currentUser });
+        }).catch((e) => {
+          pending.reject(e?.message || 'Gagal mengambil info user Google.');
+        });
       }
-      currentToken = {
-        access_token: resp.access_token,
-        expires_at: Date.now() + (resp.expires_in * 1000) - 60000 // buffer 1 menit
-      };
-      fetchUserInfo().then(() => {
-        persistSession();
-        onToken(currentToken, null);
-      });
-    }
-  });
+    });
+  }
+  return tokenClient;
 }
 
+// Catatan: client di-init SEKALI di ensureTokenClient(); callback-nya permanen
+// dan mengirim hasil ke pendingAuth (promise yang sedang menunggu). Tidak ada
+// lagi initTokenClient(onToken) per pemanggilan — pola itu yang dulu membuat
+// klik pertama gagal karena requestAccessToken dipanggil sebelum init selesai.
+
+/**
+ * Preload script GIS + init token client TANPA popup. Dipanggil saat layar
+ * login tampil, supaya klik pertama user sudah siap (tidak perlu muat script
+ * dulu di dalam gesture klik — itu yang bikin klik pertama gagal).
+ */
+export function preloadAuth() {
+  ensureTokenClient().catch(() => { /* gagal preload: login akan coba lagi saat klik */ });
+}
+
+let pendingAuth = null; // { resolve, reject } untuk request popup yang sedang berjalan
+
 async function fetchUserInfo() {
-  const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-    headers: { Authorization: 'Bearer ' + currentToken.access_token }
-  });
-  if (res.ok) {
-    currentUser = await res.json();
+  // Batasi 20 detik: di jaringan buruk permintaan ini bisa menggantung lama,
+  // dan selama menggantung promise login tidak pernah selesai (penyebab
+  // pesan "Timeout menunggu Google" muncul padahal popup sudah sukses).
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 20000);
+  try {
+    const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: 'Bearer ' + currentToken.access_token },
+      signal: ctrl.signal,
+    });
+    if (res.ok) {
+      currentUser = await res.json();
+    }
+  } catch {
+    /* biarkan currentUser apa adanya; pemanggil yang memutuskan */
+  } finally {
+    clearTimeout(t);
   }
   return currentUser;
 }
@@ -133,42 +176,34 @@ async function fetchUserInfo() {
  */
 export function silentLogin() {
   return new Promise((resolve) => {
-    try {
-      initTokenClient((token) => {
-        resolve(token ? { token, user: currentUser } : null);
-      });
-      tokenClient.requestAccessToken({ prompt: '' });
-    } catch {
-      resolve(null);
-    }
+    ensureTokenClient().then((client) => {
+      pendingAuth = {
+        resolve: (res) => resolve(res),
+        reject: () => resolve(null), // silent: gagal = null, bukan error
+      };
+      client.requestAccessToken({ prompt: '' });
+    }).catch(() => resolve(null));
   });
 }
 
 /**
  * Memicu popup login Google. Resolve dengan { token, user } kalau berhasil.
  * Kalau gagal, reject dengan error message yang jelas.
+ *
+ * Perbaikan klik-pertama-gagal: init client (muat script GIS) di-AWAIT dulu
+ * sebelum requestAccessToken — sebelumnya request dipanggil sinkron padahal
+ * init belum selesai sehingga tokenClient masih null dan popup tidak muncul.
  */
-export function login() {
+export async function login() {
+  const client = await ensureTokenClient();
   return new Promise((resolve, reject) => {
-    initTokenClient((token, error) => {
-      console.log('[googleAuth] Token client callback:', { token, error });
-      
-      if (error || !token) {
-        reject(new Error(error || 'Login dibatalkan oleh pengguna atau error teknis'));
-        return;
-      }
-      
-      localStorage.setItem(HAS_LOGGED_IN_BEFORE_KEY, 'true');
-      resolve({ token, user: currentUser });
-    });
-    
+    pendingAuth = { resolve, reject };
     try {
       // Di mobile/tablet, pakai prompt='select_account' untuk pastikan popup muncul
       const prompt = currentUser ? '' : 'select_account';
-      console.log('[googleAuth] Calling requestAccessToken with prompt:', prompt);
-      tokenClient.requestAccessToken({ prompt: prompt });
+      client.requestAccessToken({ prompt });
     } catch (e) {
-      console.error('[googleAuth] Error calling requestAccessToken:', e);
+      pendingAuth = null;
       reject(new Error('Gagal memicu popup login Google. Pastikan JavaScript aktif & bukan blocked by browser.'));
     }
   });
@@ -210,15 +245,12 @@ export async function getValidAccessToken() {
     return currentToken.access_token;
   }
   // Token expired -> refresh silent
+  const client = await ensureTokenClient();
   return new Promise((resolve, reject) => {
-    initTokenClient((token, error) => {
-      if (error || !token) {
-        reject(new Error('Sesi login berakhir. Silakan login ulang.'));
-        return;
-      }
-      persistSession();
-      resolve(token.access_token);
-    });
-    tokenClient.requestAccessToken({ prompt: '' });
+    pendingAuth = {
+      resolve: (res) => resolve(res.token.access_token),
+      reject: () => reject(new Error('Sesi login berakhir. Silakan login ulang.')),
+    };
+    client.requestAccessToken({ prompt: '' });
   });
 }

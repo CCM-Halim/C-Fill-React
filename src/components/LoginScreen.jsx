@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from './AuthContext';
+import { preloadAuth } from '../lib/googleAuth';
 import { LOGIN_HEADER_IMAGE_URL } from '../config/loginHeader';
 
 // Identitas aplikasi — dipakai di footer card login.
@@ -21,6 +22,14 @@ function GoogleIcon() {
 
 export default function LoginScreen() {
   const { login, loading, error } = useAuth();
+
+  // Preload script Google Identity Services + init token client begitu layar
+  // login tampil. Tanpa ini, klik pertama user jatuh ke dalam gesture-nya
+  // sendiri sambil masih memuat script (async) sehingga tokenClient belum
+  // siap -> popup tidak muncul dan muncul error "Gagal memicu popup".
+  useEffect(() => {
+    preloadAuth();
+  }, []);
 
   return (
     <div className="login-screen-v2">
