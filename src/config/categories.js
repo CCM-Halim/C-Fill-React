@@ -39,6 +39,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pengujian alarm pemadaman listrik (3 bulan)",
         "standar": "Hasil Pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -47,6 +48,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pengujian fungsi Switching Main & Backup listrik AC (3 bulan)",
         "standar": "Hasil pengujian swtching baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -55,6 +57,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pembersihan rak kabel (parit/bagian bawah) dan pemeriksaan penampilan saluran listrik (3 bulan)",
         "standar": "Sudah dibersihkan dan kabel dalam kondisi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -63,6 +66,7 @@ export const CATEGORIES = [
         "id": "i7",
         "label": "Periksa kekuatan koneksi antar komponen, perapian kabel, dan cek labelnya(6 bulan)",
         "standar": "Hasil pemeriksaann baik dan label sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -71,6 +75,7 @@ export const CATEGORIES = [
         "id": "i8",
         "label": "Periksa kondisi dan kekuatan koneksi kabel grounding",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -200,21 +205,25 @@ export const CATEGORIES = [
       {
         "id": "i1",
         "label": "Kondisi Casing Alat Pemadam Api",
+        "inputType": "yes_no",
         "standar": "Casing tidak rusak/berkarat (isi untuk tiap unit APAR di lokasi)"
       },
       {
         "id": "i2",
         "label": "Kondisi pin / segel",
+        "inputType": "yes_no",
         "standar": "Pin & segel utuh, tidak pernah terpakai"
       },
       {
         "id": "i3",
         "label": "Tekanan / Masa sesuai ketentuan (jarum indikator)",
+        "inputType": "yes_no",
         "standar": "Jarum indikator di area hijau"
       },
       {
         "id": "i4",
         "label": "Masa kadaluarsa APAR",
+        "inputType": "yes_no",
         "standar": "Belum melewati tanggal kadaluarsa"
       }
     ],
@@ -240,6 +249,10 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan peralatan (1 bulan)",
         "standar": "Sudah dibersihkan",
+        "inputType": "yes_no",
+        "inputType": "yes_no",
+        "inputType": "yes_no",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1,
@@ -582,6 +595,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -590,6 +604,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -598,6 +613,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -606,6 +622,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -1895,6 +1912,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan dan pemeriksaan baterai (1 bulan)",
         "standar": "Sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -1903,6 +1921,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan casing luar apakah menggelembung / kembung atau rusak (1 bulan)",
         "standar": "Tidak ada kerusakan",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -1911,6 +1930,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan kebocoran elektrolit atau kebocoran asam di terminal kutub baterai (1 bulan)",
         "standar": "Tidak ada kebocoran",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -1919,6 +1939,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan kekuatan koneksi (1 bulan)",
         "standar": "Tidak ada kelonggaran",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2101,6 +2122,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan kondisi pemasangan kamera, kepala pan/tilt, topi pelindung, lampu inframerah, dll di lapangan. (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -2109,6 +2131,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan kondisi pemasangan panel box peralatan luar ruangan di lapangan (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -2117,6 +2140,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan Video vertikalitas tiang (tower), status pondasi dan lingkungan sekitar, dll di lapangan. (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -2125,6 +2149,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan dan pembersihan status peralatan seperti codec, transceiver optik video, peralatan switching jaringan, dll. (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -2204,6 +2229,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan tampilan, kekuatan penyangga kamera, kekuatan koneksi kabel, kepala pan/tilt, cover pelindung, lampu inframerah,dan peralatan lainnya (6 bulan)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -2212,6 +2238,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Bersihkan benda dan objek yang menghalangi pandangan kamera (6 bulan)",
         "standar": "Sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -2220,6 +2247,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan kekuatan struktur tiang CCTV, kekuatan setiap komponen dan bagian pemeriksaan baut rutin (1 tahun)",
         "standar": "Kondisi Baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2228,6 +2256,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan kondisi sambungan las komponen utama tiang CCTV (1 tahun)",
         "standar": "Kondisi Baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2236,6 +2265,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksaan lapisan anti korosi dan kondisi karat pada komponen tiang video (tower), las, baut, mur, dll. (1 tahun)",
         "standar": "Kondisi Baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2244,6 +2274,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pemeriksaan pondasi tiang video (tower) dan struktur geologi di sekitarnya (1 tahun)",
         "standar": "Kondisi Baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2252,6 +2283,7 @@ export const CATEGORIES = [
         "id": "i7",
         "label": "pemeriksaan di lapangan, penguatan dan pengaturan kotak peralatan luar ruangan (termasuk peralatan tambahan internal) (1 tahun)",
         "standar": "Kondisi Baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2260,6 +2292,7 @@ export const CATEGORIES = [
         "id": "i8",
         "label": "Deteksi vertikalitas tiang video (tower) (1 tahun)",
         "standar": "Kondisi Baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2362,6 +2395,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan status operasi receiver satelit (1 bulan)",
         "standar": "Bekerja dengan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2370,6 +2404,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pembersihan permukaan peralatan (3 bulan)",
         "standar": "Bersih tanpa debu",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -2378,6 +2413,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan Feeder dan receiver antena satelit dan lingkungan sekitar (3 bulan)",
         "standar": "Kondisi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -2386,6 +2422,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan kabel ground peralatan, pemeriksaan perangkat proteksi petir feeder antena (1 tahun)",
         "standar": "Konektor yang kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2498,6 +2535,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksa kualitas koneksi grounding bar, kabel grounding, ikatan ekuipotensial, dan kabel jaringan grounding (1 tahun)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2506,6 +2544,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pemeriksaan tampilan dan kualitas sambungan pelindung lonjakan arus (1 tahun)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2601,6 +2640,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan peralatan dan pemeriksaan status (1 bulan)",
         "standar": "Pembersihan peralatan dan pemeriksaan status operasi (1 bulan)",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2609,6 +2649,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Periksa kabel sambungan dan label (1 bulan)",
         "standar": "Konektor bagus, label sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2617,6 +2658,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan pengaturan dan kontrol kamera (1 bulan)",
         "standar": "Berfungsi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2625,6 +2667,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Uji suara dan gambar: input dan output audio dan video (1 bulan)",
         "standar": "Uji fungsi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2633,6 +2676,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksaan fungsi mixer (1 bulan)",
         "standar": "Berfungsi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2641,6 +2685,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pemeriksaan fungsi TV (monitor, dll) (1 bulan)",
         "standar": "Berfungsi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2649,6 +2694,7 @@ export const CATEGORIES = [
         "id": "i7",
         "label": "Pemeriksaan fungsi amplifier (1 bulan)",
         "standar": "Berfungsi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2743,6 +2789,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan peralatan dan periksa status pengoperasian (3 bulan)",
         "standar": "Sudah dibersihkan, status operasi normal dan tidak ada alarm",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -2751,6 +2798,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan aksesoris peralatan, kabel dan label (3 bulan)",
         "standar": "Hasil pemeriksaan baik, kabel rapi, dan label sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -2759,6 +2807,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pembersihan filter debu peralatan (3 bulan)",
         "standar": "Sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -2826,6 +2875,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan operasi peralatan (Cek lampu led indikator operasi) (1 bulan)",
         "standar": "Peralatan bekerja dengan baik,tidak ada alarm",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2834,6 +2884,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Bersihkan permukaan peralatan, periksa mikrofon dan koneksi (1 bulan)",
         "standar": "Sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2842,6 +2893,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Periksa status peralatan, atur sensitivitas layar, waktu di display, dan lainnya",
         "standar": "Hasil pemeriksaan lampu indikator normal, sentuhan sensitif, dan waktu akurat",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2850,6 +2902,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan saluran utama dan cadangan (interface ganda), saluran utama dan tambahan panggilan, bicara, uji peralihan gagang (1 bulan)",
         "standar": "Peralihan normal dan layanan panggilan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2858,6 +2911,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Uji Panggilan Dispatch : area layanan stasiun, antar stasiun, OCE dengan petugas lapangan (1 bulan)",
         "standar": "Layanan panggilan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2866,6 +2920,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pengujian panggilan masuk dan keluar ekstensi darurat (1 bulan)",
         "standar": "Hasil pengujian layanan panggilan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2953,6 +3008,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pengujian, inspeksi dan penyesuaian keamanan perangkat dan cek kabel grounding (1 tahun)",
         "standar": "Dispatch Console dalam kondisi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2961,6 +3017,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pembersihan, pemeriksaan, perbaikan dan penggantian suku cadang peralatan jika diperlukan (1 tahun)",
         "standar": "Hasil pemeriksaan seluruh mesin dan komponennya dalam kondisi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2969,6 +3026,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan kondisi dan pengujian mikrofon, atau ganti mikrofon jika diperlukan (1 tahun)",
         "standar": "Hasil pemeriksaan mikrofon dalam kondisi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2977,6 +3035,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pengujian fungsi utama seperti panggilan, rekaman panggilan dan uji permintaan, uji mandiri daya, dll. (1 tahun)",
         "standar": "Status panggilan baik, query rekaman panggilan normal, dan pengujian fungsi normal",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -3035,6 +3094,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan dan pembersihan berbagai kabel dan plug-in peralatan (1 bulan)",
         "standar": "Bersih dan dalam kondisi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -3043,6 +3103,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan, pembersihan dan pengujian berbagai peralatan (1 bulan)",
         "standar": "Bersih dan dalam kondisi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -3051,6 +3112,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan dan verifikasi kuantitas kabel optik darurat (1 bulan)",
         "standar": "Kondisi bagus, kuantitas sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -3059,6 +3121,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan daya baterai dan pengisian daya baterai (1 bulan)",
         "standar": "Terisi penuh",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -3067,6 +3130,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksaan kinerja dan verifikasi kuantitas peralatan darurat dan peralatan lainnya (1 bulan)",
         "standar": "Performa bagus dan kuantitas sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -3075,6 +3139,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Uji coba panggilan telepon (1 bulan)",
         "standar": "Uji panggilan bagus",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -3083,6 +3148,7 @@ export const CATEGORIES = [
         "id": "i7",
         "label": "Uji coba transmisi gambar, data, dan video conference (1 bulan)",
         "standar": "Uji transmisi bagus",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -3091,6 +3157,7 @@ export const CATEGORIES = [
         "id": "i8",
         "label": "Pemeriksaan dan pengujian kabel optik darurat (1 bulan)",
         "standar": "Uji fungsi bagus",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -3099,6 +3166,7 @@ export const CATEGORIES = [
         "id": "i9",
         "label": "Latihan di lapangan : uji panggilan internal di lapangan, uji panggilan di lapangan dengan pusat komando darurat (OCC), uji pengiriman dokumen dan uji transmisi gambar dinamis (1 bulan)",
         "standar": "Hasil uji bagus",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -3193,6 +3261,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan peralatan dan status operasi peralatan (3 bulan)",
         "standar": "Hasil pemeriksaan baik, status operasi normal dan tidak ada alarm",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -3201,6 +3270,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pengujian layanan dasar panggilan (3 bulan)",
         "standar": "Hasil pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -3209,6 +3279,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan kabel dan kekuatan koneksi (3 bulan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -3217,6 +3288,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pembersihan debu repeater (3 bulan)",
         "standar": "Sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -3225,6 +3297,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pengujian serat optik cadangan (1 tahun)",
         "standar": "Hasil pengujian sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -3307,6 +3380,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan peralatan dan status operasi peralatan (3 bulan)",
         "standar": "Hasil pemeriksaan baik, status operasi normal dan tidak ada alarm",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -3315,6 +3389,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pengujian layanan dasar panggilan (3 bulan)",
         "standar": "Hasil pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -3323,6 +3398,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan kabel dan kekuatan koneksi (3 bulan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -3331,6 +3407,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pembersihan debu repeater (3 bulan)",
         "standar": "Sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -3339,6 +3416,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pengujian serat optik cadangan (1 tahun)",
         "standar": "Hasil pengujian sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -3500,6 +3578,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksaan Waktu / Time Calibration (3 bulan)",
         "standar": "Sama dengan waktu Jakarta",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -3615,6 +3694,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan kipas beroperasi dengan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -3623,6 +3703,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan kekuatan setiap sambungan, pengaturan wiring kabel,dan periksa label (6 bulan)",
         "standar": "Koneksi kuat dan labelnya benar",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -3631,6 +3712,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Inspeksi Visual/Tampilan dan inspeksi kekuatan sambungan kabel ground protektif (1 tahun)",
         "standar": "Koneksi kuat dan labelnya benar",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -3887,6 +3969,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksaan Waktu / Time Calibration (3 bulan)",
         "standar": "Sama dengan waktu Jakarta",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -4002,6 +4085,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan kipas beroperasi dengan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -4010,6 +4094,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan kekuatan setiap sambungan, pengaturan wiring kabel,dan periksa label (6 bulan)",
         "standar": "Koneksi kuat dan labelnya benar",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -4018,6 +4103,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Inspeksi Visual/Tampilan dan inspeksi kekuatan sambungan kabel ground protektif (1 tahun)",
         "standar": "Koneksi kuat dan labelnya benar",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -4087,6 +4173,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pengujian penurunan/Drop tegangan ujung ke ujung/End to End voltage pada rangkaian catu daya DC (1 tahun)",
         "standar": "Nilai output catu daya switching dikurangi nilai input pada sisi perangkat tidak boleh melebihi 3,2V",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -4274,6 +4361,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksaan Waktu / Time Calibration (3 bulan)",
         "standar": "Sama dengan waktu Jakarta",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -4389,6 +4477,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan kipas beroperasi dengan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -4397,6 +4486,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan kekuatan setiap sambungan, pengaturan wiring kabel,dan periksa label (6 bulan)",
         "standar": "Koneksi kuat dan labelnya benar",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -4405,6 +4495,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Inspeksi Visual/Tampilan dan inspeksi kekuatan sambungan kabel ground protektif (1 tahun)",
         "standar": "Koneksi kuat dan labelnya benar",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -4474,6 +4565,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pengujian penurunan/Drop tegangan ujung ke ujung/End to End voltage pada rangkaian catu daya DC (1 tahun)",
         "standar": "Nilai output catu daya switching dikurangi nilai input pada sisi perangkat tidak boleh melebihi 3,2V",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -4600,6 +4692,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan kekuatan dan pemeliharaan saluran kabel optik dan fasilitas tambahan (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -4608,6 +4701,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Deteksi dan konfirmasi jalur kabel optik yang terkubur langsung, inspeksi kedalaman penguburan, penguatan dan konsolidasi tanah (1 tahun)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -4707,6 +4801,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan ruangan dan lingkungan",
         "standar": "Sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "noTglPrefix": true,
         "periodMonths": 1,
@@ -4849,6 +4944,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan peralatan dan pemeriksaan status pengoperasian (1 bulan)",
         "standar": "Sudah dibersihkan, operasi normal, dan tidak ada alarm",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -4857,6 +4953,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan kabel dan konektor (1 bulan)",
         "standar": "Hasil pemeriksaan baik dan konektor kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -4865,6 +4962,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan waktu / Time Calibration (1 bulan)",
         "standar": "Sama dengan waktu Jakarta",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -4873,6 +4971,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pengujian/play file rekaman suara (1 bulan)",
         "standar": "Hasil pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -4881,6 +4980,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pembaruan verifikasi label (1 bulan)",
         "standar": "Label Sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -4889,6 +4989,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pemeriksaan display perekam: status pengoperasian, status perekaman, status pemutaran rekaman (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -4897,6 +4998,7 @@ export const CATEGORIES = [
         "id": "i7",
         "label": "Pengujian fungsi alarm perekam (3 bulan)",
         "standar": "Hasil pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -4905,6 +5007,7 @@ export const CATEGORIES = [
         "id": "i8",
         "label": "Memeriksa dan mengatur file rekaman (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -4927,6 +5030,7 @@ export const CATEGORIES = [
         "id": "i10",
         "label": "Pembersihan, pemeriksaan dan penggantian komponen seluruh mesin (Overhaul/Opsional) (1 tahun)",
         "standar": "Sudah dibersihkan dan dalam kondisi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -4935,6 +5039,7 @@ export const CATEGORIES = [
         "id": "i11",
         "label": "Penggantian kabel yang sudah usang (Opsional) (1 tahun)",
         "standar": "Keadaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -5086,6 +5191,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan sambungan leacky cable (6 bulanan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -5094,6 +5200,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksaan sambungan, antena feeder dan pengencangan tower (6 bulan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -5115,6 +5222,7 @@ export const CATEGORIES = [
         "id": "i7",
         "label": "pemeriksaan kekuatan dan sealing kabel antena dan feeder (6 bulan)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -5131,6 +5239,7 @@ export const CATEGORIES = [
         "id": "i9",
         "label": "Pemeriksaan bersama, perbaikan dan penggantian jika diperlukan (1 tahun)",
         "standar": "Hasil pemeriksaan baik (Tidak ada pemggantian komponen)",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -5256,6 +5365,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Bersihkan permukaan LCX monitoring/FSU dan periksa status operasi (1 Bulan)",
         "standar": "Sudah dibersihkan, status operasi normal tidak ada alarm",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -5264,6 +5374,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan dan inspeksi kondisi perangkat host LCX Monitoring/FSU (1 Bulan)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -5272,6 +5383,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan label peralatan dan label kabel (3 Bulan)",
         "standar": "Hasil pemeriksaan baik dan pelabelan benar",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -5280,6 +5392,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan penampilan, pemasangan dan kekuatan koneksi sensor front-end (3 Bulan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -5399,6 +5512,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan label peralatan dan label kabel (3 Bulan)",
         "standar": "Hasil pemeriksaan baik dan pelabelan benar",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -5539,6 +5653,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan data tower monitoring (Berkordinasi dan verifikasi ke NMC) (3 Bulan)",
         "standar": "Sudah diverifikasi",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -5547,6 +5662,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan label peralatan dan label kabel (3 Bulan)",
         "standar": "Hasil pemeriksaan baik dan pelabelan benar",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -5555,6 +5671,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksaan penampilan, pemasangan dan kekuatan koneksi sensor front-end (3 Bulan)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -5663,6 +5780,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan eksterior peralatan (3 bulan)",
         "standar": "Sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -5671,6 +5789,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan peralatan tambahan dan kabel (3 bulan)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -5679,6 +5798,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Periksa dan bersihkan atau ganti filter debu dan kipas (3 bulan)",
         "standar": "Hasil pemeriksaan baik dan sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -5697,6 +5817,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksaan kabel dan tampilan kabel ground dan unit proteksi (1 tahun)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -5778,6 +5899,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan peralatan dan periksa status operasi (3 bulan)",
         "standar": "Sudah dibersihkan,pemeriksaan status operasi normal dan tidak ada alarm",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -5786,6 +5908,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan aksesoris, kabel dan label peralatan (3 bulan)",
         "standar": "Hasil pemeriksaan kabel rapi dan label sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -5846,6 +5969,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan permukaan peralatan dan periksa status operasi (3 bulan)",
         "standar": "Sudah dibersihkan,pemeriksaan status operasi normal dan tidak ada alarm",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -5854,6 +5978,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan aksesoris, kabel dan label peralatan (3 bulan)",
         "standar": "Hasil pemeriksaan kabel rapi dan label sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6005,6 +6130,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan kekuatan struktur eksterior tower, pemeriksaan baut pengikat masing-masing komponen dan bagian, serta pengencangan baut seluruh tower. (6 bulan)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6013,6 +6139,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Periksa kekencangan pemasangan platform tower, tangga, jaring pelindung, bracket antena dan komponen tambahan lainnya, dan kencangkan bautnya (6 bulan)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6109,6 +6236,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6117,6 +6245,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6125,6 +6254,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6133,6 +6263,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
         "standar": "Pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6237,6 +6368,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6245,6 +6377,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6253,6 +6386,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6261,6 +6395,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
         "standar": "Pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6365,6 +6500,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6373,6 +6509,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6381,6 +6518,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6389,6 +6527,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
         "standar": "Pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6493,6 +6632,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6501,6 +6641,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6509,6 +6650,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6517,6 +6659,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
         "standar": "Pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6621,6 +6764,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pemeriksaan status operasi peralatan (3 bulan)",
         "standar": "Status operasi normal dan tidak ada alarm",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6629,6 +6773,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan pengkabelan, pelabelan dan verivikasi EDF,DDF,ODF (3 bulan)",
         "standar": "Hasil pemeriksaan rapi dan label sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6637,6 +6782,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pembersihan permukaan peralatan dan filter debu (3 bulan)",
         "standar": "Status operasi normal, tidak ada alarm, dan sudah dibersihkan",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6645,6 +6791,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan kabel dan kekuatan koneksi grounding peralatan (6 bulan)",
         "standar": "Pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6834,6 +6981,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksaan waktu / Time Calibration (Ruangan Signal Building) (3 bulan)",
         "standar": "Sama dengan waktu jakarta (selain signal building tidak ada time calibration)",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -6915,6 +7063,7 @@ export const CATEGORIES = [
         "id": "i1",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihan dan kipas berfungsi dengan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6923,6 +7072,7 @@ export const CATEGORIES = [
         "id": "i2",
         "label": "Pemeriksaan kekuatan setiap sambungan, perapian wiring, dan periksa label (6 bulan)",
         "standar": "Hasil pemeriksaan baik, koneksi kuat dan label benar",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6931,6 +7081,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Pemeriksaan penampilan dan kekuatan sambungan kabel ground (1 tahun)",
         "standar": "Hasil pemeriksaan baik dan koneksi kuat",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -6939,6 +7090,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pemeriksaan dan verifikasi nilai pengaturan parameter sistem (1 tahun)",
         "standar": "Hasil pemeriksaan baik dan parameter sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
