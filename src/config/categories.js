@@ -2301,6 +2301,7 @@ export const CATEGORIES = [
         "id": "i9",
         "label": "Pemeliharaan peralatan seperti codec, transceiver optik video, peralatan switching jaringan, dll. (1 tahun)",
         "standar": "Kondisi Baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2431,6 +2432,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksaan kabel dan pelabelan (1 tahun)",
         "standar": "Pengkabelan rapi dan pelabelan sesuai",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -2703,6 +2705,7 @@ export const CATEGORIES = [
         "id": "i8",
         "label": "Pemeriksaan fungsi mikrofon (1 bulan)",
         "standar": "Berfungsi baik",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -2816,6 +2819,7 @@ export const CATEGORIES = [
         "id": "i4",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan operasi kipas baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -2929,6 +2933,7 @@ export const CATEGORIES = [
         "id": "i7",
         "label": "Pembaruan pemeriksaan label aplikasi (1 bulan)",
         "standar": "Pelabelan jelas",
+        "inputType": "yes_no",
         "hasTglCatatan": false,
         "periodMonths": 1,
         "noTglPrefix": true
@@ -3607,6 +3612,7 @@ export const CATEGORIES = [
         "id": "i8",
         "label": "Pengujian fungsi Switching Main & Backup listrik AC (3 bulan)",
         "standar": "Hasil pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -3803,6 +3809,7 @@ export const CATEGORIES = [
         "id": "i8",
         "label": "Pengujian Fungsi Alarm (1 tahun)",
         "standar": "Hasil pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -3998,6 +4005,7 @@ export const CATEGORIES = [
         "id": "i8",
         "label": "Pengujian fungsi Switching Main & Backup listrik AC (3 bulan)",
         "standar": "Hasil pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -4195,6 +4203,7 @@ export const CATEGORIES = [
         "id": "i8",
         "label": "Pengujian Fungsi Alarm (1 tahun)",
         "standar": "Hasil pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -4390,6 +4399,7 @@ export const CATEGORIES = [
         "id": "i8",
         "label": "Pengujian fungsi Switching Main & Backup listrik AC (3 bulan)",
         "standar": "Hasil pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -4587,6 +4597,7 @@ export const CATEGORIES = [
         "id": "i8",
         "label": "Pengujian Fungsi Alarm (1 tahun)",
         "standar": "Hasil pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -4710,6 +4721,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksaan sambungan isolasi dan grounding kabel optik yang masuk ke machinery room (1 tahun)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -4776,6 +4788,7 @@ export const CATEGORIES = [
       {
         "id": "i1",
         "label": "Data pemeriksaan tiap modul (Serial Number, Hasil Pengecekan, Keterangan)",
+        "inputType": "yes_no",
         "standar": "Hasil pengecekan baik, tidak ada kerusakan"
       }
     ],
@@ -5048,6 +5061,7 @@ export const CATEGORIES = [
         "id": "i12",
         "label": "Uji fungsi seperti penyetelan, pemantauan, penghapusan, tampilan, dan sinkronisasi waktu (1 tahun)",
         "standar": "Hasil pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -5256,6 +5270,7 @@ export const CATEGORIES = [
         "id": "i11",
         "label": "Pemeriksaan peralatan pendukung kabel LCX (bracket parts, hanging wires and fixing parts) (1 tahun)",
         "standar": "Hasil pemeriksaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -5917,6 +5932,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Uji dial panggilan (Cek modulasi dan nada notifikasi panggilan) (6 bulan)",
         "standar": "Uji panggilan baik (Pengujian softswitch hanya di stasiun & Signal Building)",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -5987,6 +6003,7 @@ export const CATEGORIES = [
         "id": "i3",
         "label": "Uji dial panggilan (Cek modulasi dan nada notifikasi panggilan) (6 bulan)",
         "standar": "Uji panggilan baik (Pengujian softswitch hanya di stasiun & Signal Building)",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6170,6 +6187,7 @@ export const CATEGORIES = [
         "id": "i5",
         "label": "Pemeriksaan dan perawatan pondasi tower dan struktur geologi sekitarnya (1 tahun)",
         "standar": "Hasil pemeriksaan dalam keadaan baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -6295,6 +6313,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan operasi kipas baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6427,6 +6446,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan operasi kipas baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6559,6 +6579,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan operasi kipas baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6691,6 +6712,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan operasi kipas baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6823,6 +6845,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pembersihan kipas (6 bulan)",
         "standar": "Sudah dibersihkan dan operasi kipas baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 6,
         "noTglPrefix": false
@@ -6990,6 +7013,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pengujian fungsi Switching Main & Backup listrik AC (3 bulan)",
         "standar": "Hasil pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 3,
         "noTglPrefix": false
@@ -7107,6 +7131,7 @@ export const CATEGORIES = [
         "id": "i6",
         "label": "Pengujian fungsi alarm (1 tahun)",
         "standar": "Hasil pengujian baik",
+        "inputType": "yes_no",
         "hasTglCatatan": true,
         "periodMonths": 12,
         "noTglPrefix": false
@@ -7179,6 +7204,7 @@ export const CATEGORIES = [
       {
         "id": "i1",
         "label": "Pembersihan permukaan server, penyimpanan, peralatan switching jaringan dan peralatan lainnya, pembersihan kipas dan pemeriksaan status operasi (3 bulan)",
+        "inputType": "yes_no",
         "standar": "Sudah dibersihkan, status operasi normal",
         "periodMonths": 3,
         "noTglPrefix": false
