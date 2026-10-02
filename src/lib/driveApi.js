@@ -99,6 +99,27 @@ export async function findFileByExactName(folderId, name, mimeType) {
 }
 
 /**
+ * Pindahkan file ke Trash (bisa dipulihkan dari Drive selama ~30 hari).
+ * Dipakai HANYA untuk membuang salinan Google Sheets yang baru saja dibuat
+ * sendiri saat ternyata perangkat lain sudah lebih dulu membuatnya - jadi
+ * yang dibuang pasti file tanpa data (baru dibuat beberapa detik lalu).
+ * File lain tidak pernah dihapus otomatis oleh aplikasi.
+ */
+export async function trashFile(fileId) {
+  const token = await getValidAccessToken();
+  const res = await fetch(`${DRIVE_BASE}/files/${fileId}?${DRIVE_SUPPORT_PARAMS}`, {
+    method: 'PATCH',
+    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ trashed: true })
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error('Gagal memindahkan file ke Trash (' + res.status + '): ' + body);
+  }
+  return res.json();
+}
+
+/**
  * Konversi file .xlsx yang sudah ada jadi Google Sheets (copy dengan mimeType baru),
  * supaya bisa ditulisi lewat Sheets API sambil TETAP mempertahankan layout/format
  * aslinya (baris "Tgl", kolom per item, dst - tidak dibuat dari nol).
@@ -156,6 +177,18 @@ export async function convertXlsxToSheets(xlsxFileId, folderId, targetName) {
  */
 const CACHE_KEY = 'cfill_spreadsheet_cache_v1';
 
+/**
+ * Kunci anti-balapan (race) antar-panggilan yang jalan BARENGAN di tab yang
+ * sama. Beberapa bagian UI bisa minta spreadsheet site yang sama dalam waktu
+ * hampir bersamaan (daftar kategori + form checksheet). Tanpa ini, dua
+ * panggilan yang start bersamaan sama-sama TIDAK menemukan file (yang pertama
+ * belum selesai membuat) lalu sama-sama meng-KONVERSI - hasilnya langsung 2
+ * file Google Sheets dengan nama sama di folder yang sama.
+ */
+const IN_FLIGHT = new Map();
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 function loadCache() {
   try {
     return JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
@@ -181,50 +214,115 @@ export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {
     return { spreadsheetId: cache[cacheKey], duplicateWarning: null };
   }
 
-  const sheetsMime = 'application/vnd.google-apps.spreadsheet';
+  // Kalau ada panggilan lain (tab yang sama) yang sedang menyiapkan spreadsheet
+  // yang SAMA PERSIS, tunggu hasilnya - jangan jalan sendiri dan ikut bikin
+  // salinan baru. Ini yang mencegah 2 file tercipta berbarengan.
+  if (IN_FLIGHT.has(cacheKey)) {
+    return IN_FLIGHT.get(cacheKey);
+  }
 
-  // 1. Sudah pernah dikonversi sebelumnya (termasuk dari sesi/browser/PWA lain)?
-  // Cache localStorage TIDAK selalu nyambung antara app terinstall (PWA) dan
-  // browser tab biasa (keduanya bisa punya storage terpisah) - jadi pencarian
-  // di sini nggak boleh cuma andalkan cache. Kalau percobaan pertama nggak
-  // ketemu, coba lagi 2x dengan jeda (jaga-jaga index Drive Search belum
-  // update kalau file baru aja dibuat di sesi/perangkat lain sesaat sebelumnya)
-  // - baru dianggap beneran belum ada kalau ketiga percobaan tetap kosong.
-  for (let attempt = 1; attempt <= 3; attempt++) {
+  const task = resolveSiteSpreadsheet(folderId, originalFileName, cacheKey)
+    .finally(() => IN_FLIGHT.delete(cacheKey));
+  IN_FLIGHT.set(cacheKey, task);
+  return task;
+}
+
+async function resolveSiteSpreadsheet(folderId, originalFileName, cacheKey) {
+  const sheetsMime = 'application/vnd.google-apps.spreadsheet';
+  const xlsxMime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+
+  // Berapa kali pencarian diulang. Percobaan PERTAMA tidak diulang-ulang -
+  // kalau memang sudah ada (kasus normal) hasilnya langsung ketemu, jadi tidak
+  // perlu nunggu. Pengulangan cuma dipakai untuk kasus langka "file baru saja
+  // dibuat perangkat lain, index Drive belum keburu update" yang tidak bisa
+  // dibedakan dari "memang belum pernah dibuat" pada pencarian pertama.
+  const MAX_SEARCH_ROUNDS = 3;
+
+  for (let round = 1; round <= MAX_SEARCH_ROUNDS; round++) {
     const allSheets = await findAllFilesByName(folderId, originalFileName, sheetsMime);
     if (allSheets.length > 0) {
-      const chosen = allSheets[0]; // paling lama dibuat (lihat findAllFilesByName) - konsisten dipakai terus
+      // findAllFilesByName sudah mengurutkan dari yang PALING LAMA dibuat,
+      // jadi salinan pertama (yang dipakai terus oleh semua perangkat) selalu
+      // terpilih - bukan hasil acak.
+      const chosen = allSheets[0];
       saveCacheEntry(cacheKey, chosen.id);
-      // PENTING: kalau ketemu LEBIH DARI 1 file Sheets dengan nama sama, ini
-      // tanda ada duplikat (mis. teknisi manual "Save as Google Sheets" dari
-      // file .xlsx asli, bukan edit ke Sheets yang udah ada). App SELALU
-      // pakai yang PALING LAMA dibuat secara konsisten - tapi kalau ada yang
-      // manual edit ke duplikat yang lebih baru, editan itu nggak akan pernah
-      // kepakai/kelihatan di app. Kasih tau biar bisa di-cleanup manual.
       const duplicateWarning = allSheets.length > 1
         ? `Ditemukan ${allSheets.length} file Google Sheets dengan nama sama di folder ini. Aplikasi selalu memakai yang paling lama dibuat - kalau ada yang mengedit salinan lain secara manual, editan itu tidak akan terbaca. Sebaiknya hapus salinan duplikat dan gabungkan datanya secara manual.`
         : null;
       return { spreadsheetId: chosen.id, duplicateWarning };
     }
-    if (attempt < 3) {
-      await new Promise((resolve) => setTimeout(resolve, attempt * 1500));
+
+    // Belum ketemu. Kalau file .xlsx aslinya JUGA belum ada, berarti ini
+    // memang site yang belum pernah dikonversi sama sekali -> langsung
+    // konversi, tidak perlu ngulang-ngulang pencarian (hemat waktu ~4,5 detik
+    // per site baru).
+    const xlsx = await findFileByExactName(folderId, originalFileName, xlsxMime);
+    if (!xlsx) {
+      throw new Error(
+        `File asli "${originalFileName}" tidak ditemukan di folder site ini. ` +
+        `Pastikan file .xlsx checksheet asli sudah ada di folder Drive site tersebut.`
+      );
     }
-  }
 
-  // 2. Cari file .xlsx aslinya di folder ini
-  const xlsxMime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-  const originalXlsx = await findFileByExactName(folderId, originalFileName, xlsxMime);
-  if (!originalXlsx) {
-    throw new Error(
-      `File asli "${originalFileName}" tidak ditemukan di folder site ini. ` +
-      `Pastikan file .xlsx checksheet asli sudah ada di folder Drive site tersebut.`
-    );
-  }
+    if (round < MAX_SEARCH_ROUNDS) {
+      await sleep(round * 1500);
+      continue;
+    }
 
-  // 3. Konversi (sekali saja - hasilnya langsung di-cache, tidak perlu search lagi)
-  const converted = await convertXlsxToSheets(originalXlsx.id, folderId, originalFileName);
-  saveCacheEntry(cacheKey, converted.id);
-  return { spreadsheetId: converted.id, duplicateWarning: null };
+    // Pencarian diulang tetap kosong, padahal .xlsx aslinya ada -> kemungkinan
+    // besar perangkat lain sedang/baru saja membuatnya. Jeda sebentar, lalu
+    // cek di luar cache: kalau ternyata perangkat lain sudah membuatnya, pakai
+    // file ITU (app tidak pernah membuat salinan kedua).
+    await sleep(1200);
+    const afterWait = await findAllFilesByName(folderId, originalFileName, sheetsMime);
+    if (afterWait.length > 0) {
+      const chosen = afterWait[0];
+      saveCacheEntry(cacheKey, chosen.id);
+      const duplicateWarning = afterWait.length > 1
+        ? `Ditemukan ${afterWait.length} file Google Sheets dengan nama sama di folder ini. Aplikasi selalu memakai yang paling lama dibuat - kalau ada yang mengedit salinan lain secara manual, editan itu tidak akan terbaca. Sebaiknya hapus salinan duplikat dan gabungkan datanya secara manual.`
+        : null;
+      return { spreadsheetId: chosen.id, duplicateWarning };
+    }
+
+    // Benar-benar tidak ada -> konversi. SETELAH konversi selesai, pastikan
+    // dulu file kita benar-benar sudah MUNCUL di hasil pencarian (index Drive
+    // tidak langsung update) - kalau belum, salinan perangkat lain yang dibuat
+    // lebih dulu juga belum terlihat, jadi keputusannya bisa salah. Baru
+    // setelah kelihatan, bandingkan: kalau ada salinan yang dibuat LEBIH DULU,
+    // punya kitalah yang berlebih dan dibuang (yang dibuang selalu salinan
+    // yang baru saja kita buat sendiri barusan - tidak pernah file berisi data).
+    const converted = await convertXlsxToSheets(xlsx.id, folderId, originalFileName);
+
+    let verify = [];
+    for (let wait = 1; wait <= 6; wait++) {
+      await sleep(wait * 1200);
+      verify = await findAllFilesByName(folderId, originalFileName, sheetsMime);
+      if (verify.some((f) => f.id === converted.id)) break; // index sudah menangkap file kita
+    }
+
+    const createdAt = new Date(converted.createdTime).getTime();
+    const olderThanMine = verify
+      .filter((f) => f.id !== converted.id)
+      .filter((f) => new Date(f.createdTime).getTime() < createdAt);
+
+    if (olderThanMine.length > 0) {
+      const winner = olderThanMine[0]; // paling lama dibuat
+      try {
+        await trashFile(converted.id);
+      } catch {
+        // Gagal buang salinan berlebih jangan sampai menggagalkan penyimpanan
+        // teknisi - yang penting datanya masuk ke file yang benar.
+      }
+      saveCacheEntry(cacheKey, winner.id);
+      return {
+        spreadsheetId: winner.id,
+        duplicateWarning: 'Ada perangkat lain yang lebih dulu membuat file ini. Salinan kosong yang baru dibuat otomatis dibuang; yang dipakai adalah file yang lebih dulu ada.'
+      };
+    }
+
+    saveCacheEntry(cacheKey, converted.id);
+    return { spreadsheetId: converted.id, duplicateWarning: null };
+  }
 }
 
 /**
