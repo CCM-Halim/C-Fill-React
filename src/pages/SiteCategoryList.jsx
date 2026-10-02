@@ -1,33 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getCategoriesForSite } from '../lib/cfillService';
+import { getCategoriesForSite, checkEntryExitFilledThisMonth } from '../lib/cfillService';
 import EntryExitForm from '../components/EntryExitForm';
 import { HeroHeader, PhotoCard } from '../components/PhotoCard';
 import { getSiteBackground, getEquipmentBackground } from '../config/backgrounds';
 
-function todayStr() {
-  const d = new Date();
-  const pad = (n) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
-
 /**
- * Entry/Exit Registration WAJIB diisi tiap kunjungan (per site per hari) -
- * bukan cuma sekali per bulan, karena ini LOG KUNJUNGAN bukan checklist
- * bulanan.
+ * Entry/Exit Registration WAJIB diisi SEKALI per site per BULAN - bukan tiap
+ * kunjungan. Kalau di bulan berjalan sudah ada catatan Entry/Exit untuk site
+ * ini, kunjungan berikutnya (tanggal berapa pun di bulan yang sama) langsung
+ * masuk ke daftar kategori tanpa ditanya lagi - biasanya teknisi cuma
+ * merevisi/melengkapi isian checksheet, bukan kunjungan baru.
  *
- * PENTING: status "sudah diisi hari ini" disimpan di sessionStorage (bukan
- * cuma React state biasa) supaya BERTAHAN walau teknisi pindah ke halaman
- * checksheet lain terus balik lagi ke sini (component ini remount tiap
- * navigasi - kalau statusnya cuma React state lokal, dia reset ke false lagi
- * dan minta isi Entry/Exit ULANG padahal baru aja diisi di kunjungan yang
- * sama). sessionStorage bertahan selama tab browser masih terbuka, otomatis
- * "reset" sendiri kalau tab ditutup/besok dibuka lagi (kunjungan baru).
+ * Yang dicek adalah isi Google Sheets-nya (checkEntryExitFilledThisMonth),
+ * BUKAN status di memori browser - supaya konsisten walau teknisi ganti HP,
+ * buka dari laptop, atau menutup tab.
  */
-function entryExitSessionKey(siteName) {
-  return `cfill_entryexit_${siteName}_${todayStr()}`;
-}
-
 export default function SiteCategoryList() {
   const { buildingCategory, siteName } = useParams();
   const decodedBc = decodeURIComponent(buildingCategory);
@@ -35,14 +23,17 @@ export default function SiteCategoryList() {
   const categories = getCategoriesForSite(decodedSite);
   const heroPhoto = getSiteBackground(decodedSite, decodedBc);
 
-  const [entrySubmitted, setEntrySubmitted] = useState(
-    () => sessionStorage.getItem(entryExitSessionKey(decodedSite)) === 'true'
-  );
+  // null = sedang mengecek ke Sheets, true/false = hasil cek.
+  const [entryFilled, setEntryFilled] = useState(null);
 
-  function handleEntryExitSuccess() {
-    sessionStorage.setItem(entryExitSessionKey(decodedSite), 'true');
-    setEntrySubmitted(true);
-  }
+  useEffect(() => {
+    let cancelled = false;
+    setEntryFilled(null);
+    checkEntryExitFilledThisMonth(decodedBc, decodedSite)
+      .then((res) => { if (!cancelled) setEntryFilled(!!res.filled); })
+      .catch(() => { if (!cancelled) setEntryFilled(false); });
+    return () => { cancelled = true; };
+  }, [decodedBc, decodedSite]);
 
   const breadcrumb = (
     <div className="breadcrumb">
@@ -51,7 +42,17 @@ export default function SiteCategoryList() {
     </div>
   );
 
-  if (!entrySubmitted) {
+  if (entryFilled === null) {
+    return (
+      <section>
+        {breadcrumb}
+        <HeroHeader photoUrl={heroPhoto} eyebrow="Checksheet Peralatan" title={decodedSite} />
+        <div className="muted">Memeriksa catatan Entry/Exit bulan ini…</div>
+      </section>
+    );
+  }
+
+  if (!entryFilled) {
     return (
       <section>
         {breadcrumb}
@@ -59,7 +60,7 @@ export default function SiteCategoryList() {
         <EntryExitForm
           site={{ buildingCategory: decodedBc, siteName: decodedSite }}
           mandatory
-          onSuccess={handleEntryExitSuccess}
+          onSuccess={() => setEntryFilled(true)}
         />
       </section>
     );

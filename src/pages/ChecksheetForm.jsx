@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
-import { submitChecksheet, checkMonthAlreadyFilled, checkEntryExitFilledOnDate, previewSlot } from '../lib/cfillService';
+import { submitChecksheet, checkMonthAlreadyFilled, previewSlot } from '../lib/cfillService';
 import { useToast } from '../components/Toast';
 import BatteryTable from '../components/BatteryTable';
 import MeasurementInput, { serializeMeasurement } from '../components/MeasurementInput';
@@ -112,24 +112,22 @@ export default function ChecksheetForm() {
     }
     setSubmitting(true);
     try {
-      // Dialog "Perbaikan/Perawatan Baru" CUMA relevan kalau lokasi ini
-      // beneran ada kunjungan Entry/Exit tercatat di TANGGAL YANG SAMA dgn
-      // checksheet ini (skenario "kerjaan bulan depan dikerjain lebih awal,
-      // ada 2 kunjungan di hari yang sama") - kalau enggak, langsung timpa
-      // aja seperti biasa tanpa nanya-nanya (submit tunggal normal).
-      const entryExitSameDate = await checkEntryExitFilledOnDate(decodedBc, decodedSite, tanggal);
-      if (entryExitSameDate) {
-        // Cek dulu apakah slot bulan ini sudah ada isinya - kalau ada, tanya
-        // dulu Perbaikan (timpa) atau Perawatan Baru (isi baru ditambahkan,
-        // isi lama nggak hilang) sebelum benar-benar nulis.
-        const check = await checkMonthAlreadyFilled({
-          buildingCategory: decodedBc, siteName: decodedSite, categoryId: category.id, tanggal
-        });
-        if (check.hasExisting) {
-          setSubmitting(false);
-          setConfirmDialog({ existingValues: check.existingValues });
-          return;
-        }
+      // Cek dulu apakah slot BULAN INI untuk kategori ini sudah ada isinya.
+      //
+      // - Belum pernah diisi  -> langsung simpan, TIDAK perlu tanya apa-apa.
+      // - Sudah pernah diisi  -> baru munculkan popup konfirmasi:
+      //   "Perbaikan" (timpa) atau "Perawatan Baru" (simpan sebagai riwayat,
+      //   isian lama tetap ada).
+      //
+      // Dicek dari isi sheet-nya langsung, jadi tetap benar walau halaman
+      // dibuka ulang atau dari perangkat lain.
+      const check = await checkMonthAlreadyFilled({
+        buildingCategory: decodedBc, siteName: decodedSite, categoryId: category.id, tanggal
+      });
+      if (check.hasExisting) {
+        setSubmitting(false);
+        setConfirmDialog({ existingValues: check.existingValues });
+        return;
       }
       await doSubmit('overwrite', {});
     } catch (e) {

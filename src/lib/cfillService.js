@@ -281,89 +281,51 @@ const ENTRY_EXIT_START_ROW = 7; // baris pertama data (baris 1-6 header/judul)
 const ENTRY_EXIT_DATE_COL = 2; // kolom B = Tanggal, dipakai buat deteksi baris kosong
 
 /**
- * Cek apakah "Entry and exit registration" sudah pernah diisi untuk BULAN
- * BERJALAN di site ini - dipakai buat wajibkan pengisian sebelum bisa akses
- * checksheet peralatan (kalau belum, tampilkan form ini duluan).
+ * Cek apakah Entry/Exit Registration sudah pernah diisi di BULAN BERJALAN
+ * untuk site ini. Kalau sudah pernah, kunjungan berikutnya di bulan yang sama
+ * TIDAK perlu isi lagi (teknisi biasanya cuma merevisi checksheet).
+ *
+ * Ceknya per BULAN, bukan per tanggal: Google Sheets kadang menormalkan
+ * tanggal jadi "MM/DD/YYYY" walau kita mengirim "DD/MM/YYYY", jadi pencocokan
+ * dilakukan dengan mengambil semua angka di string tanggal lalu memastikan
+ * bulan berjalan + tahun berjalan sama-sama ada - tidak bergantung posisi.
  */
-/**
- * Cek apakah Entry/Exit Registration SUDAH ADA buat site + TANGGAL SPESIFIK
- * tertentu (beda dari checkEntryExitFilledThisMonth yang cek per-bulan) -
- * dipakai buat nentuin apakah dialog "Perbaikan/Perawatan Baru" perlu
- * ditampilkan pas submit checksheet (cuma relevan kalau lokasi itu emang
- * beneran ada kunjungan tercatat di tanggal yang sama dgn checksheet-nya).
- */
-export async function checkEntryExitFilledOnDate(buildingCategory, siteName, tanggal) {
+export async function checkEntryExitFilledThisMonth(buildingCategory, siteName, date = new Date()) {
+  const empty = { filled: false, sheetUrl: null };
   const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
-  if (!site) return false;
+  if (!site) return empty;
 
-  const [year, month, day] = tanggal.split('-').map(Number); // tanggal format "YYYY-MM-DD"
-  if (!year || !month || !day) return false;
+  const now = date;
+  const currentMonth = now.getMonth() + 1;
+  const currentYear = now.getFullYear();
 
   try {
     const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-    const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+    const { spreadsheetId } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
     const tabName = await resolveTabName(spreadsheetId, ENTRY_EXIT_TAB_NAME);
+
     const nextEmptyRow = await findNextEmptyRow(spreadsheetId, tabName, ENTRY_EXIT_START_ROW, ENTRY_EXIT_DATE_COL);
-    if (nextEmptyRow <= ENTRY_EXIT_START_ROW) return false;
+    const gid = await getSheetGid(spreadsheetId, tabName);
+    const sheetUrl = getSpreadsheetUrl(spreadsheetId, gid);
+
+    if (nextEmptyRow <= ENTRY_EXIT_START_ROW) return { filled: false, sheetUrl };
 
     const rows = await readEntryExitDates(spreadsheetId, tabName, ENTRY_EXIT_START_ROW, nextEmptyRow - 1);
-    // Sama seperti checkEntryExitFilledThisMonth - cek fleksibel (nggak asumsi
-    // urutan DD/MM/YYYY yang kaku), tapi kali ini cocokkan hari+bulan+tahun
-    // TIGA-TIGANYA (bukan cuma bulan+tahun).
-    return rows.some((dateStr) => {
-      const numbers = (dateStr || '').match(/\d+/g);
-      if (!numbers || numbers.length < 3) return false;
-      const hasYear = numbers.includes(String(year));
-      const hasMonth = numbers.some((n) => parseInt(n, 10) === month && parseInt(n, 10) <= 12);
-      const hasDay = numbers.some((n) => parseInt(n, 10) === day);
-      return hasYear && hasMonth && hasDay;
-    });
-  } catch {
-    // Gagal cek (mis. site belum ada Entry/Exit sama sekali) - fail-safe ke
-    // false, biar dialog konfirmasi cuma nggak muncul (bukan nge-block submit).
-    return false;
-  }
-}
-
-export async function checkEntryExitFilledThisMonth(buildingCategory, siteName) {
-  requireFolderConfig(ROOT_CHECKSHEET_FOLDER_ID, 'VITE_ROOT_CHECKSHEET_FOLDER_ID');
-  const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
-  if (!site) return { filled: false, sheetUrl: null };
-
-  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
-  const tabName = await resolveTabName(spreadsheetId, ENTRY_EXIT_TAB_NAME);
-
-  const nextEmptyRow = await findNextEmptyRow(spreadsheetId, tabName, ENTRY_EXIT_START_ROW, ENTRY_EXIT_DATE_COL);
-  const now = new Date();
-
-  // Baca semua baris tanggal yang sudah terisi (dari start row sampai baris kosong
-  // berikutnya), cek apakah ADA yang bulan+tahunnya cocok bulan berjalan.
-  //
-  // PENTING: nggak boleh asumsi urutan "DD/MM/YYYY" yang kaku. Google Sheets
-  // kadang nyimpen/nampilin tanggal dalam format "MM/DD/YYYY" (locale AS) kalau
-  // valueInputOption=USER_ENTERED mem-parsing ulang string yang dikirim -
-  // tergantung setting locale spreadsheet-nya, walau kode kita SELALU ngirim
-  // "DD/MM/YYYY". Makanya di sini dicek dengan cara yang tahan banting: ambil
-  // SEMUA angka di string tanggalnya, terus cek apakah bulan berjalan (dengan
-  // ATAU tanpa nol di depan) DAN tahun berjalan sama-sama ada di situ - nggak
-  // peduli itu di posisi keberapa persisnya.
-  const currentMonth = now.getMonth() + 1;
-  const currentYear = now.getFullYear();
-  let filled = false;
-  if (nextEmptyRow > ENTRY_EXIT_START_ROW) {
-    const rows = await readEntryExitDates(spreadsheetId, tabName, ENTRY_EXIT_START_ROW, nextEmptyRow - 1);
-    filled = rows.some((dateStr) => {
+    const filled = rows.some((dateStr) => {
       const numbers = (dateStr || '').match(/\d+/g);
       if (!numbers || numbers.length < 3) return false;
       const hasYear = numbers.includes(String(currentYear));
       const hasMonth = numbers.some((n) => parseInt(n, 10) === currentMonth && parseInt(n, 10) <= 12);
       return hasYear && hasMonth;
     });
-  }
 
-  const gid = await getSheetGid(spreadsheetId, tabName);
-  return { filled, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid) };
+    return { filled, sheetUrl };
+  } catch {
+    // Gagal cek (mis. site ini belum punya tab Entry/Exit) - fail-safe ke
+    // false, biar form Entry/Exit tetap dimunculkan, bukan malah mengunci
+    // akses teknisi ke checksheet.
+    return empty;
+  }
 }
 
 /**

@@ -63,8 +63,8 @@ export default function EntryExitForm({ site, onSuccess, mandatory }) {
       <div className="card-title">Formulir Keluar-Masuk — {site.siteName}</div>
       {mandatory && (
         <div className="notice-box" style={{ marginBottom: 16 }}>
-          📋 Entry/Exit Registration bulan ini belum diisi untuk site ini — wajib diisi dulu
-          sebelum bisa mengisi checksheet item perawatan.
+          📋 Entry/Exit Registration bulan ini belum diisi untuk site ini — cukup diisi sekali per bulan,
+          lalu checksheet bisa diisi/direvisi berkali-kali tanpa diminta isi lagi.
         </div>
       )}
 
