@@ -2,43 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext';
 import { getJadwalKunjunganBulanIni, getLogGangguanTabs, getLogGangguanData } from '../lib/cfillService';
+import ProgressKerjaCard from '../components/ProgressKerjaCard';
 
 const BULAN_ID = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-
-/** Donut kecil per periode (1M/3M/6M/1Y) - pakai CSS conic-gradient, tanpa library.
- * Bagian "Selesai" dan "Belum" masing-masing bisa diklik terpisah buat buka
- * pop-up daftar lokasinya (lihat onClickFinished/onClickNotYet). */
-function PeriodDonut({ label, total, finished, onClickFinished, onClickNotYet }) {
-  const notYet = total - finished;
-  const pct = total > 0 ? Math.round((finished / total) * 100) : 0;
-  const bg = total > 0
-    ? `conic-gradient(var(--accent) ${pct}%, #F0DCCB ${pct}% 100%)`
-    : '#EDEAE0';
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-      <div style={{
-        width: 74, height: 74, borderRadius: '50%', background: bg,
-        display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative'
-      }}>
-        <div style={{
-          width: 54, height: 54, borderRadius: '50%', background: 'var(--surface)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
-        }}>
-          <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 15 }}>{finished}/{total}</div>
-        </div>
-      </div>
-      <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-soft)' }}>{label}</div>
-      <div style={{ display: 'flex', gap: 6, fontSize: 10.5 }}>
-        <span className="link-like" onClick={onClickFinished} style={{ color: 'var(--accent-strong)' }}>
-          {finished} selesai
-        </span>
-        <span className="link-like" onClick={onClickNotYet} style={{ color: '#B4302F' }}>
-          {notYet} belum
-        </span>
-      </div>
-    </div>
-  );
-}
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -100,36 +66,7 @@ export default function Dashboard() {
       )}
 
       {jadwal && jadwal.available && (
-        <div className="card" style={{ marginBottom: 16 }}>
-          <div className="card-title">Progress Kerja {jadwal.bulan} {jadwal.tahun}</div>
-          <div className="muted" style={{ marginBottom: 14 }}>Dari: {jadwal.fileName}</div>
-
-          <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', marginBottom: 6 }}>
-            {['1M', '3M', '6M', '1Y'].map((p) => (
-              <PeriodDonut
-                key={p}
-                label={p}
-                total={jadwal.periodBreakdown[p].total}
-                finished={jadwal.periodBreakdown[p].finished}
-                onClickFinished={() => setPeriodModal({ label: p, status: 'Selesai', items: jadwal.periodBreakdown[p].finishedItems })}
-                onClickNotYet={() => setPeriodModal({ label: p, status: 'Belum Selesai', items: jadwal.periodBreakdown[p].notYetItems })}
-              />
-            ))}
-          </div>
-
-          <a href={jadwal.sheetUrl} target="_blank" rel="noreferrer" className="link-like" style={{ display: 'inline-block', marginTop: 14, fontSize: 13 }}>
-            Buka jadwal lengkap di Google Sheets →
-          </a>
-
-          {jadwal.total > 0 && jadwal.periodBreakdown['1M'].total === 0 && jadwal.periodBreakdown['3M'].total === 0 && (
-            <div className="notice-box" style={{ marginTop: 14, fontSize: 11.5 }}>
-              🔧 Diagnostik sementara — {jadwal.total} baris kebaca tapi periode semuanya 0. Sample data mentah:
-              <pre style={{ whiteSpace: 'pre-wrap', marginTop: 6, fontSize: 10.5 }}>
-                {JSON.stringify(jadwal.debugSample, null, 1)}
-              </pre>
-            </div>
-          )}
-        </div>
+        <ProgressKerjaCard jadwal={jadwal} onOpenPeriod={setPeriodModal} />
       )}
 
       <div className="card">

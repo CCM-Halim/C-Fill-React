@@ -12,6 +12,7 @@ import { INSTRUMENT_SLOT_MAP } from '../config/instruments';
 import { SLOT_MAP_OVERRIDES } from '../config/slotMapOverrides';
 import { logActivity } from './activityLog';
 import { getCurrentUser } from './googleAuth';
+import { summarizeJadwal } from './jadwalProgress';
 
 // Struktur sheet "Lembar Verifikasi Pekerjaan" (boilerplate, sama di semua 69
 // file site): baris 6 = Januari, step 1/bulan, kolom C = Tanggal, D = Nama
@@ -447,9 +448,19 @@ export async function submitVerification({ buildingCategory, siteName, monthInde
  * dikonfigurasi, cari file yang namanya cocok BULAN BERJALAN (dicari via
  * substring match, toleran kalau ada variasi kecil di penulisan), lalu parse
  * tab "Jadwal Kunjungan MR" jadi ringkasan progress + daftar kerjaan yang
- * belum selesai. Kolom di sheet (dari B, kolom A "No" dilewati):
- * B=Hari&Tanggal, C=Jam, D=Lokasi, E=(kosong), F=Kegiatan, G=Detail,
- * H=PIC, I=Temuan, J=Realisasi, K=Status Kegiatan, L=Keterangan.
+ * belum selesai.
+ *
+ * PETA KOLOM (baris 2 = header, data mulai baris 3) DIAMBIL DARI HEADER sheet,
+ * bukan dari perkiraan - lihat lib/jadwalProgress.js:
+ *   B=Hari&Tanggal  C=Jam  D=lokasi MR - ECS3  E=Kegiatan  F=Detail Pekerjaan
+ *   G=PIC Checksheet  H=Temuan  I=Realisasi  J=Status Kegiatan  K=Keterangan
+ *   L:O=1M/3M/6M/1Y (kolom bantu rencana, dipakai sebagai pembanding)
+ *
+ * Riwayat bug: pemetaan lama mengambil lokasi dari D, tetapi Kegiatan dari F
+ * (harusnya E) dan Status dari K (harusnya J). Akibatnya kolom Kegiatan selalu
+ * kosong & tidak ada baris yang terbaca "Finish", sehingga keempat donut
+ * menampilkan 0/0 meski jadwalnya terisi. Pemetaan sekarang mengikuti header
+ * dan sudah diuji terhadap data September & Oktober 2026 asli.
  */
 
 const JADWAL_CONFIG_FILE_ID = import.meta.env.VITE_JADWAL_CONFIG_FILE_ID;
@@ -530,25 +541,14 @@ export async function getJadwalKunjunganBulanIni() {
   }
 
   const tabName = await resolveTabName(target.id, 'Jadwal Kunjungan MR');
-  const rows = await readRawRange(target.id, tabName, 'B3:L120');
+  // Range sampai kolom O: L:O = kolom bantu rencana (1M/3M/6M/1Y) yang dipakai
+  // sebagai pembanding angka rencana. Parsing-nya ada di lib/jadwalProgress.js
+  // (modul murni, ada test-nya di test/jadwalProgress.test.mjs).
+  const rows = await readRawRange(target.id, tabName, 'B3:O120');
 
-  const items = [];
-  for (const r of rows) {
-    const lokasi = (r[2] || '').trim();
-    if (!lokasi) continue; // baris kosong / bukan entri kerjaan beneran
-    items.push({
-      tanggal: (r[0] || '').trim(),
-      jam: (r[1] || '').trim(),
-      lokasi,
-      kegiatan: (r[4] || '').trim(),
-      pic: (r[6] || '').trim(),
-      temuan: (r[7] || '').trim(),
-      status: (r[9] || '').trim(),
-      keterangan: (r[10] || '').trim()
-    });
-  }
+  const summary = summarizeJadwal(rows);
 
-  if (items.length === 0) {
+  if (summary.items.length === 0) {
     // Diagnostik: file & tab ketemu tapi nggak ada baris kerjaan yang kebaca -
     // tampilkan info teknis biar gampang dilacak, daripada nampilin 0/0 yang
     // menyesatkan (seolah-olah beneran nggak ada kerjaan bulan ini).
@@ -560,54 +560,13 @@ export async function getJadwalKunjunganBulanIni() {
     };
   }
 
-  // Progress per PERIODE (1M/3M/6M/1Y) - 1 baris bisa mencakup beberapa periode
-  // sekaligus (kolom "Kegiatan" isinya mis. "1M, 3M, 6M" dipisah koma), jadi
-  // tiap periode yang disebut di baris itu dihitung masing-masing (total +
-  // selesai kalau statusnya "Finish"). Ini DIHITUNG SENDIRI dari kolom
-  // Kegiatan+Status, bukan dari kolom M:P (1M/3M/6M/1Y) di sheet - kolom itu
-  // cuma angka kumulatif total per periode, nggak ada breakdown selesai/belum.
-  // Selain angka, disimpan juga DAFTAR lokasinya (finishedItems/notYetItems) -
-  // dipakai buat pop-up daftar site pas donut chart di Dashboard diklik.
-  const PERIODS = ['1M', '3M', '6M', '1Y'];
-  const periodBreakdown = {};
-  PERIODS.forEach((p) => { periodBreakdown[p] = { total: 0, finished: 0, finishedItems: [], notYetItems: [] }; });
-
-  for (const it of items) {
-    if (!it.kegiatan) continue;
-    const tags = it.kegiatan.split(',').map((t) => t.trim().toUpperCase());
-    for (const tag of tags) {
-      if (periodBreakdown[tag]) {
-        periodBreakdown[tag].total += 1;
-        if (it.status.toLowerCase() === 'finish') {
-          periodBreakdown[tag].finished += 1;
-          periodBreakdown[tag].finishedItems.push(it);
-        } else {
-          periodBreakdown[tag].notYetItems.push(it);
-        }
-      }
-    }
-  }
-
-  const finished = items.filter((it) => it.status.toLowerCase() === 'finish');
-  const notYet = items.filter((it) => it.status.toLowerCase() !== 'finish');
-
   return {
     available: true,
     bulan: namaBulan,
     tahun,
     fileName: target.name,
     sheetUrl: `https://docs.google.com/spreadsheets/d/${target.id}/edit`,
-    total: items.length,
-    finishedCount: finished.length,
-    notYetCount: notYet.length,
-    periodBreakdown,
-    notYetItems: notYet,
-    allItems: items,
-    // Diagnostik sementara: sample 5 item pertama apa adanya (kegiatan +
-    // status persis seperti yang kebaca) - dipakai buat lacak kalau donut
-    // masih 0/0 padahal items nggak kosong (berarti masalahnya di pencocokan
-    // tag Kegiatan, bukan di pembacaan baris).
-    debugSample: items.slice(0, 5).map((it) => ({ lokasi: it.lokasi, kegiatan: it.kegiatan, status: it.status }))
+    ...summary,
   };
 }
 
