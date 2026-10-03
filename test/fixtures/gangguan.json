@@ -1,0 +1,5601 @@
+{
+ "spreadsheetId": "1UJZwW1CXeR0DUpoGWqWK4X3L6q7DfXWQbJ13kV6VHgw",
+ "tabs": {
+  "Gangguan Peralatan": [
+   [
+    "No.",
+    "Status",
+    "Tanggal",
+    "Waktu Pelaporan",
+    "Lokasi Gangguan",
+    "Nama Peralatan",
+    "Waktu Gangguan",
+    "Waktu Pemulihan",
+    "Durasi",
+    "Ruang Lingkup Dampak dan Fenomena Gangguan",
+    "Analisis Penyebab dan Hasil Penanganan ",
+    "Tindakan Pencegahan",
+    "Pelapor",
+    "Penerima/Tanggap Pengaduan",
+    "Area Kerja Penanggung Jawab",
+    "Sistem Terkait",
+    "Dokumentasi"
+   ],
+   [
+    "1",
+    "Close",
+    "01/01/2026",
+    "9:00",
+    "K10 + 200",
+    "BBU",
+    "01/01/2026 17:03:00",
+    "01/01/2026 23:00:00",
+    "0 Hari, 5 Jam, 57 Menit, 0 Detik",
+    "Alarm Radio Link Failure HA-KA02A K10+200",
+    "Melakukan pergantian modul SFP main BBU CPRI 1 di MR HA-KA02B K10+200"
+   ],
+   [
+    "2",
+    "Close",
+    "03/01/2026",
+    "7:00",
+    "K2 + 075",
+    "Repeater",
+    "03/01/2026 6:03:00",
+    "12/02/2026 0:15:00",
+    "39 Hari, 18 Jam, 12 Menit, 0 Detik",
+    "Power Amplifier Communication Failure Alarm 2 HALIM/R3(K2+075)",
+    "- Penambahan resistor di board IF tetapi alarm masih muncul dan recovery.\n- Lalu dilakukan penggantian board Power Amplifier 2 tetapi alarm masih muncul dan recovery.\n- Lalu dilakukan penggantian board Intermediate Frequency (IF) 2 dan alarm clear.\n- Lalu dilakukan penggantian RU.\n- Muncul alarm Remote Optical Receiver Underpower alarm 2 lalu diganti SFP di board IF 1 port 2.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Repeater"
+   ],
+   [
+    "3",
+    "Closed",
+    "04/01/2026",
+    "10:36",
+    "OCE St Halim",
+    "Telephone AG",
+    "04/01/2026 10:36:00",
+    "04/01/2026 11:27:00",
+    "0 Hari, 0 Jam, 51 Menit, 0 Detik",
+    "Telephone AG OCE St Halim tidak berdering saat ada panggilan masuk",
+    "Tombol ringer berada pada posisi off, dan sudah dikembalikan pada posisi on.",
+    "",
+    "OCE Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "Telepone AG"
+   ],
+   [
+    "4",
+    "Open",
+    "06/01/2026",
+    "16:30",
+    "K45+241",
+    "Ligthing proctection ",
+    "06/01/2026 16:30:00",
+    "",
+    "#NUM!",
+    "ligthing protection offline",
+    "- Ditemukan lightning counter menghitung 1x sambaran petir. RTU tidak bisa mendeteksi panel lightning protection karena dugaan TTL tidak dapat bekerja.\n- Sudah diuji coba penggantian TTL dari MR lain dan alarm berhasil dihapus.\n- Sudah dipasang TTL baru warna biru (tetap alarm Lightning Protection).",
+    "",
+    "CCM HALIM",
+    "Telco On-Site Halim",
+    "Halim",
+    "Peralatan komunikasi"
+   ],
+   [
+    "5",
+    "Open",
+    "06/01/2026",
+    "16:30",
+    "K45+241",
+    "Air conditioner",
+    "06/01/2026 12:30:00",
+    "",
+    "#NUM!",
+    "AC offline ",
+    "",
+    "",
+    "CCM HALIM",
+    "Telco On-Site Halim",
+    "Halim",
+    "Peralatan komunikasi"
+   ],
+   [
+    "6",
+    "Close",
+    "06/01/2026",
+    "16:30",
+    "K41+683 (204)",
+    "BATERAI GROUP 2 No 4 HFSPS",
+    "06/01/2026 10:30:00",
+    "1/7/2026",
+    "0 Hari, 13 Jam, 30 Menit, 0 Detik",
+    "Baterai 12 volt 100Ah  no 4 group 2 sistem perangkat HFSPS mengalami kebocoran ",
+    "",
+    "sudah dilakukan penggantian baterai",
+    "CCM HALIM",
+    "Telco On-Site Halim",
+    "Halim",
+    "HFSPS"
+   ],
+   [
+    "7",
+    "Open",
+    "07/01/2026",
+    "11:50",
+    "K83+834",
+    "External power monitoring equipment",
+    "07/01/2026 8:50:00",
+    "",
+    "#NUM!",
+    "Smart meter_6_4 Offline",
+    "Indikasi tidak ada tegangan pada terminal kabel 4,sehingga akan dilakukan pengujian dengan menukar dengan terminal yang lain dan bersama dengan tim power untuk mencoba melakukan switch power main dan backup\n\n4 April 2026 : Alarm masih intermitent",
+    "",
+    "CCM HALIM",
+    "Telco On-Site Halim",
+    "Halim",
+    "Power Supply"
+   ],
+   [
+    "8",
+    "Close",
+    "08/01/2026",
+    "11:13",
+    "K14+276",
+    "Baterai HFSPS ",
+    "08/01/2026 10:20:00",
+    "08/01/2026 12:20:00",
+    "0 Hari, 2 Jam, 0 Menit, 0 Detik",
+    "Baterai HFSPS Grup 1 No.21 Offline",
+    "Pengencangan kabel power modul baterai",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "HFSPS"
+   ],
+   [
+    "9",
+    "Close",
+    "11/01/2026",
+    "1:00",
+    "K0+215",
+    "Telephone AG",
+    "11/01/2026 0:40:00",
+    "11/01/2026 1:20:00",
+    "0 Hari, 0 Jam, 40 Menit, 0 Detik",
+    "Telepon AG mati",
+    "Penggantian console telepon AG",
+    "",
+    "CCM HALIM",
+    "Telco On-Site Halim",
+    "Halim",
+    "Peralatan komunikasi"
+   ],
+   [
+    "10",
+    "Close",
+    "12/01/2026",
+    "6:20",
+    "K24+635",
+    "OSN1800V",
+    "12/01/2026 6:12:00",
+    "12/01/2026 12:30:00",
+    "0 Hari, 6 Jam, 18 Menit, 0 Detik",
+    "Alarm OSN R_LOSS di subrack 0 SLNO slot 3 port 1 di K24 dan alarm OSN di subrack 0 SLNO slot 4 port 1 di K17.",
+    "Penelurusan didapat kabel patchcord di K24 ODF 1-1-9 ke ODF 2-1-1 digigit tikus sehingga dilakukan penggantian kabel patchcord sementara.\n\nDi temuan berikutnya patchcord di ODF 1-1-10 redamannya tinggi sehingga dilakukan pergantian patchcord dan diukur dengan OPM redamannya turun.",
+    "Sumber jalur tikus ada di jalur exhaust AC di bawah lantai, terdapat feses tikus dan indikasi lubang sebagai jalan masuk tikus ke MR. Digunakan sikaboom/foam untuk menutup lubang jalur tikus",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Sistem Transmisi"
+   ],
+   [
+    "11",
+    "Close",
+    "12/01/2026",
+    "8:20",
+    "K24+635",
+    "OSN1800V",
+    "12/01/2026 8:12:00",
+    "12/01/2026 19:30:00",
+    "0 Hari, 11 Jam, 18 Menit, 0 Detik",
+    "Alarm OSN ETH_LOSS di subrack 0 EMS slot 6 port 4 di K24",
+    "Penelusuran didapat kabel patchcord di k24 ODF 2-5-4 ke ODF 1-4-6 untuk kebutuhan power telecontrol box transformer courtyard digigit tikus sehingga dilakukan penggantian kabel patchcord sementara.\nDicek lampu indikator major di OSN telah hilang dan status alarm normal.",
+    "Sumber jalur tikus ada di jalur exhaust AC di bawah lantai, terdapat feses tikus dan indikasi lubang sebagai jalan masuk tikus ke MR. Digunakan sikaboom/foam untuk menutup lubang jalur tikus",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Sistem Transmisi"
+   ],
+   [
+    "12",
+    "Open",
+    "15/01/2026",
+    "12:00",
+    "K66+000",
+    "Ligthning proctection ",
+    "15/01/2026 11:35:00",
+    "5/7/2026 (Intermittent)",
+    "#VALUE!",
+    "Alarm lightning protection di NMC karena masalah RS485 ke RTU",
+    "- Saat di site, Modul TTL ro RS485 indikator lampu menyala terus, dugaan rusak. Panel LP terhubung dengan port 7 RTU.\n\n- Sudah dilakukan perpindahan port 7 Lightning Protection (LP) di RTU ke port 5 Air Conditioner. Hasilnya Air Conditioner malah Offline di port 7 sehingga port 7 rusak dan port 5 LP tetap Offline. Sudah dilakukan pengecekan kabel LAN dari RTU ke panel LP memakai LAN tester dan didapat konektivitas baik.Di port 5 LP yang tetap Offline, modul TTL to RS485 berkedip normal (ada transmisi data) sehingga diduga prosesor LP mengalami kegagalan fungsi (tersambar petir).\n\n- Sudah dicoba dipasang modul TTL K66 di K0 + 215 tetapi tetap alarm lightning protection di K0 + 215\n\n7 Mei 2026 : dilakukan penggantian modul TTL yang baru dan kondisi normal\n14 Mei 2026 : alarm kembali lightning protection\n24 Juni 2026 : alarm kembali (intermitten)",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Lightning protection panel"
+   ],
+   [
+    "13",
+    "Close",
+    "15/01/2026",
+    "15:21",
+    "K0+316",
+    "BATERAI GROUP 2 no 1 HFSPS",
+    "15/01/2026 12:52:00",
+    "15/01/2026 17:30:00",
+    "0 Hari, 4 Jam, 38 Menit, 0 Detik",
+    "Baterai 2 volt no 1 group 2 sistem perangkat HFSPS mengalami kegagalan pengiriman data",
+    "",
+    "Dilakukan plug out plug in pada konektor sensor tegangan",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai HFSPS"
+   ],
+   [
+    "14",
+    "Close",
+    "17/01/2026",
+    "8:10",
+    "K76 + 722",
+    "Baterai 3 UPS",
+    "17/01/2026 8:00:00",
+    "25/01/2026 1:00:00",
+    "7 Hari, 17 Jam, 0 Menit, 0 Detik",
+    "Alarm battery UPS No 3 voltage High Alarm",
+    "Pengukuran langsung didapat 13,761 V dan resistansi 18,946 mohm, alarm pulih sendiri.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai UPS"
+   ],
+   [
+    "15",
+    "Close",
+    "23/1/2026",
+    "2:00",
+    "K12+025",
+    "OSN1800V",
+    "22/01/2026 23:00:00",
+    "23/01/2026 2:45:00",
+    "0 Hari, 3 Jam, 45 Menit, 0 Detik",
+    "Power Fail di PIU board subrack 0 PIU slot 17 (Undervoltage -48V main power supply). Alarm ini menimbulkan alarm fuse pada HFSPS.",
+    "recovery sendiri karena supply main aktif lagi",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "HFSPS"
+   ],
+   [
+    "16",
+    "Close",
+    "23/1/2026",
+    "20:37",
+    "K10 + 200",
+    "RRU",
+    "23/1/2026 20:37",
+    "23/1/2026 22:50",
+    "0 Hari, 2 Jam, 13 Menit, 0 Detik",
+    "Alarm Radio Link Failure HA-KA02A",
+    "Dilakukan reset board dari NMC",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "RRU"
+   ],
+   [
+    "17",
+    "Close",
+    "25/1/2026",
+    "7:12",
+    "K74+445",
+    "CCTV",
+    "25/01/2026 06:31:00",
+    "20/05/2026 00:31:00",
+    "114 Hari, 18 Jam, 0 Menit, 0 Detik",
+    "CCTV inlet tunnel 2 berembun sehingga mengurangi fokus dan jarak pandang",
+    "Kemungkinan karena curah hujan yang tinggi dan perubahan suhu secara berulang-ulang dan terus menerus menyebabkan CCTV berembun.\n\n20/5/2026\n- Sudah ditindaklanjuti dengan pembersihan CCTV namun hasilnya masih nampak kurang jelas (diindikasikan seperti ada jamur didalam)",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "CCTV"
+   ],
+   [
+    "18",
+    "Open",
+    "23/1/2026",
+    "10:35",
+    "K52+083 ",
+    "RTU ",
+    "23/01/2026 10:25:00",
+    "",
+    "#NUM!",
+    "Alarm Air Conditioner 1 dan 2 Offline",
+    "Kemungkinan masalah pada interface dari Air conditioner ke RTU.",
+    "untuk port COM5 Air Coniditioner tidak bagus. \nuntuk selanjutnya dilakukan penarikan network kabel dari Air Conditioner ke RTU.",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "RTU"
+   ],
+   [
+    "19",
+    "Open",
+    "23/1/2026",
+    "10:35",
+    "K52+083 ",
+    "Lightning protection",
+    "23/01/2026 10:25:00",
+    "",
+    "",
+    "Alarm Lightning protection Offline",
+    "Kemungkinan dari panel lightning RS485 Interface ke RTU (di K52 tidak ada modul TTL to RS485).",
+    "untuk tindakan dilapangan telah dilakukan pindah port dari COM7 ke COM8 untuk lightning protection dan NMC sudah melakukan configurasi namun hasilnya tetap sama",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "RTU"
+   ],
+   [
+    "20",
+    "Close",
+    "30/1/2026",
+    "10:00",
+    "Stasiun Karawang",
+    "Telephone AG",
+    "30/01/2026 10:25:00",
+    "30/01/2026 21:05:00",
+    "0 Hari, 10 Jam, 40 Menit, 0 Detik",
+    "Telepon AG mati ruang IT berdering terus",
+    "sudah ditindaklanjuti dengan pergantian telepon AG baru",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Telepon AG"
+   ],
+   [
+    "21",
+    "Close",
+    "03/02/2026",
+    "11:00",
+    "K14 + 276",
+    "CCTV",
+    "03/02/2026 11:00:00",
+    "03/02/2026 13:00:00",
+    "0 Hari, 2 Jam, 0 Menit, 0 Detik",
+    "CCTV courtyard buram",
+    "sudah ditindaklanjuti dengan dilakukan pembersihan",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "CCTV"
+   ],
+   [
+    "22",
+    "Open",
+    "03/02/2026",
+    "11:00",
+    "K14 + 276",
+    "Lampu TL LED",
+    "",
+    "",
+    "",
+    "Lampu TL LED (spek 18W 220-240V) mati",
+    "",
+    "",
+    "CCM ",
+    "Telco On-Site Halim",
+    "Halim",
+    "Lampu"
+   ],
+   [
+    "23",
+    "Close",
+    "04/02/2026",
+    "19:20",
+    "K56+665",
+    "MCB Panel Air Conditioner",
+    "04/02/2026 19:20:00",
+    "13/02/2026 12:30:00",
+    "8 Hari, 17 Jam, 10 Menit, 0 Detik",
+    "AC (Air Conditioner) offline ",
+    "MCB panel AC Terbakar sehingga AC1 dan AC2 offline (suhu TH module konstan 28 - 30 C).\nSudah dilakukan pergantian MCB oleh biro powerline dan AC sudah nyala.",
+    "",
+    "CCM ",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "24",
+    "Close",
+    "04/02/2026",
+    "11:15",
+    "K52 + 083",
+    "Baterai UPS No 11",
+    "04/02/2026 11:00:00",
+    "04/02/2026 11:30:00",
+    "",
+    "Baterai UPS No 11 Offline",
+    "Pembersihan di port sensor baterai",
+    "",
+    "CCM ",
+    "Telco On-Site Halim",
+    "Halim",
+    "UPS"
+   ],
+   [
+    "25",
+    "Open",
+    "08/02/2026",
+    "18:00",
+    "K32+475",
+    "AC",
+    "02/08/2026",
+    "",
+    "",
+    "AC (Air Conditioner) offline ",
+    "Aktual kondisi AC normal tetapi tidak bisa di remote oleh NMC.\n15 Agustus 2026 :\n- Sudah switch port COM 8 TH modul dengan COM 5 Air Conditioner, untuk kedua data masih belum bisa dibaca di NMC.\n- Sudah jumper network kabel baru dari RTU COM 5 ke Air Conditioner untuk data masih belum bisa dibaca.\n- Sudah jumper langsung dari RTU COM 8 ke Air Conditioner untuk data juga masih sama belum bisa dibaca di NMC.\n- Dilakukan pengukuran pada out control di panel Air Conditioner di dapatkan tegangan 4.5 - 5V DC, dan juga dilakukan pemeriksaan pada network kabel untuk kondisi dalam keadaan normal.\n- Kemungkinan analisisnya antara port pada perangkat RTU dan Board remote monitoring yang ada di Air Conditioner untuk observasi selanjutnya.",
+    "",
+    "CCM ",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "26",
+    "Open",
+    "08/02/2026",
+    "18:00",
+    "K22+025",
+    "AC",
+    "",
+    "",
+    "",
+    "AC (Air Conditioner) offline ",
+    "",
+    "",
+    "CCM ",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "27",
+    "Open",
+    "08/02/2026",
+    "18:00",
+    "K1+267",
+    "AC",
+    "",
+    "",
+    "",
+    "AC (Air Conditioner) offline ",
+    "",
+    "",
+    "CCM ",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "28",
+    "Close",
+    "04/02/2026",
+    "0:12",
+    "K34 + 575",
+    "Baterai HF Grup 1 No 11",
+    "04/02/2026 0:00:00",
+    "04/02/2026 0:20:00",
+    "0 Hari, 0 Jam, 20 Menit, 0 Detik",
+    "Baterai HFSPS Grup 1 No.11 Offline"
+   ],
+   [
+    "29",
+    "Close",
+    "13/02/2026",
+    "22:25",
+    "K41+607 (202)",
+    "Baterai HF Grup 2 No 13",
+    "13/02/2026 0:10:00",
+    "13/02/2026 0:30:00",
+    "0 Hari, 0 Jam, 20 Menit, 0 Detik",
+    "Baterai HF Grup 2 No 13 nilai tegangan di NMC 1,8 V",
+    "Sudah di TL dengan pengecekan nilai tegangan normal dan sudah plug and play serta pengecekan fisik kabel dan sensor",
+    "",
+    "CCM ",
+    "Telco On-Site Halim",
+    "Halim",
+    "Telepon AG"
+   ],
+   [
+    "30",
+    "Close",
+    "14/02/2026",
+    "1:00",
+    "K56 + 096",
+    "Telepon AG",
+    "14/02/2026 1:00:00",
+    "03/04/2026 11:00:00",
+    "",
+    "Telepon AG mati. sudah dilakukan pengecekan kondisi kabel dan perangkat.",
+    "penggantian perangkat console telepon",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Telepon AG"
+   ],
+   [
+    "31",
+    "Close",
+    "14/02/2026",
+    "1:00",
+    "K56 + 665",
+    "Baterai UPS No 3",
+    "14/02/2026 1:00:00",
+    "",
+    "",
+    "Nilai baterai UPS No 3 voltage High dan resistansi tidak terbaca di NMC",
+    "pengukuran di site normal dan pengecekan module sensor plug unplug serta nilai recovery sendiri.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai UPS"
+   ],
+   [
+    "32",
+    "Close",
+    "16/02/2026",
+    "6:10",
+    "K41 + 607 (202)",
+    "Air Conditioner",
+    "16/02/2026 6:10:00",
+    "",
+    "",
+    "TH Module 39 C, return temp 30 C. Di NMC setpoint cold/hot sudah diturunkan 20 C namun suhu belum turun. AC 2 disetting off dari NMC dan suhu berangsur turun menjadi 27 C.",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "33",
+    "Close",
+    "16/02/2026",
+    "6:59",
+    "K0 + 215",
+    "Baterai UPS Grup 1 offline",
+    "16/02/2026 6:59:00",
+    "16/02/2026 7:24:00",
+    "0 Hari, 0 Jam, 25 Menit, 0 Detik",
+    "Baterai UPS Grup 1 offline",
+    "plug and unplug kabel sensor baterai",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai UPS"
+   ],
+   [
+    "34",
+    "Close",
+    "16/02/2026",
+    "19:32",
+    "K31+367",
+    "Baterai Grup 2 No 17 HFSPS",
+    "19:28",
+    "",
+    "",
+    "Sensor tegangan baterai mengalami kegagalan pengiriman data",
+    "",
+    "",
+    "CCM ",
+    "Telco On-Site Halim",
+    "Halim",
+    "HFSPS"
+   ],
+   [
+    "35",
+    "Close",
+    "18/02/2026",
+    "3:52",
+    "K6 + 352",
+    "Disaster prevention (rain, wind, and intrusion)",
+    "18/02/2026 3:52:00",
+    "18/02/2026 11:24:00",
+    "0 Hari, 7 Jam, 32 Menit, 0 Detik",
+    "Fault alarm pada sistem Disaster Prevention (rain, wind, and intrusion). Sistem catu daya dan host dari NMC normal tetapi ada indikator segitiga berwarna kuning.",
+    "Diselesaikan oleh CRSC bidang disaster monitoring system",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Disaster prevention"
+   ],
+   [
+    "36",
+    "Close",
+    "18/02/2026",
+    "20:29",
+    "K63+174",
+    "TH Module",
+    "18/02/2026 20:29:00",
+    "18/02/2026 20:29:00",
+    "",
+    "TH Module Offline. Alarm selalu intermittent.Sempet cabuT colok normal kembali, sehingga port RTU normal.\nAkan dilakukan perakitan kabel network kembali.",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "TH Module"
+   ],
+   [
+    "37",
+    "Open",
+    "28/02/2026",
+    "6:00",
+    "K41 + 683 (204)",
+    "Air Conditioner",
+    "28/02/2026 6:00:00",
+    "",
+    "",
+    "- Temperatur ruangan 29 C menjadi 22 C.\n- Sudah dilakukan pembersihan filter AC indoor.Outdoornya di lantai 2 belum dibersihkan.\n- 2 Indoor 1 Outdoor.\n- AC1 kompressor normal nyala, AC 2 kompressor tidak normal tidak nyala. Kontaktor AC2 bekerja sebentar kemudian kembali tidak energize.\n\n15/5/2026\n- Kondisi AC mati. TL dengan melakukan restart display kontrol. AC 1 normal dan AC 2 kondisi off setelah beberapa menit dinyalakan.",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "38",
+    "Close",
+    "28/02/2026",
+    "16:11",
+    "K2 + 075",
+    "Repeater",
+    "28/02/2026 16:11:00",
+    "",
+    "",
+    "Remote Optical Receiver Underpower Alarm 2 HALIM/R3(K2+075).Kondisi alarm intermittent.\nDilakukan pergantian SFP di board IF 2.",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Repeater"
+   ],
+   [
+    "39",
+    "Open",
+    "01/03/2026",
+    "6:35",
+    "K78+662",
+    "Baterai UPS",
+    "01/03/2026 6:30:00",
+    "",
+    "#NUM!",
+    "Kondisi alarm Intermittent :\n- Baterai 03 UPS High Voltage (alarm terakhir 23 Juni 2026).\n- Baterai 02 UPS High Voltage.\n- Baterai 01 UPS High Voltage.",
+    "- Sudah dilakukan plug/unplug sensor baterai tetapi alarm masih sering muncul",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai UPS"
+   ],
+   [
+    "40",
+    "Close",
+    "19/03/2026",
+    "3:33",
+    "K41+475 (201)",
+    "Transmisi",
+    "19/03/2026 3:30:00",
+    "",
+    "",
+    "Terjadi ETH_Los (Major) Board B2EFS8 - Slot 11 - Port 1 deskripsi dispatch ip phone ",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Transmisi"
+   ],
+   [
+    "41",
+    "Close",
+    "04/03/2026",
+    "9:00",
+    "K56+096",
+    "Lampu MR",
+    "04/03/2026 9:30:00",
+    "",
+    "",
+    "2 Lampu Dalam MR Mati",
+    "",
+    "",
+    "CCM",
+    "Telco On-Site Halim",
+    "Halim",
+    "Penerangan"
+   ],
+   [
+    "42",
+    "Close",
+    "04/03/2026",
+    "9:00",
+    "K56+096",
+    "Telepon AG",
+    "04/03/2026 9:30:00",
+    "",
+    "",
+    "Telepon AG Mati",
+    "",
+    "",
+    "CCM",
+    "Telco On-Site Halim",
+    "Halim",
+    "Telepon AG"
+   ],
+   [
+    "43",
+    "Open",
+    "05/03/2026",
+    "1:00",
+    "K73+983",
+    "Pintu Kabinet",
+    "05/03/2026 1:00:00",
+    "",
+    "",
+    "Pembuka Pintu salah satu kabinet patah",
+    "",
+    "",
+    "CCM",
+    "Telco On-Site Halim",
+    "Halim",
+    "Pintu Kabinet"
+   ],
+   [
+    "44",
+    "Open",
+    "05/03/2026",
+    "10:00",
+    "K34 + 575",
+    "Pintu MR",
+    "05/03/2026 10:00:00",
+    "",
+    "",
+    "Engsel penahan pintu MR patah ( pegas pintu MR rusak )",
+    "",
+    "",
+    "CCM",
+    "Telco On-Site Halim",
+    "Halim",
+    "Pintu MR"
+   ],
+   [
+    "45",
+    "Open",
+    "11/03/2026",
+    "2:00",
+    "K83+834",
+    "Telephone AG",
+    "11/03/2026 2:00:00",
+    "",
+    "",
+    "Telephone AG mati",
+    "",
+    "",
+    "CCM",
+    "Telco On-Site Halim",
+    "Halim",
+    "Telepon AG"
+   ],
+   [
+    "46",
+    "Close",
+    "11/03/2026",
+    "11:00",
+    "K10+200",
+    "K10+200",
+    "11/03/2026 11:00:00",
+    "",
+    "",
+    "Alarm Baterai HFSPS Grup 1 No.9 Offline",
+    "",
+    "",
+    "CCM",
+    "Telco On-Site Halim",
+    "Halim",
+    "HFSPS"
+   ],
+   [
+    "47",
+    "Close",
+    "12/03/2026",
+    "12:14",
+    "K70+090",
+    "Baterai UPS nomor 11",
+    "12/03/2026 12:00:00",
+    "12/03/2026 12:30:00",
+    "",
+    "Terdapat over voltage di Baterai UPS nomer 11",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "HFSPS"
+   ],
+   [
+    "48",
+    "Close",
+    "23/03/2026",
+    "19:09",
+    "K6 + 352",
+    "Sistem Transmisi",
+    "23/03/2026 19:00:00",
+    "23/03/2026 20:00:00",
+    "",
+    "- Alarm ETH_LOSS di subrack 0 EMS10 slot 6 port 4 sistem telekontrol Halim - K6+352.\n- Alarm ETH_LOSS di subrack 0 EMS10 slot 5 port 4 sistem telekontrol Karawang - K6+352\n- Input Power -60 dBm dan Output Power -2 dBm.",
+    "- Pengecekan di ODF untuk layanan power telekontrol terukur semua di OTDR.\n- Pengecekan di box type dengan biro power ditemukan RTU mereka mati karena supply power yg berasal dari UPS mereka juga mati.\n- Penggantian UPS oleh biro power sudah dilakukan.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Sistem Transmisi"
+   ],
+   [
+    "49",
+    "Close",
+    "23/03/2026",
+    "12:18",
+    "K0 + 215",
+    "Sistem Transmisi",
+    "23/03/2026 12:18:00",
+    "23/03/2026 12:21:00",
+    "0 Hari, 0 Jam, 3 Menit, 0 Detik",
+    "- Alarm ETH_LOSS di subrack 0 EFS8 slot 11 port 6 di Halim 20kV (K0+215) intermittent",
+    "Alarm intermittent. Kemungkinan berasal dari ruangan Halim bridge and Tunnel Dormitory.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Sistem Transmisi"
+   ],
+   [
+    "50",
+    "Open",
+    "27/03/2026",
+    "21:11",
+    "K0 + 316",
+    "BTS",
+    "20/03/2026 21:00:00",
+    "21/03/2026 10:00:00",
+    "0 Hari, 13 Jam, 0 Menit, 0 Detik",
+    "- Radio Link Failure jbBSC/1_Halim_K0+316 Cabinet No.=0, Subrack No=61, Slot No=0, Carrier No=1\n- Radio Link Failure jbBSC/1_Halim_K0+316 Cabinet No.=0, Subrack No=60, Slot No=0, Carrier No=2",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "BTS"
+   ],
+   [
+    "52",
+    "Open",
+    "28/03/2026",
+    "10:00",
+    "K53 + 465",
+    "CCTV",
+    "28/03/2026 10:00:00",
+    "",
+    "#NUM!",
+    "CCTV crossway bridge K53 + 465 terhalangi tanaman",
+    "rumput tumbuh dengan sangat cepat",
+    "pemotongan rumput dan penyemprotan obat rumput",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "CCTV"
+   ],
+   [
+    "53",
+    "Close",
+    "02/04/2026",
+    "13:00",
+    "K48 + 680",
+    "Baterai HF ",
+    "02/04/2026 13:00:00",
+    "03/04/2026 14:00:00",
+    "1 Hari, 1 Jam, 0 Menit, 0 Detik",
+    "Batrai hfsps voltage grup 2 no 19 tidak terbaca di nmc",
+    "plug/unplug kabel",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai HF "
+   ],
+   [
+    "54",
+    "Open",
+    "07/04/2026",
+    "3:47",
+    "K83+834",
+    "Earthquake Monitoring System",
+    "07/04/2026 3:00:00",
+    "",
+    "#NUM!",
+    "- Pasca pemadaman listrik sehingga salah satu power yg mensuplai di panel earthquake off, Beberapa jam kemudian UPS A kabinet earthquake Offline, lalu tim site datang ke lokasi untuk reset alarm dan switch panel ke otomatis.\n\n- 21 April 00:00 pemadaman pada D2-4 integrated load (S1 OFF), kontaktor bekerja normal 0II dan saat S1 dan S2 hidup lagi, kontaktor balik ke keadaan normal kembali IOI.\n- 9 Mei 00:00 pemadaman pada D1-4 first load (S2 OFF) shg ada alarm UPS A Failure, kontaktor tidak normal IOO, pukul 02:00 alarm UPS A sudah normal. Pukul 05:18 Alarm UPS A Failure muncul kembali, kontaktor tidak normal IOO, saat S1 dan S2 hidup lagi, kontaktor tidak balik ke normal IOI.\n- 12 Mei 00:00 pemadaman pada D1-4 first load (S2 OFF) shg ada alarm UPS A Failure, kontaktor tidak normal IOO, dan saat S1 dan S2 hidup lagi, kontaktor tidak balik ke normal IOI.\n- 14 Mei 03:00 pemadaman D2-4 first load kondisi I00.\n- 11 Agustus 2026 00:00 : pemadaman integrated load, UPS B failed posisi sebelum datang ke lokasi OOI.\n4 September 2026 :\n- Observasi pada baterai earthquake B mampu bertahan berapa lama untuk membackup daya sementara ketika listrik padam. Dari hasil observasi dapat diambil kesimpulan baterai earthquake B hanya mampu membackup daya selama +- 30 menit dan dilakukan Pergantian 2 Baterai UPS Earthquake",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Earthquake Monitoring System"
+   ],
+   [
+    "55",
+    "Close",
+    "08/04/2026",
+    "14:00",
+    "K12 + 025",
+    "Telepon AG",
+    "08/04/2026 14:00:00",
+    "08/05/2026 11:00:00",
+    "29 Hari, 21 Jam, 0 Menit, 0 Detik",
+    "Telepon AG di K12 Gardu traksi bermasalah (perlu dilakukan pergantian telepon / crimping ulang rj11)",
+    "8 Mei 2026\n- Tegangan di roset (putih biru, biru yaitu pin 4 dan 5) terukur 47,8V (normalnya 5V) dan tegangan di MDF nya (putih biru, biru) juga 47,8V (normal 5V).\n- Telepon AG diganti gagangnya dengan yang baru",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Telepon AG"
+   ],
+   [
+    "56",
+    "Open",
+    "08/04/2026",
+    "14:00",
+    "K12 + 025",
+    "Pilot Lamp",
+    "08/04/2026 14:00:00",
+    "",
+    "#NUM!",
+    "Lampu pilot warna hijau mati di box lightning protection mati",
+    "",
+    "",
+    "CCM",
+    "Telco On-Site Halim",
+    "Halim",
+    "Pilot Lamp"
+   ],
+   [
+    "57",
+    "Close",
+    "10/04/2026",
+    "13:00",
+    "K38 + 116",
+    "Pintu MR",
+    "10/04/2026 13:00:00",
+    "",
+    "#NUM!",
+    "pegas pintu MR rusak",
+    "Dikencangkan ulang bautnya.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "CCTV"
+   ],
+   [
+    "58",
+    "Close",
+    "12/04/2026",
+    "9:00",
+    "K38 + 116",
+    "Baterai UPS",
+    "12/04/2026 9:00:00",
+    "4/13/2026",
+    "0 Hari, 15 Jam, 0 Menit, 0 Detik",
+    "Baterai UPS offline semua.",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai UPS"
+   ],
+   [
+    "59",
+    "Close",
+    "13/04/2026",
+    "10:30",
+    "K0 + 316",
+    "Clock Synchronization T8010",
+    "13/04/2026 10:00:00",
+    "10/9/2026",
+    "178 Hari, 14 Jam, 0 Menit, 0 Detik",
+    "\nAlarm di transmisi : ETH_LOSS di STM16 0-subrack-3-B2EFS8-2 (clock network management network)",
+    "\n14 April 2026 : \n- cek tegangan output antenna didapat Port ANT main (kiri) dan standby (kanan) di T8010 bawah 0 VDC dan 4,95 VDC. Modul CPRHA main (kiri) di T8010 bawah ditukar dengan Modul CPRHA di T8010 atas. Setelah posisi ditukar, Modul CPRHA standby (kanan) di T8010 bawah (atau main ?) ditukar dengan dari NMC. Hasilnya hanya Modul CPRHA yg dari NMC yg bagus (mendapatkan sinyal GPS).\nBoard yg lingkaran kiri atas, kanan bawah, serta board yg diganti dengan board NMC damaged.\n\nantenna board kiri 0/0 ditukar dengan board kanan 0/1 untuk memastikan masalahnya ada di antenna atau bukan lalu didapat hasil board kiri 0/0 status tidak mendapatkan posisi GPS dan board kanan 0/1 status antenna normal mendapatkan posisi GPS.Kesimpulan sementara board kiri 0/0 rusak bukan di antenna.  20 Agustus 2026 : muncul alarm baru (frequency lock failure, clock entering into non tracing running mode, time lock status is failed) lalu tidak lama clear sendiri.\n\n10 September 2026 :\n- Untuk melepas board clock cek tegangan port kabel antenna board clock 0/0 dan hasilnya 0 V (standarnya 5 +- 0,5 V), dan dilepas board clock 0/0.\n- Pasang satelite card ke board clock lalu dipasang ke slot 0/0.\n- Tegangan di port kabel antenna board clock 0/0 4,9 V dan 40 menit perangkat bekerja normal.\n- Halim dan CRSC Berkoordinasi dengan NMC alarm clear.\n\n11 September 2026 :\n- muncul alarm ETH_LOSS dan di sisi NMC direverse (CPRHA yg jadi slave tidak memberikan inputan ke transmisi, begitu juga yg main) sehingga normal kembali.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Clock Sync"
+   ],
+   [
+    "60",
+    "Close",
+    "19/04/2026",
+    "2:30",
+    "K0+116 ",
+    "CCTV throat area halim K0+116 #4",
+    "19/04/2026 2:00:00",
+    "23/04/2026 2:00:00",
+    "4 Hari, 0 Jam, 0 Menit, 0 Detik",
+    "CCTV throat area halim K0+116 #4 view tidak pada posisi seharusnya, bagian bawah cctv tergenang air, intermiittent ON OFF, gambar di layar buram\n\n--- 23 April ---\n- Kamera kemasukan air dan dilakukan pengeringan dan pembersihan\n- wiper masih belum berfungsi",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "CCTV"
+   ],
+   [
+    "61",
+    "Close",
+    "21/04/2026",
+    "1:00",
+    "K76+000",
+    "lampu dalam MR mati ",
+    "21/04/2026 1:00:00",
+    "",
+    "#NUM!",
+    "lampu dalam MR K76+000 mati.\nlampu yang rusak hanya 1, kedua lampu sudah kami cek di MR K77 dan yang menyala hanya 1.\nperkiraan di bagian balas lampu yg bermasalah atau L dan N tertukar di balas lampu.",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "Lampu TL"
+   ],
+   [
+    "62",
+    "Close",
+    "23/04/2026",
+    "0:00",
+    "K0+116",
+    "CCTV Outdoor throat Area",
+    "4/23/2026 0:00",
+    "4/23/2026 1:20",
+    "0 Hari, 1 Jam, 20 Menit, 0 Detik",
+    "Kamera CCTV buram",
+    "Kemungkinan ada lubang pada perangkat kamera CCTV outdoor, Perangkat kamera CCTV outdoor sudah dibersihkan dari jamur, dibersihkan dari air yang masuk ke perangkat CCTV outdoor sehigga gambar sudah jelas kembali",
+    "Menyemprotkan sikaboom ke lubang kabel pada perangkat CCTV outdoor ",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "CCTV"
+   ],
+   [
+    "63",
+    "Open",
+    "24/04/2026",
+    "0:20",
+    "K52+083 ",
+    "Baterai UPS no 15",
+    "4/24/2026 0:00",
+    "",
+    "",
+    "Baterai UPS no 15 skun berkarat dan berjamur",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "UPS"
+   ],
+   [
+    "64",
+    "Close",
+    "28/04/2026",
+    "15:53",
+    "K14+276",
+    "Baterai HFSPS Grup 1 No. 24",
+    "28/04/2026 15:53:00",
+    "30/04/2026 15:53:00",
+    "2 Hari, 0 Jam, 0 Menit, 0 Detik",
+    "Baterai Offline",
+    "sensor tidak mendeteksi",
+    "plug and play kabel sensor",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai"
+   ],
+   [
+    "65",
+    "Close",
+    "28/04/2026",
+    "15:53",
+    "K45+241",
+    "Baterai HFSPS Grup 1 No. 17",
+    "28/04/2026 15:53:00",
+    "29/04/2026 16:53:00",
+    "1 Hari, 1 Jam, 0 Menit, 0 Detik",
+    "Baterai Undervoltaged",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai"
+   ],
+   [
+    "66",
+    "Open",
+    "28/04/2026",
+    "15:53",
+    "K67+965",
+    "Baterai HFSPS Grup 2 No. 4",
+    "29/04/2026 1:00:00",
+    "",
+    "",
+    "Baterai HF grup 2 No 4 High Voltaged 17,2 V",
+    "9 Juli :\n- Pengukuran di site tegangan normal 13,64 V, sudah dilakukan penggantian modul sensor baterai, plug unplug kabel modul sensor baterai dan plug unplug kabel transmisi. ",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai HF"
+   ],
+   [
+    "67",
+    "Close",
+    "01/05/2026",
+    "5:30",
+    "K24 + 635",
+    "TH Module",
+    "01/05/2026 5:30:00",
+    "01/05/2026 5:30:00",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik",
+    "TH Module 30,5 C",
+    "AC sudah diremote kembali dari NMC suhu berangsur turun hingga 22,9 C",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "68",
+    "Open",
+    "07/05/2026",
+    "12:00",
+    "K7 + 741",
+    "CCTV",
+    "07/05/2026 12:00:00",
+    "",
+    "",
+    "CCTV tangga darurat berembun",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "CCTV"
+   ],
+   [
+    "69",
+    "Open",
+    "07/05/2026",
+    "12:00",
+    "K82 + 540",
+    "CCTV",
+    "07/05/2026 12:00:00",
+    "",
+    "",
+    "CCTV courtyard dalam RPT berembun",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "CCTV"
+   ],
+   [
+    "70",
+    "Close",
+    "10/05/2026",
+    "12:00",
+    "K41 + 475 (201)",
+    "Baterai HF Grup 1 No 10",
+    "10/05/2026 12:00:00",
+    "10/05/2026 14:00:00",
+    "0 Hari, 2 Jam, 0 Menit, 0 Detik",
+    "Alarm baterai HF temperature",
+    "Penggantian modul sensor baterai HFSPS grup 01 nomor 10",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai HFSPS"
+   ],
+   [
+    "71",
+    "Close",
+    "12/05/2026",
+    "11:30",
+    "K83+834",
+    "AC",
+    "12/05/2026 11:30:00",
+    "12/05/2026 12:30:00",
+    "0 Hari, 1 Jam, 0 Menit, 0 Detik",
+    "Salah satu AC terdapat alarm water leakage",
+    "AC sudah dibersihkan dan dikeringkan menggunakan kanebo",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "72",
+    "Close",
+    "14/05/2026",
+    "2:30",
+    "K38 + 116",
+    "Baterai UPS",
+    "14/05/2026 2:30:00",
+    "",
+    "",
+    "Baterai UPS Online tetapi nilai tertampil 0 semua",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai UPS"
+   ],
+   [
+    "74",
+    "Open",
+    "16/05/2026",
+    "13:14",
+    "K0 + 316",
+    "AG 32S",
+    "16/05/2026 13:30:00",
+    "",
+    "",
+    "memory utililzation masih tinggi 97 %",
+    "",
+    "mencoba merestart perangkat AG 32 S secara manual di perangkat",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AG\n"
+   ],
+   [
+    "75",
+    "Close",
+    "16/05/2026",
+    "13:14",
+    "K41 + 683 (204)",
+    "AG X3000",
+    "16/05/2026 13:30:00",
+    "16/05/2026 19:30:00",
+    "0 Hari, 6 Jam, 0 Menit, 0 Detik",
+    "slot 7 offline/unused dan sudah restart server NMC.\n",
+    "- slot 7 ditukar dengan slot 8. Setelah ditukar ke slot 8 muncul alarm offline.\n- slot 8 dipindah ke slot 13 (tidak ada layanan) setelah dipindahkan slot 8 (slot dari 13) alarm clear.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AG\n"
+   ],
+   [
+    "76",
+    "Open",
+    "16/05/2026",
+    "14:38",
+    "K82 + 372",
+    "Baterai 1 & 3 UPS",
+    "16/05/2026 14:38:00",
+    "",
+    "",
+    "Baterai 1 & 3 UPS High Voltage dan High Resistance (alarm intermittent)",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai UPS"
+   ],
+   [
+    "77",
+    "Open",
+    "19/05/2026",
+    "1:15",
+    "K82 + 540",
+    "Baterai 3 UPS",
+    "19/05/2026 1:15:00"
+   ],
+   [
+    "78",
+    "Open",
+    "20/05/2026",
+    "23:46",
+    "K76 + 000",
+    "Baterai 2 UPS",
+    "20/05/2026 23:46:00",
+    "",
+    "",
+    "Baterai 2 UPS High Voltage (alarm terakhir 23 Juni 2026)",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai UPS"
+   ],
+   [
+    "79",
+    "Close",
+    "24/05/2026",
+    "6:10",
+    "K41 + 607 (202)",
+    "Air Conditioner",
+    "24/05/2026 6:37:00",
+    "",
+    "",
+    "- Temperatur ruangan 32 C\n- Kondisi AC Offline sehingga tidak bisa diremote NMC.",
+    "- MCB panel untuk AC (di ranah MEP) ngetrip sehinggga dibuat hanya 1 AC yg menyala yaitu AC 1.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "80",
+    "Open",
+    "26/05/2026",
+    "11:10",
+    "K27 + 985 ",
+    "Door sensor",
+    "5/26/2026 11:10",
+    "",
+    "",
+    "door sensor tidak ter trigger oleh NMC",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "RTU"
+   ],
+   [
+    "81",
+    "Close",
+    "26/05/2026",
+    "19:39",
+    "Padalarang 802 & Karawang 802",
+    "OSN1800V",
+    "26/05/2026 19:39:00",
+    "30/05/2026 2:39:00",
+    "3 Hari, 7 Jam, 0 Menit, 0 Detik",
+    "R_LOS di Padalarang 802 STM16 Cascade (Subrak) 0, Slot 2 SLNO, Port 6\n\nDi Karawang 202 (Output Power : 0,6 dBm ; Input Power : -60 dBm)\nDi Padalarang 802 K109 (Output Power : 0,5 dBm ; Input Power : -18,4 dBm)\n\nNMC mengabarkan detail nya Kabel B core 17-18 terhubung ke Karawang 202 STM16 Cascade (Subrak) 0, Slot 1 SLNO, Port 6\n\nDi Karawang 202 ODF sisi jalurnya di ODF1-3-2-5 dan ODF1-3-2-6",
+    "Diduga berkaitan dengan adanya masalah pada ODF, kabel patch core dan/atau kabel fiber optic.\n\n- Pengecekan OTDR di Karawang 202 core 17 dalam kondisi baik sedangkan core 18 bermasalah atau berkemungkinan putus.\n- Pengukuran menggunakan OTDR untuk core 18 dari sisi Padalarang hanya tembus di jarak 42,4999 Km dan dari sisi Karawang hanya tembus di jarak 30,4306 Km.\n- Aktualnya jarak antara Karawang-Padalarang sekitar 72 Km(termasuk spare).\n\n- Pengukuran pada core 19 & 20(backup) guna memastikan kabel backup dalam kondisi baik. Dari hasil pengukuran didapati bahwa core 19 & 20 dalam kondisi baik sehingga melakukan pemindahan yang sebelumnya dari core 17 & 18 kemudian dipindahkan ke core 19 & 20.\n\nJumat dini hari (28 Mei 2026): \n- Dilakukan pengecekan JB K69 ditemukan core 18 & 22 putus. \n- Penyambungan ulang core 13-24 dilokasi karena sambungan di kaset 2 sudah rapuh.\n- Dilakukan OTDR di sisi Padalarang untuk memastikan kabel terhubung sempurna.\n- NMC melakukan pengecekan kabel fo yang terdapat layanan & dipastikan semua dalam kondisi tersambung & dBm sesuai standar.\n- Setelah alarm clear, tim yang ada di 202 & 802 melakukan pemindahan port semula di cable B core 19-20 ke 17-18.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Sistem Transmisi"
+   ],
+   [
+    "82",
+    "Close",
+    "26/05/2026",
+    "1:52",
+    "Padalarang 802 & Karawang 802",
+    "Data Network",
+    "26/05/2026 19:39:00",
+    "30/05/2026 2:39:00",
+    "3 Hari, 7 Jam, 0 Menit, 0 Detik",
+    "Physical Port Down dan Link Down pada Padalarang - AR02 - N8KM14 GE 0/3/1 dan Karawang - AR02 - N8KM14 GE 0/4/1\n\ndetail kabelnya Kabel B core 21-22.\n\nDi Karawang 202 ODF sisi jalurnya di ODF1-3-2-9 dan ODF1-3-2-10.",
+    "- OTDR di Karawang 202 didapat 30,2 Km.\n- Core 21 kondisi baik dan core 22 bermasalah (kemungkinan putus).\n- TL sementara pindah ke core 47 & 48 Kabel B.\n\nJumat dini hari (28 Mei 2026): \n- Dilakukan pengecekan JB K69 ditemukan core 18 & 22 putus. \n- Penyambungan ulang core 13-24 dilokasi karena sambungan di kaset 2 sudah rapuh.\n- Dilakukan OTDR di sisi Padalarang untuk memastikan kabel terhubung sempurna.\n- NMC melakukan pengecekan kabel fo yang terdapat layanan & dipastikan semua dalam kondisi tersambung & dBm sesuai standar.\n- Setelah alarm clear, tim yang ada di 202 & 802 melakukan pemindahan port semula di cable B core 47-48 ke 21-22.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Sistem Transmisi"
+   ],
+   [
+    "83",
+    "Open",
+    "26/05/2026",
+    "14:30",
+    "K52+083",
+    "Switch POE",
+    "26/05/2026 14:30:00",
+    "26/05/2026 1:30:00",
+    "#NUM!",
+    "",
+    "Sudah Reset Password & IP Config Switch POE.\nNilai PING Switch POE terpantau tinggi dari NMC, tampilan lambat, NMC tidak dapat mengakses switch PoE.\n\n26 Mei 2026 :\n- Reconfigure Switch PoE dengan konfig ulang VLAN ID dan IP Addressnya lalu mengaktifkan telnet dan https agar bisa diremote dari NMC.\n- Sempat ada masalah saat login dari management mode dan console mode. Tidak dapat login memakai user : admin dan pw : Crsc@2023 sehingga dilakukan reset pw dan booting menggunakan default mode.\n- Login berhasil dan konfig VLAN ID dan IP Address lalu mengaktifkan telnet dan https agar dapat remote menggunakan web.\n- Konfig IP route-static agar dapat diremote.\n- Saat ini switch PoE (10.10.3.17) sudah bisa di ping dan diremote dari NMC namun ping masih terlalu besar.\n\n14 Mei 2026 00:00 :\n- Cek kondisi kabel antara switch PoE dan SDH transmisi.\n- Tes beban traffic dari switch PoE - SDH STM4 - SDH STM64 - Core Switch di 202.\n- Pindahin port PoE dari port 2 ke port lain (karena ping yg tinggi hanya CCTV PoE saja).\n- Dibahas lagi dengan NMC dan minta NMC cek VC12 di K52 dan membandingkan VC12 di BTS lain yang CCTV nya lebih banyak atau serupa jumlahnya.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Switch PoE"
+   ],
+   [
+    "84",
+    "Close",
+    "28/05/2026",
+    "14:47",
+    "Padalarang 802 & Karawang 802",
+    "OSN1800V",
+    "28/05/2026 14:47:00",
+    "29/05/2026 14:47:00",
+    "1 Hari, 0 Jam, 0 Menit, 0 Detik",
+    "Alarm di STM16 Padalarang 802 : IN_PWR_ABN muncul lalu R_LOS yang disertai APS_INDI (Automatic Protection Switching Indication).\n\nAlarm R_LOS dan APS_INDI sudah clear.\n\nNMC mengabarkan detail kabel A core 13-14 yang terhubung ke Karawang 202 STM16 Cascade (Subrak) 0, Slot 1 SLNO, Port 7\n",
+    "pemindahan port optik :\nsemula ODF 1-1-6-1 menjadi ODF 1-1-6-3 \nsemula ODF 1-1-6-2 menjadi ODF 1-1-6-4",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Sistem Transmisi"
+   ],
+   [
+    "85",
+    "Close",
+    "02/06/2026",
+    "14:45",
+    "K45+241",
+    "Fuse lampu indikator lightning protection",
+    "02/06/2026 14:45:00",
+    "10/09/2026 10:47:00",
+    "99 Hari, 20 Jam, 2 Menit, 0 Detik",
+    "Fuse lampu indicator lightning protection putus (5 fuse putus) dan lampu indicator mengalami kerusakan (3 lampu rusak)",
+    "sudah ditindaklanjuti dengan melakukan penggantian 2 pilot lamp yang baru dan penggantian 4 fuse",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "Lightning protection box"
+   ],
+   [
+    "86",
+    "Close",
+    "05/06/2026",
+    "8:05",
+    "K34 + 575",
+    "Baterai grup 1 No 11",
+    "05/06/2026 8:05:00",
+    "05/06/2026 11:05:00",
+    "0 Hari, 3 Jam, 0 Menit, 0 Detik",
+    "Baterai grup 1 No 11 Offline",
+    "Plug in dan plug out sensor baterai",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai HF"
+   ],
+   [
+    "87",
+    "Open",
+    "06/06/2026",
+    "13:35",
+    "K41 + 475 (201)",
+    "Lampu dalam MR",
+    "06/06/2026 13:35:00",
+    "",
+    "",
+    "2 unit lampu dalam MR tidak menyala",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "Lampu MR"
+   ],
+   [
+    "88",
+    "Open",
+    "06/06/2026",
+    "13:35",
+    "K41 + 676 (203)",
+    "Lampu dalam MR",
+    "06/06/2026 13:35:00",
+    "",
+    "",
+    "2 unit lampu dalam MR tidak menyala",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "Lampu MR"
+   ],
+   [
+    "89",
+    "Close",
+    "10/06/2026",
+    "1:04",
+    "K45+241",
+    "TH Module",
+    "10/06/2026 13:00:00",
+    "10/06/2026 20:00:00",
+    "0 Hari, 7 Jam, 0 Menit, 0 Detik",
+    "TH Module 30,1 C",
+    "- RTU sudah direstart dari NMC tetapi tidak bisa diremote\n- Setelah pengecekan lapangan, Satu AC di K45+241 AC mati dan alarm high air temperature. Satu AC memang dibiarkan mati.\n- Pengecekan tegangan dan arus normal serta pengecekan area outdoor dan ditemukan saluran pembuangan air AC tersumbat dan sudah dibersihkan dan kondisi AC sudah normal kembali ",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "90",
+    "Open",
+    "12/06/2026",
+    "16:00",
+    "K41+475 (201)",
+    "Core Switch 3",
+    "10/06/2026 13:00:00",
+    "",
+    "",
+    "Core Switch 3 port GE 0/0/24 di MR201 saat menerima data dari Router MR IT 201, terpantau oleh NMC nilai RX -40dBm dan TX -6dBm pada Pengiriman dan Penerimaan data",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Router dan Switch"
+   ],
+   [
+    "91",
+    "Close",
+    "16/06/2026",
+    "1:00",
+    "K74+439",
+    "Water sensor",
+    "16/06/2026 1:00:00",
+    "30/09/2026 0:20:00",
+    "105 Hari, 23 Jam, 20 Menit, 0 Detik",
+    "Water immertion tidak bisa di baca oleh NMC",
+    "- Menggunakan air untuk dilakukan pengujian",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Water Sensor"
+   ],
+   [
+    "92",
+    "Open",
+    "16/06/2026",
+    "1:00",
+    "K74+439",
+    "Smoke Detector",
+    "16/06/2026 1:00:00",
+    "",
+    "",
+    "Smoke detektor tidak bisa di baca oleh NMC",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Smoke Detector"
+   ],
+   [
+    "93",
+    "Close",
+    "16/06/2026",
+    "1:00",
+    "K75+500",
+    "Water sensor",
+    "16/06/2026 1:00:00",
+    "30/09/2026 1:20:00",
+    "106 Hari, 0 Jam, 20 Menit, 0 Detik",
+    "Water immertion tidak bisa di baca oleh NMC",
+    "- Menggunakan air untuk dilakukan pengujian",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Water Sensor"
+   ],
+   [
+    "94",
+    "Close",
+    "17/06/2026",
+    "9:33",
+    "K76+000",
+    "water sensor",
+    "17/06/2026 1:00:00",
+    "30/09/2026 1:40:00",
+    "105 Hari, 0 Jam, 40 Menit, 0 Detik",
+    "water sensor tidak dapat mendeteksi",
+    "- Menggunakan air untuk dilakukan pengujian",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "95",
+    "Open",
+    "17/06/2026",
+    "9:33",
+    "K76+722",
+    "water sensor",
+    "17/06/2026 01:00:01",
+    "",
+    "",
+    "water sensor tidak dapat mendeteksi ",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "96",
+    "Open",
+    "17/06/2026",
+    "9:33",
+    "K77+350",
+    "water sensor",
+    "17/06/2026 01:00:02",
+    "",
+    "",
+    "water sensor tidak dapat mendeteksi ",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "97",
+    "Open",
+    "17/06/2026",
+    "9:33",
+    "K77+350",
+    "Baterai 2 UPS",
+    "17/06/2026 01:00:03",
+    "",
+    "",
+    "Baterai UPS No 2 high voltage (intermittent alarm terakhir 23 Juni 2026)",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai UPS"
+   ],
+   [
+    "98",
+    "Open",
+    "17/06/2026",
+    "9:33",
+    "CCTV K77+350 tunnel 4 sisi kanan dan kiri",
+    "CCTV",
+    "17/06/2026 01:00:04",
+    "",
+    "",
+    "view kamera terhalang pohon",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "99",
+    "Close",
+    "18/06/2026",
+    "16:00",
+    "K24+635",
+    "UPS",
+    "18/06/2026 16:00:00",
+    "18/06/2026 18:00:00",
+    "0 Hari, 2 Jam, 0 Menit, 0 Detik",
+    "Alarm UPS (intermittent), Nilai tegangan input dan output 0V dan nilai arus dan lain lain 0.",
+    "Dari sisi NMC sudah coba restart RTU namun masih alarm. Alarm auto recovery, Pengukuran UPS di lapangan normal",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "UPS"
+   ],
+   [
+    "100",
+    "Close",
+    "18/06/2026",
+    "23:26",
+    "K66+000",
+    "Lampu Tower",
+    "18/06/2026 23:26:00",
+    "03/07/2026 1:00:00",
+    "14 Hari, 1 Jam, 34 Menit, 0 Detik",
+    "Lampu tower mati",
+    "Dari pengamatan langsung, lampu tower menyala",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "Tower"
+   ],
+   [
+    "101",
+    "Close",
+    "19/06/2026",
+    "11:12",
+    "K83 + 834",
+    "Baterai HF",
+    "19/06/2026 11:12:00",
+    "19/06/2026 13:12:00",
+    "0 Hari, 2 Jam, 0 Menit, 0 Detik",
+    "alarm baterai voltage dan resistance tidak terbaca pada baterai HF grup 2 baterai 1 ",
+    "Plug and play modul sensor baterai HF group 2 baterai 1",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai HF"
+   ],
+   [
+    "102",
+    "Open",
+    "20/06/2026",
+    "1:30",
+    "K80 + 835",
+    "Lampu Tower",
+    "20/06/2026 1:30:00",
+    "",
+    "",
+    "Lampu tower mati",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "Tower"
+   ],
+   [
+    "103",
+    "Open",
+    "20/06/2026",
+    "2:00",
+    "K83 + 834",
+    "Lampu Tower",
+    "20/06/2026 2:00:00",
+    "",
+    "",
+    "Lampu tower mati",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "Tower"
+   ],
+   [
+    "104",
+    "Close",
+    "20/06/2026",
+    "2:00",
+    "K83 + 834",
+    "ODF",
+    "20/06/2026 2:00:00",
+    "20/06/2026 2:20:00",
+    "0 Hari, 0 Jam, 20 Menit, 0 Detik",
+    "pengukuran OTDR di ODF rak 2 kaset 6 port 2 tidak terbaca (2-6-2)",
+    "Dilakukan penggantian flange dan data OTDR terbaca",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "ODF"
+   ],
+   [
+    "105",
+    "Close",
+    "22/06/2026",
+    "0:40",
+    "K32 + 475",
+    "Lightning protection",
+    "22/06/2026 0:40:00",
+    "16/07/2026 10:50:00",
+    "24 Hari, 10 Jam, 10 Menit, 0 Detik",
+    "alarm lightning protection",
+    "dilakukan pergantian modul TTL (modul TTL yg hijau NEW)",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Lightning Protection"
+   ],
+   [
+    "106",
+    "Open",
+    "23/06/2026",
+    "6:21",
+    "K76 + 722",
+    "Baterai 2 UPS",
+    "23/06/2026 6:21:00",
+    "",
+    "",
+    "Baterai 2 UPS High Voltage (intermittent alarm terakhir 23 Juni 2026)",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai UPS"
+   ],
+   [
+    "107",
+    "Open",
+    "23/06/2026",
+    "23:29",
+    "K66 + 000",
+    "BTS (DBS3900)",
+    "01/07/2026 23:29:00",
+    "",
+    "",
+    "RF unit VSWR treshold crossed di BTS-A K66 cabinet 0, slot 0, subrak no 61, tx channel no 0, board MRRU, site type DBS3900, nilai VSWR 1,57",
+    "sudah direset board melalui iMaster MAE tetapi vswr tidak ada perubahan.\n\n3 Juli 2026 :\n- observasi kabel antenna, bridge, dan CPRI pada BBU dan RRU di BTS-A.\n- menukar konfigurasi cross-connect kabel feeder yang menuju antenna pada masing2 bridge di kabinet BTS-A dan mendapat VSWR 1,12 dan 1,13.\n- cross-connect dikembalikan kembali ke posisi semula dan VSWR di 1,29 dan 1,38.\n- hipotesis adalah di konektor kabel feeder yang menuju antenna atau bridge (coupler).",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "BTS"
+   ],
+   [
+    "108",
+    "Open",
+    "29/06/2026",
+    "7:00",
+    "K38 + 116",
+    "Lampu dalam MR",
+    "29/06/2026 7:00:00",
+    "",
+    "",
+    "Lampu tergantung di K38+116",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Lampu MR"
+   ],
+   [
+    "109",
+    "Open",
+    "06/07/2026",
+    "13:00",
+    "K63 + 174",
+    "RTU ",
+    "7/6/2026 13:00:00",
+    "",
+    "",
+    "Sensor pada MR tersebut tidak terbaca di NMC, belum konfirmasi perihal reset RTU ke NMC",
+    "Belum dilakukan reset pada RTU dan konfirmasi ke NMC",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "BTS"
+   ],
+   [
+    "110",
+    "Close",
+    "07/07/2026",
+    "4:08",
+    "K41 + 638 (204)",
+    "TH Module(suhu ruangan)",
+    "7/7/2026 4:08:00",
+    "7/7/2026 16:08:00",
+    "0 Hari, 12 Jam, 0 Menit, 0 Detik",
+    "Alarm temperature TH Module 28,3 C",
+    "2 Juli 2026 :\n- Sudah dilakukan pembersihan outdoor AC yang terletak di lantai 2",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "112",
+    "Open",
+    "11/07/2026",
+    "8:16",
+    "K21 + 020",
+    "Tower Monitoring",
+    "7/11/2026 8:16:00",
+    "",
+    "",
+    "Tower Monitoring tidak bisa membaca data vertikality, sudut angle antena 1 dan 2.",
+    "sudah dilakukan restart pada tower monitoring dan berkoordinasi dengan NMC, dan pengecekan wiring sensor dan kekuatan kabel normal, tapi data masih belum muncul, selanjutnya akan diinformasikan observasi lebih lanjut.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Tower monitoring"
+   ],
+   [
+    "113",
+    "Open",
+    "11/07/2026",
+    "8:16",
+    "K17 + 724",
+    "Tower Monitoring",
+    "7/11/2026 8:16:00",
+    "",
+    "",
+    "pembacaan data settlement along the X-axis dan Y-axis status Emergency alarm",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Tower monitoring"
+   ],
+   [
+    "114",
+    "Open",
+    "17/07/2026",
+    "1:20",
+    "K75 + 500",
+    "CCTV",
+    "7/17/2026 1:20:00",
+    "",
+    "",
+    "Lensa CCTV pada exiting tunnel 2 K75+500 terlihat kotor/berembun dari pemantauan monitor (jika pemantauan pada malam hari)",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "CCTV"
+   ],
+   [
+    "115",
+    "Open",
+    "18/07/2026",
+    "1:05",
+    "K2 + 075",
+    "UPS",
+    "7/18/2026 1:05:00",
+    "",
+    "",
+    "Saat AC distribution supply 1 dan supply 2 dimatikan (sumber listrik dari baterai), UPS tidak mau merubah dari DC ke AC",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "UPS"
+   ],
+   [
+    "115",
+    "Open",
+    "18/07/2026",
+    "13:00",
+    "K41 + 607 (202)",
+    "DAG 32S",
+    "7/18/2026 13:00:00",
+    "",
+    "",
+    "OCE Karawang tidak bisa menelpon ke OPH",
+    "18 Juli 2026\n- Saat menelpon menggunakan console AG OCE Karawang ke OPH bisa. Saat OPH dimatikan ada suara console AG \"nut nut nut\". Lalu diredial dari console AG ke OPH kembali tidak bisa dan harus copot pasang port di AG32S. Begitu juga dengan  pindah port ke port lain juga masih sama.\n- Analisis sementara semua port AG 32S bermasalah."
+   ],
+   [
+    "115",
+    "Open",
+    "18/07/2026",
+    "1:05",
+    "K4 + 485",
+    "Display Lightning Protection",
+    "7/18/2026 1:05:00",
+    "",
+    "",
+    "display lighting protection berkedip, sebelumnya sudah dilakukan pergantian konverter AC/DC di box lightning protection",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "Lightning Protection"
+   ],
+   [
+    "116",
+    "Close",
+    "19/07/2026",
+    "6:10",
+    "K41 + 475 (201)",
+    "Baterai HF",
+    "7/19/2026 6:10:00",
+    "7/19/2026 11:08:00",
+    "0 Hari, 4 Jam, 58 Menit, 0 Detik",
+    "Baterai No 10 Grup 1 dan Grup 2 Offline",
+    "Plug and play modul sensor baterai HF group 1 dan group 2 baterai no 10",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai HF"
+   ],
+   [
+    "117",
+    "Close",
+    "19/07/2026",
+    "6:10",
+    "K24 + 635",
+    "Baterai HF",
+    "7/19/2026 6:10:00",
+    "7/19/2026 11:08:00",
+    "0 Hari, 4 Jam, 58 Menit, 0 Detik",
+    "Baterai No 18 Grup 2 Resistance Alarm",
+    "Plug and play modul sensor baterai HF group 2 baterai no 18",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai HF"
+   ],
+   [
+    "118",
+    "Close",
+    "19/07/2026",
+    "6:10",
+    "K41 + 676 (203)",
+    "Baterai HF",
+    "7/19/2026 6:10:00",
+    "7/19/2026 11:08:00",
+    "0 Hari, 4 Jam, 58 Menit, 0 Detik",
+    "Baterai grup 2 No 1",
+    "Plug and play modul sensor baterai HF group 2 baterai no 1",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai HF"
+   ],
+   [
+    "119",
+    "Close",
+    "21/07/2026",
+    "6:00",
+    "K38 + 116",
+    "Baterai HF",
+    "7/21/2026 6:00:00",
+    "7/21/2026 11:00:00",
+    "0 Hari, 5 Jam, 0 Menit, 0 Detik",
+    "Alarm seluruh Battery UPS1 Offline tidak menampilkan nilai V/I/R/Temperature",
+    "Pembersihan konektor, Plug and play modul sensor baterai yg menuju ke RTU",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Baterai HF"
+   ],
+   [
+    "120",
+    "Open",
+    "21/07/2026",
+    "12:41",
+    "K56 + 096",
+    "Display AC",
+    "7/21/2026 12:41:00",
+    "",
+    "",
+    "Display kedua AC (Air Condiitoner) mati",
+    "11 September 2026 :\n- Saat dilakukan perawatan AC oleh vendor, AC yg menyala satu harus dimatikan. Jika ingin dinyalakan lagi harus melalui display AC.\n- Pengecekan adaptor 220 VAC/24 VDC untuk power display kedua AC ditemukan keluaran tegangan hanya 3,8 VDC.\n- 1 display ada di gudang (bekas dicopot dari AC K56)",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "Air Conditioner"
+   ],
+   [
+    "121",
+    "Close",
+    "23/07/2026",
+    "6:00",
+    "Crossway Bridge K4",
+    "CCTV Crossway Bridge K4",
+    "7/23/2026 6:00:00",
+    "8/5/2026 12:24:00",
+    "13 Hari, 6 Jam, 24 Menit, 0 Detik",
+    "CCTV Countryard K4, 2 CCTV Crossway Bridge K4,dan 1 CCTV Outlet Tunnel 1 mati",
+    "23 Juli 2026\n- Dilakukan pengecekan MCB sumber tegangan CCTV di Repeater K4 mengalami trip dan indikator merah (indikasi arus bocor).\n- Uji input tegangan MCB CCTV Repeater K4 ditemukan normal 220V dan uji bel test sisi output MCB CCTV Repeater K4 dengan multimeter didapatkan anomali short.\n- Mengecek kondisi panel CCTV Countryard K4, panel 1 CCTV Crossway Bridge kiri didapatkan uji tegangan input 0V dan hasil uji bel test mengalami short.\n- CCTV Crossway Bridge kanan ditemukan dibobol dan kabel mengalami putus dan juga short.\n- Penyambungan skun dan kabel sementara di terminal CCTV Crossway Bridge 2\n- Ditemukan kabel input dan output adaptor 24 V di kedua CCTV Crossway Bridge short setelah uji bel test.\n- Uji short kembali di MCB CCTV RPT K4 untuk memastikan tidak ada short.\n- Keadaan terakhir yang menyala : CCTV Countryard K4 dan 1 CCTV Outlet Tunnel 1.\n\n30 Juli 2026\n- Pemasangan CCTV PTZ di panel CCTV Crossway 2 (yg dibobol).\n- Pemasangan terminal dan kabel listrik di panel CCTV Crossway 2 (yg dibobol).\n- Penggantian trafo 24 VAC di panel CCTV Crossway 1.\n- CCTV Crossway 1 telah menyala kembali.\n\n5 Agustus 2026\n- Pemasangan trafo 24 VAC di panel CCTV Crossway 2 (yg dibobol).\n- Melakukan pemasangan kabel grounding pada panel CCTV Crossway 2.\n- Setup IP CCTV Crossway 2 (10.10.2.93) dengan instrummen Video Surveilance.\n- CCTV Crossway 2 telah menyala kembali. ",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "CCTV"
+   ],
+   [
+    "122",
+    "Open",
+    "27/07/2026",
+    "4:42",
+    "K78 + 662",
+    "RU",
+    "7/27/2026 4:42:00",
+    "",
+    "",
+    "Uplink Low Noise Amplifier Fault Alarm 2",
+    "alarm intermittent, muncul lagi 20 Agustus 02:00, 5 September",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "RU"
+   ],
+   [
+    "123",
+    "Close",
+    "29/07/2026",
+    "12:00",
+    "K45 + 241",
+    "HFSPS",
+    "7/29/2026 12:00:00",
+    "9/9/2026 1:00:00",
+    "41 Hari, 13 Jam, 0 Menit, 0 Detik",
+    "HFSPS AC1 IN Voltage B 175 V (UnderVoltage)",
+    "- Sudah diputar potensionya (variable resistor) tetapi mentok di 187 V.\n- Diputar ke kiri ke kanan malah berkurang nilainya.\n- Terakhir di cek tegangan di Lightning Protection panel, tegangan input di board controller HFSPS, tegangan ke beban, tegangan baterai normal. Masalah ada pada board control HFSPS.\n\n9 September 2026 : dilakukan pergantian board controller HFSPS dan alarm normal (Tegangan B AC1 sudah normal).",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "HFSPS"
+   ],
+   [
+    "124",
+    "Open",
+    "30/07/2026",
+    "8:00",
+    "K24 + 635",
+    "AC 2",
+    "7/30/2026 8:00:00",
+    "",
+    "",
+    "AC 2 High Pressure (HP) dan suhu ruangan 30 C",
+    "- AC 1 di lapangan normal.\n- AC 2 di lapangan outdoor kotor sehingga kompressor tidak mau bekerja dan angin yang dikeluarkan tidak dingin\n- tindakan terakhir baru dibersihkan dengan blower dan suhu sekarang 26 C\n26 Agustus :\n- Reset alarm di site",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Air Conditioner"
+   ],
+   [
+    "125",
+    "Close",
+    "02/08/2026",
+    "8:00",
+    "K80 + 835",
+    "Repeater",
+    "8/1/2026 22:14",
+    "8/7/2026 2:00",
+    "5 Hari, 3 Jam, 46 Menit, 0 Detik",
+    "Alarm out of pipe alarm direpeater M1 Dan M2 ",
+    "3 Agustus 2026\n- Pengecekan patchcord yang terhubung di RU, MU, dan ODF didapat hasil normal di rentang -4 - (-14) dBm.\n- Pergantian 4 SFP baru di board IF yang ada di RU namun alarm masih tetap ada.\n- Melakukan penukaran SFP di IF dengan SFP di MU tetapi tidak ada perubahan.\n\n7 Agustus 2026\n- Terdapat indikator lampu Link1 di bagian Slave MU 2 mati.\n- Uji OPM di Link1 MU 2 maupun yg arah ke ODF terbaca normal -5 dBm (indikasi lampu indikator Link1 Slave MU 2 mati).\n- Pengecekan pada switch monitoring yang terhubung dengan MU dengan lan tester di pastikan kondisi normal, \n- Setelah memastikan power optik normal, hard restart MU dilakukan tetapi alarm masih ada.\n- Pembukaan board MU 2 lalu plug in/out network cable di board yg menuju board IF Master and Slave dan network cable yg menuju ke transmisi EFS8.\n- NMC kemudian merestart software dan di hardware MU kita restart juga lalu alarm pulih.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "BTS"
+   ],
+   [
+    "125",
+    "Open",
+    "05/08/2026",
+    "12:00",
+    "K78 + 662",
+    "Lampu dalam MR",
+    "8/5/2026 12:00",
+    "",
+    "",
+    "Lampu dalam repeter mati 1",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "Lampu MR"
+   ],
+   [
+    "127",
+    "Open",
+    "06/08/2026",
+    "1:52",
+    "K41 + 475 (201)",
+    "Baterai HFSPS Group 1 NO 7 & 10\nBaterai HFSPS Group 2 NO 10",
+    "06/08/2026 1:52",
+    "",
+    "",
+    "alarm sensor baterai tidak terbaca",
+    "- sudah dilakukan unplug & plug serta pembersihan kabel dan sensor tetapi masih alarm\n- Tegangan di lokasi normal",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "baterai "
+   ],
+   [
+    "128",
+    "Open",
+    "06/08/2026",
+    "0:39",
+    "K41 + 676 (203)",
+    "Baterai HFSPS (tipe 12V) Group 1 No 1 & Group 2 No 1",
+    "06/08/2026 0:39",
+    "",
+    "",
+    "alarm sensor baterai tidak terbaca",
+    "- sudah dilakukan unplug & plug serta pembersihan kabel dan sensor tetapi masih alarm\n- Tegangan di lokasi normal\n- TL selanjutnya bawa modul sensor baterai",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "baterai"
+   ],
+   [
+    "129",
+    "Close",
+    "06/08/2026",
+    "11:07",
+    "K41 + 683 (204)",
+    "DBS3900 (RRU)",
+    "06/08/2026 11:07",
+    "06/08/2026 11:30",
+    "0 Hari, 0 Jam, 23 Menit, 0 Detik",
+    "RF Unit Hardware Fault",
+    "Sudah reset RRU dari NMC dan normal kembali",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "RRU"
+   ],
+   [
+    "130",
+    "Close",
+    "07/08/2026",
+    "8:54",
+    "K80 + 835",
+    "Air Conditioner",
+    "07/08/2026 8:54",
+    "07/08/2026 11:54",
+    "0 Hari, 3 Jam, 0 Menit, 0 Detik",
+    "Temperatur Ruangan 28 C",
+    "- Jika Air Conditioner 1 (depan HFSPS) nyala, Air Conditioner 2 (depan kabinet RU) mati. MCCB di boxstep D1-4 dan D2-4 trip sehingga tindakan yg dilakukan AC 1 dimatikan dan AC 2 dinyalakan.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Air Conditioner"
+   ],
+   [
+    "131",
+    "Open",
+    "07/08/2026",
+    "15:00",
+    "K70 + 090",
+    "Baterai UPS No 11",
+    "07/08/2026 14:22",
+    "",
+    "",
+    "High Voltage Baterai No 11",
+    "- Terjadi karena sensor Baterai yang anomali, sudah dilakukan penggantian kabel baterai sensor status Voltage normal kembali dan selang beberapa menit hasilnya kembali anomali.\n- Pertemuan selanjutnya pergantian modul sensor Baterai.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "baterai"
+   ],
+   [
+    "132",
+    "Close",
+    "13/08/2026",
+    "17:26",
+    "K56 + 096",
+    "UPS & RTU",
+    "13/08/2026 17:26:00",
+    "14/08/2026 2:30:00",
+    "0 Hari, 9 Jam, 4 Menit, 0 Detik",
+    "Intermittent UPS offline (tidak terbaca valuenya) dan RTU Restart sendiri ",
+    "kabel UTP dari RTU ke EDF mengalami masalah (core 7 putih coklat). Mengganti kabel UTP dengan yang baru dan melakukan hard restart RTU.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "RTU"
+   ],
+   [
+    "133",
+    "Close",
+    "14/08/2026",
+    "3:56",
+    "K42 + 365",
+    "TH Module (Suhu ruangan tinggi)",
+    "14/08/2026 3:26:00",
+    "14/08/2026 8:57:00",
+    "0 Hari, 5 Jam, 31 Menit, 0 Detik",
+    "Suhu ruangan 28 C",
+    "Sudah diset AC dari NMC namun tidak ada perubahan. AC berangsur turun 24 C ketika diremote dari NMC.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "Air Conditioner"
+   ],
+   [
+    "134",
+    "Open",
+    "13/08/2026",
+    "2:00",
+    "K52+083",
+    "Lampu Tower",
+    "13/08/2026 2:00:00",
+    "",
+    "",
+    "Lampu tower mati",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Tower"
+   ],
+   [
+    "135",
+    "Open",
+    "17/08/2026",
+    "15:00",
+    "k59+662",
+    "RTU ",
+    "17/08/2026 15:00:00",
+    "",
+    "",
+    "RTU tidak menampilkan informasi alarm dan waktu perangkat tidak beroperasi normal",
+    "-Dilakukan pengecekan sensor dan kalibrasi sensor berkordinasi dengan NMC kondisi sensor dan pembacaan data normal, dan hasil pengukuran data di NMC Normal.tetapi pada display RTU tidak ada informasi alarm, dan dilakukan kalibrasi waktu tetapi tidak ada perubahan,selanjutnya dilakukan restart hardware pada RTU tidak ada perubahan CCM Halim menyimpulkan Malfunction pada RTU",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "RTU"
+   ],
+   [
+    "136",
+    "Open",
+    "21/08/2026",
+    "14:41",
+    "K67 + 965",
+    "Baterai HF",
+    "21/08/2026 14:41:00",
+    "",
+    "",
+    "1. Baterai HF Grup 1 No 4, Grup 2 No 3 tegangan dan resistansi tidak terbaca\n2. Baterai HF Grup 2 No 4 resistansi tidak terbaca\n",
+    "- Sudah dilakukan penggantian modul sensor baterai di baterai HF Grup 2 No 3 dan 4 tetapi alarm masih sama. TL selanjutnya ganti kabel sensor merah hitam dan bawa kabel RJ11 yang panjang dan modul sensor baterai tipe 12V.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Baterai HF"
+   ],
+   [
+    "137",
+    "Open",
+    "23/08/2026",
+    "18:48",
+    "K41 + 676 (203)",
+    "OSN1800V",
+    "23/08/2026 18:48:00",
+    "",
+    "",
+    "Alarm pada Slave_Bad 0-subrack-60-Z5SCC-Other",
+    "26 Agustus 2026 : Sudah diganti dengan board UXCMS baru tetapi alarm malah pindah ke board satunya.\n",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "sistem transmisi"
+   ],
+   [
+    "",
+    "Close",
+    "01/09/2026",
+    "4:00",
+    "K0 + 215",
+    "AC",
+    "01/09/2026 4:00:00",
+    "01/09/2026 8:00:00",
+    "0 Hari, 4 Jam, 0 Menit, 0 Detik",
+    "High Temperature 28,9°C",
+    "reset alarm dan menyalakan AC yg Off kondisi suhu saat ini 23,8°C",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "AC"
+   ],
+   [
+    "",
+    "Close",
+    "01/09/2026",
+    "4:00",
+    "OCE Halim",
+    "FAS (Dispatch Console)",
+    "01/09/2026 5:00:00",
+    "01/09/2026 7:00:00",
+    "0 Hari, 2 Jam, 0 Menit, 0 Detik",
+    "Dispatch Console tidak bisa melakukan panggilan dengan TC namun bisa menerima panggilan dari TC",
+    "restart consol dan sudah dilakukan pengujian telepon ke TC (Belum bisa Call Back) dan Antar Stasiun (Normal) dan call NMC buat di konfigurasi/dicek",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "FAS"
+   ],
+   [
+    "138",
+    "Close",
+    "01/09/2026",
+    "4:26",
+    "K56 + 650",
+    "Kabel optik",
+    "01/09/2026 3:26:00",
+    "03/09/2026 3:26:00",
+    "2 Hari, 0 Jam, 0 Menit, 0 Detik",
+    "Alarm R-LOSS K56+665 Karawang Traction dan AT3 K42+365",
+    "1 September 2026 : Sudah dilakukan Observasi ditemukan titik putus optik 150 m dari MR K56+665 Karawang Traction.\n\n3 September 2026 : Diukur meteran di kabel optik didapat di MR K56 197 m, mainhole keluar di 177 m sehingga disimpulkan titik putus di luar jalur. Malam arinya ditemukan titik putus kabel di duct kabel yang mengarah ke gardu traksi K56 dan melakukan splicing 1 kaset pada A-Cable Brancing 24 Core. R_LOSS telah hilang dan menyisakan APS_INDI yang tidak lama hilang juga.JB barunya di titik K56+650.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "sistem transmisi"
+   ],
+   [
+    "",
+    "Close",
+    "02/09/2026",
+    "18:25",
+    "Ruang Bridge and Tunnel Dormitory Halim",
+    "PC",
+    "02/09/2026 18:25:00",
+    "02/09/2026 18:25:00",
+    "",
+    "Alarm earthquake ETH-LOSS subrack 0 slot 12 board EFS8 Port 7 Halim 20kV",
+    "Roset yang mengarah ke switch di ruang Bridge and Tunnel Dormi Halim kendor",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "sistem transmisi"
+   ],
+   [
+    "139",
+    "Close",
+    "04/09/2026",
+    "23:44",
+    "K56 + 318 (tanda pilok) atau\nR056081 (tanda di ballast)",
+    "Kabel optik",
+    "04/09/2026 23:44:00",
+    "06/09/2026 5:44:00",
+    "1 Hari, 6 Jam, 0 Menit, 0 Detik",
+    "Alarm R-LOSS Segmentasi Karawang-Padalarang\n\n- Dampak Layanan (Cable B) :\nSDH STM-64 Karawang - padalarang \nSDH STM-16 Karawang - Padalarang\nSDH STM4 KA-PA04(K56+096)- KA-PA06(K63+174)\nAR02 P0/4/1 Karawang - Padalarang \nAR02 P0/3/1 Karawang - Padalarang\nData Safety Network SRS3 - SRS4\nData Safety Netowrk SRS6 - KARAWANG",
+    "5 September 2026 : di OTDR arah Karawang 202 didapat di titik km 57 dari arah karawang. OTDR arah Padalarang 802 didapat di titik km 57 dari arah Padalarang.\nHasil pengecekan dari K63+174 ke K56+096 didapatkan 7,2495 Km sedangkan pengukuran dari K56+096 ke K63+174 didapatkan 0,0061Km.\n6 September 2026 : Dari lapangan dilakukan pembongkaran JB di K56 dan di OTDR ke arah Karawang didapat 16,7 km (normal) dan ke arah Padalarang 401 m. Lalu mencari titik kabel putus dan ditemukan telah digigit tikus. Lalu ditindaklanjuti dengan splicing cut off 48 core Cable B. Hasil terakhir semua redaman hasil splicing baik dan masih ditemukan core 43 redaman masih buruk karena splicing yang terburu buru.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "sistem transmisi"
+   ],
+   [
+    "140",
+    "Open",
+    "10/9/2026",
+    "23:58",
+    "K41 + 676 (203)",
+    "Baterai HFSPS",
+    "10/09/2026 23:58:00",
+    "11/09/2026 0:00:00",
+    "0 Hari, 0 Jam, 2 Menit, 0 Detik",
+    "Baterai HFSPS grup 1 no 1 dan grup 2 no 1 offline",
+    "sudah melakukan  plug in  dan plug out  dan penggantian kabel komunikasi antar modul dan uji coba penggantian modul baterai tetapi masih alarm",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Power"
+   ],
+   [
+    "141",
+    "Close",
+    "11/9/2026",
+    "2:00",
+    "K56+096",
+    "UPS",
+    "11/09/2026 2:00:00",
+    "9/11/2026 12:30:00",
+    "0 Hari, 10 Jam, 30 Menit, 0 Detik",
+    "UPS offline sehingga nilai tegangan di NMC tidak muncul",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Power"
+   ],
+   [
+    "",
+    "Open",
+    "11/09/2026",
+    "2:00",
+    "K56 + 665",
+    "AC",
+    "11/09/2026 2:00:00",
+    "",
+    "",
+    "adaptor power supply pada kedua AC tegangan output tidak sesuai sehingga kedua AC mati",
+    "",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Air Conditioner"
+   ],
+   [
+    "142",
+    "Close",
+    "13/09/2026",
+    "6:30",
+    "Km 51 + 500(tanda pilok)",
+    "Kabel optik",
+    "13/09/2026 6:30:00",
+    "",
+    "",
+    "Alarm R_LOSS Segmentasi Karawang-Padalarang\n\n- Dampak Layanan :\nSDH STM 16 Core 5-6 Cable B\nSDH STM 16 Core 9-10 Cable B\nSDH STM4 Core 13-14 Cable B KAPA2 (K48+680) - KAPA4 (K56+096)\nSDH STM 16 Core 17-18 Cable B\nSDH Data Network Core 21-22 Karawang AR02 GE0/4/1 - Padalarang AR02 GE0/3/1 Link Down\nSSDN jaringan signal Karawang - SRS3 (K56+096)\nSSDN jaringan signal SRS6 - Karawang",
+    "13 September 2026 :\n- Pengukuran OTDR dari 202 sejauh 11 km dan dari 802 sejauh 61 km.\n- Pengukuran OTDR dari K48+680 3 km ke K56+096\n- Yang terputus tedapat pada core :\nCore 5-12 cable B \nCore 17-24 cable B\nCore 33-44 cable B \n- Perpindahan port yang terdampak dari kabel B ke kabel A dengan memilih port yang redaman kecil.\n5b-39a \n6b-40a \n9b-47a \n10b-48a\n17b-43a\n18b-44a\n21b-46a\n22b-41a\n- malam splicing CUT OFF 48 core kabel B yang ditemukan di titik K51 + 500. ",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "sistem transmisi"
+   ],
+   [
+    "143",
+    "Close",
+    "19/09/2026",
+    "16:05",
+    "K63 + 174",
+    "AC",
+    "19/09/2026 16:05:00",
+    "",
+    "",
+    "Suhu ruangan 28,3 C",
+    "Kondisi terakhir sebelum ke site AC 2 (yang ada lebah) ON dan yang satunya OFF sehingga D1-4 dan D2-4 trip.\nSaat ke lapangan menyalakan AC 1 dan mematikan AC 2 dan paginya suhu tinggi lagi.\nKondisi sekarang diremote dari NMC : AC 2 di ON dan AC 1 di OFF suhu berangsur turun.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Air Conditioner"
+   ],
+   [
+    "144",
+    "Close",
+    "21/09/2026",
+    "7:04",
+    "CCTV K37 + 827 Emergency Bridge",
+    "CCTV",
+    "21/09/2026 7:04:00",
+    "",
+    "",
+    "CCTV Offline pukul 05:40. \nPergerakan terakhir 20/09/2026 pukul 17:35.\n\nData : \nIP Cam 10.10.2.152\nVSS : 10.10.0.31\nStore Server 10.10.0.27\n",
+    "21 September 2026 : Kabel fo yang mengarah ke CCTV Tangga Darurat K37 aman 0,5 km, lampu indikator optical switch yg menuju tangga K37 mati, perpindahan port optical switch port 1 ke 2 didapat lampu indikator switch untuk CCTV Courtyard tetap menyala dan CCTV Tangga K37 tetap mati sehingga port dan SFP aman, MCB di MR K38 diukur tegangan output aman 220V. \n25 September 2026 : temuan tanah liat di dalam panel box cctv tergerus dan TL sudah ditambal sikaboom dan kabel daya video output yang terhubung ke CCTV terputus akibat gigitan tikus dan TL dilakukan penyambungan kabel daya CCTV.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "CCTV"
+   ],
+   [
+    "145",
+    "Open",
+    "22/09/2026",
+    "0:45",
+    "K76+722",
+    "Baterai UPS",
+    "22/09/2026 0:45:00",
+    "",
+    "",
+    "Baterai tidak bertahan lama untuk backup supply AC pada UPS",
+    "Baterai mengalami masalah pada saat merubah dari tegangan dc to ac,sehingga drop tegangan pada baterai membuat tidak dapat membackup secara normal",
+    "",
+    "Telco Halim",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Baterai"
+   ],
+   [
+    "146",
+    "Close",
+    "24/09/2026",
+    "7:30",
+    "Stasiun Karawang",
+    "OPH Signalling Karawang",
+    "24/09/2026 7:30:00",
+    "25/09/2026 12:30:00",
+    "",
+    "OPH Signalling Karawang \"No Signal\"",
+    "24 September 2026 : Sudah dites kartu OPH Signalling Karawang ke OPH Halim ternyata berfungsi normal ada sinyal bisa menelpon.\n25 September 2026 : Penukaran OPH milik Biro Signaling yang rusak dengan yang baru dari 501",
+    "",
+    "Telco Halim",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "OPH"
+   ],
+   [
+    "147",
+    "Close",
+    "26/09/2026",
+    "4:30",
+    "K56 + 096",
+    "UPS",
+    "26/09/2026 4:30:00",
+    "26/09/2026 17:30:00",
+    "",
+    "Alarm UPS intermittent offline",
+    "Socket RS232 kendur, dan melakukan pengencangan kabel di sisi terminal socket, dan memastikan kabel terhubung dengan menggunakan buzzer multimeter",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "UPS"
+   ],
+   [
+    "147",
+    "Close",
+    "26/09/2026",
+    "19:40",
+    "K3 + 075",
+    "RU",
+    "26/09/2026 19:40:00",
+    "26/09/2026 1:10:00",
+    "",
+    "⁠link delay alarm 2 = 533",
+    "Indikasi ada masalah pada jalur transmisi (board RU, modul SFP, atau patchcore)\n.\n27 September 2026 : \n- pengecekan jalur transmisi optik, kekuatan konektor, dan kondisi board pada RU tidak ada kelainan pada perangkat. \n- Restart RU dengan mematikan sumber 1 dan 2.\n- Switch SFP pada modul IF 1 dan modul IF 2 namun alarm tetap masih ada.\n- Restart RU dan FSU.\n- Menunggu beberapa saat dikonfirmasi oleh NMC alarm normal kembali.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "RU"
+   ],
+   [
+    "148",
+    "Open",
+    "27/09/2026",
+    "1:20",
+    "K3 + 075",
+    "UPS",
+    "27/09/2026 1:20:00",
+    "",
+    "",
+    "UPS gagal convert dari sumber utama ke baterai, yang menyebabkan saat sumber 1 dan 2 off baterai gagal melakukan backup",
+    "27 September 2026 :\nuntuk kondisi UPS dalam kondisi normal, dan bisa di backup langsung dari baterai dilakukan 3 kali percobaan switch ke baterai dan hasil nya normal, CCM Halim menemukan drop tegangan yang drastis pada baterai 3 dengan hasil 8,45 V DC, hasil pengukuran baterai setelah 3 kali percobaan sebagai berikut :\n- baterai 1 : 12,16 V DC\n- ⁠baterai 2 : 12,08 V DC\n- ⁠baterai 3 : 8,45 V DC\n- tegangan total : 32,58 VDC\nCCM Halim tidak melakukan pergantian UPS karna UPS masih dalam keadaan normal",
+    "",
+    "Telco Halim",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Baterai"
+   ],
+   [
+    "149"
+   ]
+  ],
+  "Gangguan AC": [
+   [
+    "No.",
+    "Status",
+    "Tanggal",
+    "Waktu Pelaporan",
+    "Lokasi Gangguan",
+    "Nama Peralatan",
+    "Waktu Gangguan",
+    "Waktu Pemulihan",
+    "Durasi",
+    "Ruang Lingkup Dampak dan Fenomena Gangguan",
+    "Analisis Penyebab dan Hasil Penanganan ",
+    "Tindakan Pencegahan",
+    "Pelapor",
+    "Penerima/Tanggap Pengaduan",
+    "Area Kerja Penanggung Jawab",
+    "Sistem Terkait"
+   ],
+   [
+    "1",
+    "Open",
+    "01/07/2026",
+    "8:50",
+    "K80+835",
+    "Air Conditioner",
+    "01/07/2026 8:11:00",
+    "",
+    "#NUM!",
+    "\nKedua AC menyala bersamaan sehingga MCB pada box step ngetrip",
+    "- Terdapat masalah pada saat kedua AC nyala bersamaan pada saat menyala MCB pada box step ngetrip\n- Kondisi MCB pada AC1 mati sehingga muncul alarm (AC_5_1) Offline\n- Kondisi aktual lapangan hanya AC2 (kiri dari pintu) yang bekerja",
+    "Kondisi fungsi AC normal serta suhu dan kelembapan terpantau aman baik dari sisi CCM maupun NMC, namun perbaikan harus segera dilakukan",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "2",
+    "Open",
+    "09/01/2026",
+    "12:45",
+    "K34+575",
+    "Air Conditioner",
+    "01/09/2026 12:00:00",
+    "",
+    "#NUM!",
+    "(AC_5_1) Offline & (AC_5_2) Offline",
+    "- Kondisi aktual lapangan hanya AC1 yang bekerja\n- Terindikasi di kabel ethernet dari AC ke RTU",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "3",
+    "Open",
+    "23/1/2026",
+    "10:20",
+    "K52+083 ",
+    "Air Conditioner",
+    "23/1/2026 10:25",
+    "",
+    "#NUM!",
+    "(AC_5_1) Offline & (AC_5_2) Offline",
+    "- Kondisi aktual lapangan hanya AC1 yang bekerja\n- Terindikasi di kabel ethernet dari AC ke RTU",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "4",
+    "Close",
+    "03/02/2026",
+    "18:54",
+    "K56+665",
+    "Air Conditioner",
+    "03/02/2026 18:54:00",
+    "",
+    "#NUM!",
+    "(AC_5_1) Offline & (AC_5_2) Offline",
+    "MCB AC di panel GT Meledak",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "5",
+    "Open",
+    "08/02/2026",
+    "18:00",
+    "K32+475",
+    "Air Conditioner",
+    "02/08/2026",
+    "",
+    "#NUM!",
+    "AC (Air Conditioner) 1 & 2 offline ",
+    "sudah melakukan pergantian kabel UTP dan switch port pada RTU tapi alarm masih ada",
+    "",
+    "CCM",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "6",
+    "Open",
+    "",
+    "",
+    "K22+025",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik ",
+    "- AC (Air Conditioner) 1 & 2 offline, alarm dehumidifier failure\n- MCB AC 2 pada panel distribusi gosong",
+    "- sudah melakukan pergantian kabel UTP dan switch port pada RTU\nalarm dehumidifier failure hilang, tapi alarm lainnya masih ada.\n- Akan dilakukan koordinasi dengan biro power untuk melakukan penggantian MCB."
+   ],
+   [
+    "7",
+    "Open",
+    "",
+    "",
+    "K1+267",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik ",
+    "AC (Air Conditioner) 1 & 2 offline ",
+    "sudah melakukan pergantian kabel UTP dan switch port pada RTU, tapi alarm masih ada"
+   ],
+   [
+    "9",
+    "Open",
+    "28/02/2026",
+    "16:12",
+    "K0 + 215",
+    "Air Conditioner",
+    "28/02/2026 16:12:00",
+    "28/02/2026 17:12:00",
+    "0 hari, 1 jam, 0 menit, dan 0 detik ",
+    "Alarm AC 1 LP Switch Triggered\nAlarm AC 2 HP Switch Triggered",
+    "TH Module 28C return temp 65,7RH, di nmc setpoint cold/hot sudah diturunkan menjadi 20C, disite AC 2 sudah di clear alarm dan dilakukan restart on/off sehingga AC kondisi AC 2 Normal kembali, AC1 sudah di clear alarm dan dilakukan on/off selama 5 menit kondisi normal kembali karena ketika langsung dinyalakan kondisi AC tetap suhu yg keluar panas tapi ketika ditunggu 5-10 menit kondisi AC normal.\n\n- Saat kedua AC mati total (tidak bisa di ON kan), 2 AC portable yang menjaga suhu ruangan.\n- AC 1 & 2 Sudah dilakukan pembersihan filter indoor dan outdoor. Dilepas kipas outdoor fan lalu dibersihkan filter outdoornya lalu dibersihkan saluran besi outdoor menggunakan kipas kawat.\n- AC 1 indikasi kurang freon setelah dicek arus kompressor 5A (standar 10A) sehingga tekanan low. TL sementara dengan reset alarm di display.\n- AC 2 Sudah dilakukan reset manual button sensor HP di AC 2 dan sekarang 2 AC normal.\n- Alarm yg sama muncul lagi untuk AC 1 LP switch triggered dan AC 2 HP switch triggered. Penanganan berikutnya di AC 1 dilakukan plug in and out di switch sensor LP dan dibersihkan sensor switchnya lalu AC 2 dibersihkan bagian filter evaporator. Saat ini kedua AC normal.\n- Kedua AC di OFF kan tunggu 1 jam sambil AC portable di ON kan. AC 1 tetap OFF dan AC 2 di ON kan.\n- 4 April 2026 : Switch Motor Fan Outdoor\n- 20 Agustus 2026 : Suhu ruangan 28 C",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "10",
+    "Close",
+    "01/03/2026",
+    "18:30",
+    "K0 + 316",
+    "Air Conditioner",
+    "02/03/2026 18:30:00",
+    "09/03/2026 17:12:00",
+    "6 hari, 22 jam, 42 menit, dan 0 detik ",
+    "- AC K0+316 mengeluarkan udara panas, kompressor tidak bekerja secara normal (Alarm AC 1 & AC 2 HP Switch Triggered)",
+    "- AC 1 & AC 2 sudah dilakukan pembersihan filter indoor dan outdoor (perlu dilakukan pembersihan ulang).\n- 2 AC portable yang menjaga suhu ruangan.\n- AC 1 & AC 2 TL sementara reset manual button sensor HP di AC 1 & 2 dan sekarang 2 AC normal.",
+    "",
+    "Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "11",
+    "Close",
+    "15/03/2026",
+    "4:20",
+    "K42 + 365",
+    "Air Conditioner",
+    "15/03/2026 4:00:00",
+    "15/03/2026 7:00:00",
+    "0 hari, 3 jam, 0 menit, dan 0 detik ",
+    "AC High Temperature",
+    "Sudah ditindaklanjuti oleh NMC dilakukan On/Off pada monitor dan suhu kembali normal 23°C",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "12",
+    "Close",
+    "17/03/2026",
+    "11:00",
+    "K59 + 662",
+    "Air Conditioner",
+    "17/03/2026 11:00:00",
+    "17/03/2026 13:00:00",
+    "0 hari, 2 jam, 0 menit, dan 0 detik ",
+    "AC bersuhu 31.0°C",
+    "MR K59+662 setelah di reset oleh nmc temperature terpantau 21.6°C.",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "13",
+    "Close",
+    "21/03/2026",
+    "9:00",
+    "K59 + 662",
+    "Air Conditioner",
+    "21/03/2026 9:00:00",
+    "",
+    "",
+    "----- 21 April -----\n- D1-4 (back up) memang dari dulu di trip kan oleh OMC\n- Setelah ada pemadaman di D2-4, kondisi AC 1 dan AC 2 mati. Dipulihkan D2-4 dan kedua AC nyala.\n- Tidak berselang lama, D2-4 trip dan D2-4 (main) dicoba dinaikkan lagi dengan kondisi AC2 nyala.\n- Di dalam AC1, MCB nya dimatikan.\n- D1-4 dicoba dinaikkan lagi dengan kondisi AC2 nyala.\n- Kedua AC tidak bisa diremote (communication interrupt) karena AC1 dimatikan yang menuju ke kabel RTU.\n"
+   ],
+   [
+    "14",
+    "Open",
+    "16/5/2026",
+    "9:20",
+    "K41+683 (204)",
+    "Air Conditioner",
+    "16/5/2026 23:00",
+    "",
+    "",
+    "Kondisi AC no 2 off",
+    "harus dilakukan Lebih lanjut pengecekan dan pembersihan pada outdoornya ",
+    "",
+    "Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "15",
+    "Close",
+    "13/06/2026",
+    "6:07",
+    "K59+662",
+    "Air Conditioner",
+    "13/06/2026 6:05:00",
+    "13/06/2026 10:30:00",
+    "0 hari, 4 jam, 25 menit, dan 0 detik ",
+    "Timbulnya alarm TH module dan dalam waktu bersamaan muncul alarm water immertion ",
+    "adanya kotoran padat pada filter AC indor dan outdoor dan sudah dibersihkan",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC, RTU"
+   ],
+   [
+    "16",
+    "Close",
+    "23/06/2026",
+    "1:22",
+    "K66 + 000",
+    "Air Conditioner",
+    "23/06/2026 1:22:00",
+    "23/06/2026 13:57:00",
+    "0 hari, 12 jam, 35 menit, dan 0 detik ",
+    "Suhu TH module 32,74 C",
+    "- Sudah dilakukan pembersihan filter outdoor, suhu K66 turun menjadi 18,95 C",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "17",
+    "Open",
+    "12/9/2026",
+    "10.22",
+    "K48+680",
+    "Air Conditioner",
+    "12/09/2026 10:23",
+    "",
+    "",
+    "Pada AC 1, kompresor tidak bisa menyala sehingga hanya mengaluarkan angin dan tidak dingin",
+    "Pipa U-Bend mengalami kebocoran di AC Outdoor 1",
+    "",
+    "Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ],
+   [
+    "",
+    "Close",
+    "11/9/2026",
+    "13:00",
+    "56+665",
+    "Air Conditioner",
+    "9/11/2026 13:00",
+    "",
+    "",
+    "Disiplay AC mati",
+    "Adaptor power supply AC rusak",
+    "",
+    "Halim",
+    "Telco On-Site Halim",
+    "Halim",
+    "AC"
+   ]
+  ],
+  "Gangguan K3": [
+   [
+    "No.",
+    "Status",
+    "Tanggal",
+    "Lokasi Gangguan",
+    "Waktu Pelaporan",
+    "Item Gangguan",
+    "Waktu Gangguan",
+    "Waktu Pemulihan",
+    "Durasi",
+    "Ruang Lingkup Dampak dan Fenomena Gangguan",
+    "Analisis Penyebab dan Hasil Penanganan ",
+    "Tindakan Pencegahan",
+    "Pelapor",
+    "Penerima/Tanggap Pengaduan",
+    "Area Kerja Penanggung Jawab",
+    "Sistem Terkait",
+    "Dokumentasi"
+   ],
+   [
+    "1",
+    "Close",
+    "03/02/2026",
+    "1:00",
+    "K77 + 350",
+    "CCTV",
+    "03/02/2026 1:00:00",
+    "",
+    "#NUM!",
+    "Area sekitar CCTV panel terhalang ilalang",
+    "Sudah di TL dengan membabat rumput",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "2",
+    "Open",
+    "04/02/2026",
+    "7:41",
+    "K78 + 715 (CCTV outlet)",
+    "CCTV",
+    "04/06/2026 7:41:00",
+    "",
+    "#NUM!",
+    "Area sekitar CCTV terhalang ilalang",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "3",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "4",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "5",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "6",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "7",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "8",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "9",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "10",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "11",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "12",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "13"
+   ],
+   [
+    "14"
+   ],
+   [
+    "15"
+   ],
+   [
+    "16"
+   ],
+   [
+    "17"
+   ],
+   [
+    "18"
+   ],
+   [
+    "19"
+   ],
+   [
+    "20"
+   ],
+   [
+    "21"
+   ],
+   [
+    "22"
+   ],
+   [
+    "23"
+   ],
+   [
+    "24"
+   ],
+   [
+    "25"
+   ],
+   [
+    "26"
+   ],
+   [
+    "27"
+   ],
+   [
+    "28"
+   ],
+   [
+    "29"
+   ],
+   [
+    "30"
+   ],
+   [
+    "31"
+   ],
+   [
+    "32"
+   ],
+   [
+    "33"
+   ],
+   [
+    "34"
+   ],
+   [
+    "35"
+   ],
+   [
+    "36"
+   ],
+   [
+    "37"
+   ],
+   [
+    "38"
+   ],
+   [
+    "39"
+   ],
+   [
+    "40"
+   ],
+   [
+    "41"
+   ],
+   [
+    "42"
+   ],
+   [
+    "43"
+   ],
+   [
+    "44"
+   ],
+   [
+    "45"
+   ],
+   [
+    "46"
+   ],
+   [
+    "47"
+   ],
+   [
+    "48"
+   ],
+   [
+    "49"
+   ],
+   [
+    "50"
+   ],
+   [
+    "51"
+   ],
+   [
+    "52"
+   ],
+   [
+    "53"
+   ],
+   [
+    "54"
+   ],
+   [
+    "55"
+   ],
+   [
+    "56"
+   ],
+   [
+    "57"
+   ],
+   [
+    "58"
+   ],
+   [
+    "59"
+   ],
+   [
+    "60"
+   ],
+   [
+    "61"
+   ],
+   [
+    "62"
+   ],
+   [
+    "63"
+   ],
+   [
+    "64"
+   ],
+   [
+    "65"
+   ],
+   [
+    "66"
+   ],
+   [
+    "67"
+   ],
+   [
+    "68"
+   ],
+   [
+    "69"
+   ],
+   [
+    "70"
+   ],
+   [
+    "71"
+   ],
+   [
+    "72"
+   ],
+   [
+    "73"
+   ],
+   [
+    "74"
+   ],
+   [
+    "75"
+   ],
+   [
+    "76"
+   ],
+   [
+    "77"
+   ],
+   [
+    "78"
+   ],
+   [
+    "79"
+   ],
+   [
+    "80"
+   ],
+   [
+    "81"
+   ],
+   [
+    "82"
+   ],
+   [
+    "83"
+   ],
+   [
+    "84"
+   ],
+   [
+    "85"
+   ],
+   [
+    "86"
+   ],
+   [
+    "87"
+   ],
+   [
+    "88"
+   ],
+   [
+    "89"
+   ],
+   [
+    "90"
+   ],
+   [
+    "91"
+   ],
+   [
+    "92"
+   ],
+   [
+    "93"
+   ],
+   [
+    "94"
+   ],
+   [
+    "95"
+   ],
+   [
+    "96"
+   ],
+   [
+    "97"
+   ],
+   [
+    "98"
+   ],
+   [
+    "99"
+   ],
+   [
+    "100"
+   ],
+   [
+    "101"
+   ],
+   [
+    "102"
+   ],
+   [
+    "103"
+   ],
+   [
+    "104"
+   ],
+   [
+    "105"
+   ],
+   [
+    "106"
+   ],
+   [
+    "107"
+   ],
+   [
+    "108"
+   ],
+   [
+    "109"
+   ],
+   [
+    "110"
+   ],
+   [
+    "111"
+   ],
+   [
+    "112"
+   ],
+   [
+    "113"
+   ],
+   [
+    "114"
+   ],
+   [
+    "115"
+   ],
+   [
+    "116"
+   ],
+   [
+    "117"
+   ],
+   [
+    "118"
+   ],
+   [
+    "119"
+   ],
+   [
+    "120"
+   ],
+   [
+    "121"
+   ],
+   [
+    "122"
+   ],
+   [
+    "123"
+   ],
+   [
+    "124"
+   ],
+   [
+    "125"
+   ],
+   [
+    "126"
+   ],
+   [
+    "127"
+   ],
+   [
+    "128"
+   ],
+   [
+    "129"
+   ],
+   [
+    "130"
+   ],
+   [
+    "131"
+   ],
+   [
+    "132"
+   ],
+   [
+    "133"
+   ],
+   [
+    "134"
+   ],
+   [
+    "135"
+   ],
+   [
+    "136"
+   ],
+   [
+    "137"
+   ],
+   [
+    "138"
+   ],
+   [
+    "139"
+   ],
+   [
+    "140"
+   ],
+   [
+    "141"
+   ],
+   [
+    "142"
+   ],
+   [
+    "143"
+   ],
+   [
+    "144"
+   ],
+   [
+    "145"
+   ],
+   [
+    "146"
+   ],
+   [
+    "147"
+   ],
+   [
+    "148"
+   ],
+   [
+    "149"
+   ],
+   [
+    "150"
+   ],
+   [
+    "151"
+   ],
+   [
+    "152"
+   ],
+   [
+    "153"
+   ],
+   [
+    "154"
+   ],
+   [
+    "155"
+   ],
+   [
+    "156"
+   ],
+   [
+    "157"
+   ],
+   [
+    "158"
+   ],
+   [
+    "159"
+   ],
+   [
+    "160"
+   ],
+   [
+    "161"
+   ],
+   [
+    "162"
+   ],
+   [
+    "163"
+   ],
+   [
+    "164"
+   ],
+   [
+    "165"
+   ],
+   [
+    "166"
+   ],
+   [
+    "167"
+   ],
+   [
+    "168"
+   ],
+   [
+    "169"
+   ],
+   [
+    "170"
+   ],
+   [
+    "171"
+   ],
+   [
+    "172"
+   ],
+   [
+    "173"
+   ],
+   [
+    "174"
+   ],
+   [
+    "175"
+   ],
+   [
+    "176"
+   ],
+   [
+    "177"
+   ],
+   [
+    "178"
+   ],
+   [
+    "179"
+   ],
+   [
+    "180"
+   ],
+   [
+    "181"
+   ],
+   [
+    "182"
+   ],
+   [
+    "183"
+   ],
+   [
+    "184"
+   ],
+   [
+    "185"
+   ],
+   [
+    "186"
+   ],
+   [
+    "187"
+   ],
+   [
+    "188"
+   ],
+   [
+    "189"
+   ],
+   [
+    "190"
+   ],
+   [
+    "191"
+   ],
+   [
+    "192"
+   ],
+   [
+    "193"
+   ],
+   [
+    "194"
+   ],
+   [
+    "195"
+   ],
+   [
+    "196"
+   ],
+   [
+    "197"
+   ],
+   [
+    "198"
+   ],
+   [
+    "199"
+   ],
+   [
+    "200"
+   ]
+  ],
+  "Gangguan Kontruksi": [
+   [
+    "No.",
+    "Status",
+    "Tanggal",
+    "Waktu Pelaporan",
+    "Lokasi Gangguan",
+    "Nama Peralatan",
+    "Waktu Gangguan",
+    "Waktu Pemulihan",
+    "Durasi",
+    "Ruang Lingkup Dampak dan Fenomena Gangguan",
+    "Analisis Penyebab dan Hasil Penanganan ",
+    "Tindakan Pencegahan",
+    "Pelapor",
+    "Penerima/Tanggap Pengaduan",
+    "Area Kerja Penanggung Jawab",
+    "Sistem Terkait",
+    "Dokumentasi"
+   ],
+   [
+    "1",
+    "Open",
+    "07/01/2026",
+    "14:00",
+    "K79+865",
+    "Manhole",
+    "01/07/2026 9:00:00",
+    "",
+    "#NUM!",
+    "Terdapat titik bocor (rembesan) pada sumur optik",
+    "1. Genangan air di sumur kabel optik\n2. Manhole terdapat genangan air yang perlu dilakukan pengurasan",
+    "1. Perlu dilakukan perbaikan konstruksi manhole untuk menutup sumber air\n2. Harus dilakukan pengurasan air menggunakan pompa air",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "2",
+    "Open",
+    "09/01/2026",
+    "13:00",
+    "K34+575",
+    "Tower",
+    "01/09/2026 13:00:00",
+    "",
+    "#NUM!",
+    "Terdapat plastisin yang hancur di lubang under ground tower",
+    "1. Sementara sudah dilakukan penutupan dengan botol dan plastik",
+    "1. Perlu dilakukan penutupan dengan plastisin/sikabom",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "3",
+    "Closed",
+    "10/01/2026",
+    "12:10",
+    "K67+965",
+    "Manhole",
+    "01/10/2026 12:10:00",
+    "01/10/2026 13:30:00",
+    "0 Hari, 1 Jam, 20 Menit, 0 Detik",
+    "Terdapat titik bocor (rembesan) pada sumur optik",
+    "1. Genangan air di sumur kabel optik\n2. Manhole terdapat genangan air yang perlu dilakukan pengurasan",
+    "1. Perlu dilakukan perbaikan konstruksi manhole untuk menutup sumber air\n2. Harus dilakukan pengurasan air menggunakan pompa air",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "4",
+    "Open",
+    "24/01/2026",
+    "1:00",
+    "K77+350",
+    "CCTV",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik",
+    "View CCTV terhalangi rumput",
+    "sudah ditindaklanjuti, perlu penanganan lanjut untuk pembersihan",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "5",
+    "Open",
+    "24/01/2026",
+    "1:15",
+    "K77+350",
+    "Jalur kabel",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik",
+    "jalur kabel dari manhole ke RPT berlubang",
+    "sudah di TL dengan penambalan plastisin",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "6",
+    "Open",
+    "27/01/2026",
+    "9:30",
+    "K76 + 000",
+    "Pintu gerbang",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik",
+    "Pintu gerbang lasnya lepas",
+    "Sudah dilakukan pembongkaran gerbang RPT K74 + 439 & K76 + 000"
+   ],
+   [
+    "7",
+    "Open",
+    "25/1/2026",
+    "2:10",
+    "K77+350",
+    "Manhole",
+    "25/1/2026 02:10",
+    "",
+    "#NUM!",
+    "Terdapat titik bocor (rembesan) pada sumur optik",
+    "1. Genangan air di sumur kabel optik\n2. Manhole terdapat genangan air yang perlu dilakukan pengurasan",
+    "belum ditindaklanjuti, karna pernah dilakukan pengurasan rembesan air yg mengalir balik kembali, perlu dilakukan penambalan yang bocor",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "8",
+    "Open",
+    "27/1/2026",
+    "10:00",
+    "K76 + 000",
+    "Pintu gerbang",
+    "26/1/2026 10:00",
+    "",
+    "#NUM!",
+    "pintu gerbang lepas dikarenakan berkarat dan terkena hembusan kereta ",
+    "Dilakukan pembongkaran pintu gerbang",
+    "",
+    "NMC",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "9",
+    "Open",
+    "03/02/2026",
+    "10:00",
+    "K27 + 985",
+    "Manhole",
+    "03/02/2026 10:00:00",
+    "",
+    "",
+    "manhole terisi air",
+    "Dilakukan pengurasan air"
+   ],
+   [
+    "10",
+    "Open",
+    "03/02/2026",
+    "10:08",
+    "K31 + 367",
+    "Manhole",
+    "03/02/2026 10:00:00",
+    "",
+    "#NUM!",
+    "Engsel pintu manhole rusak",
+    "1. Dikarenakan ada nya korosi pada engsel pintu manhole",
+    "1. Perlu dilakukan penggantian engsel baru dan pengelasan",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "11",
+    "Open",
+    "03/02/2026",
+    "1:00",
+    "K76 + 000",
+    "Jalur kabel",
+    "03/02/2026 1:00:00",
+    "",
+    "",
+    "lubang kabel feeder dalam MR tidak tertutup sempurna",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "12",
+    "Open",
+    "10/02/2026",
+    "11:47",
+    "K6+352",
+    "Manhole",
+    "10/02/2026 11:40:00",
+    "",
+    "#NUM!",
+    "Terdapat titik bocor (rembesan) pada sumur optik",
+    "1. Genangan air di sumur kabel optik\n2. Manhole terdapat genangan air yang perlu dilakukan pengurasan",
+    "belum ditindaklanjuti, karna pernah dilakukan pengurasan rembesan air yg mengalir balik kembali, perlu dilakukan penambalan yang bocor",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "13",
+    "Open",
+    "04/02/2026",
+    "11:35",
+    "K48 + 680",
+    "Manhole",
+    "04/02/2026 11:40:00",
+    "",
+    "#NUM!",
+    "manhole terisi air",
+    "",
+    "belum ditindaklanjuti",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "14",
+    "Open",
+    "06/02/2026",
+    "13:00",
+    "K67+965",
+    "Manhole",
+    "06/02/2026 13:00:00",
+    "",
+    "#NUM!",
+    "manhole terisi air dua duanya",
+    "",
+    "Sudah dikuras salah satu manhole",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "15",
+    "Open",
+    "21/05/2026",
+    "1:00",
+    "K77 + 350",
+    "jalur Kabel",
+    "21/05/2026 1:00:00",
+    "",
+    "",
+    "jalur kabel dari manhole ke RPT berlubang",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "16",
+    "Closed",
+    "04/06/2027",
+    "13:00",
+    "K56+096",
+    "Manhole",
+    "04/06/2027 13:00",
+    "04/06/2027 16:00",
+    "0 Hari, 3 Jam, 0 Menit, 0 Detik",
+    "manhole terisi air dua duanya",
+    "1. Genangan air di sumur kabel optik\n2. Manhole terdapat genangan air yang perlu dilakukan pengurasan",
+    "Sudah dilakukan pengurasan  manhole",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "17",
+    "Open",
+    "04/06/2027",
+    "14:00",
+    "K56+665",
+    "Manhole",
+    "4/6/2027 16:00",
+    "",
+    "#NUM!",
+    "manhole terisi air dua duanya",
+    "1. Genangan air di sumur kabel optik\n2. Manhole terdapat genangan air yang perlu dilakukan pengurasan",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "18",
+    "Open",
+    "17/06/2026",
+    "9:49",
+    "k76 + 000",
+    "sound barreir",
+    "17/06/2026",
+    "",
+    "#NUM!",
+    "plat sound barrier terkelupas",
+    "",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "19",
+    "Open",
+    "05/08/2027",
+    "10:00",
+    "K79+865",
+    "Beton",
+    "8/5/2027 10:00",
+    "",
+    "#NUM!",
+    "Tidak bisa maksimal mengunci pintu",
+    "Beton rapuh sehingga pengunci pintu kurang maksimal",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "20",
+    "Open",
+    "05/08/2027",
+    "11:00",
+    "K78+662",
+    "Kawat duri",
+    "8/5/2027 10:00",
+    "",
+    "#NUM!",
+    "Penyangga kawat duri lepas",
+    "Penyangga kawat duri lepas",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "21",
+    "Open",
+    "05/08/2027",
+    "12:00",
+    "K78+662",
+    "lampu dalam MR mati ",
+    "8/5/2027 10:00",
+    "",
+    "#NUM!",
+    "Lampu mati 1",
+    "Lampu mati 1",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "22",
+    "Open",
+    "05/09/2026",
+    "15:00",
+    "K63+174",
+    "Pintu MR rusak(kropos)",
+    "9/5/2026 15:00",
+    "",
+    "#NUM!",
+    "Pintu",
+    "Kropos akibat karat",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "23",
+    "Open",
+    "11/09/2026",
+    "14:00",
+    "K56+665",
+    "Engsel pintu manhole rusak",
+    "9/11/2026 14:00",
+    "",
+    "#NUM!",
+    "Pintu manhole",
+    "Kropos akibat karat",
+    "",
+    "Telco On-Site Halim",
+    "Telco On-Site Halim",
+    "Halim"
+   ],
+   [
+    "24",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "25",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "26",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "27",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "28",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "29",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "30",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "31",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "32",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "33",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "34",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 \n, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "35",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 Hari, 0 Jam, 0 Menit, 0 Detik"
+   ],
+   [
+    "36"
+   ],
+   [
+    "37"
+   ],
+   [
+    "38"
+   ],
+   [
+    "39"
+   ],
+   [
+    "40"
+   ],
+   [
+    "41"
+   ],
+   [
+    "42"
+   ],
+   [
+    "43"
+   ],
+   [
+    "44"
+   ],
+   [
+    "45"
+   ],
+   [
+    "46"
+   ],
+   [
+    "47"
+   ],
+   [
+    "48"
+   ],
+   [
+    "49"
+   ],
+   [
+    "50"
+   ],
+   [
+    "51"
+   ],
+   [
+    "52"
+   ],
+   [
+    "53"
+   ],
+   [
+    "54"
+   ],
+   [
+    "55"
+   ],
+   [
+    "56"
+   ],
+   [
+    "57"
+   ],
+   [
+    "58"
+   ],
+   [
+    "59"
+   ],
+   [
+    "60"
+   ],
+   [
+    "61"
+   ],
+   [
+    "62"
+   ],
+   [
+    "63"
+   ],
+   [
+    "64"
+   ],
+   [
+    "65"
+   ],
+   [
+    "66"
+   ],
+   [
+    "67"
+   ],
+   [
+    "68"
+   ],
+   [
+    "69"
+   ],
+   [
+    "70"
+   ],
+   [
+    "71"
+   ],
+   [
+    "72"
+   ],
+   [
+    "73"
+   ],
+   [
+    "74"
+   ],
+   [
+    "75"
+   ],
+   [
+    "76"
+   ],
+   [
+    "77"
+   ],
+   [
+    "78"
+   ],
+   [
+    "79"
+   ],
+   [
+    "80"
+   ],
+   [
+    "81"
+   ],
+   [
+    "82"
+   ],
+   [
+    "83"
+   ],
+   [
+    "84"
+   ],
+   [
+    "85"
+   ],
+   [
+    "86"
+   ],
+   [
+    "87"
+   ],
+   [
+    "88"
+   ],
+   [
+    "89"
+   ],
+   [
+    "90"
+   ],
+   [
+    "91"
+   ],
+   [
+    "92"
+   ],
+   [
+    "93"
+   ],
+   [
+    "94"
+   ],
+   [
+    "95"
+   ],
+   [
+    "96"
+   ],
+   [
+    "97"
+   ],
+   [
+    "98"
+   ],
+   [
+    "99"
+   ],
+   [
+    "100"
+   ],
+   [
+    "101"
+   ],
+   [
+    "102"
+   ],
+   [
+    "103"
+   ],
+   [
+    "104"
+   ],
+   [
+    "105"
+   ],
+   [
+    "106"
+   ],
+   [
+    "107"
+   ],
+   [
+    "108"
+   ],
+   [
+    "109"
+   ],
+   [
+    "110"
+   ],
+   [
+    "111"
+   ],
+   [
+    "112"
+   ],
+   [
+    "113"
+   ],
+   [
+    "114"
+   ],
+   [
+    "115"
+   ],
+   [
+    "116"
+   ],
+   [
+    "117"
+   ],
+   [
+    "118"
+   ],
+   [
+    "119"
+   ],
+   [
+    "120"
+   ],
+   [
+    "121"
+   ],
+   [
+    "122"
+   ],
+   [
+    "123"
+   ],
+   [
+    "124"
+   ],
+   [
+    "125"
+   ],
+   [
+    "126"
+   ],
+   [
+    "127"
+   ],
+   [
+    "128"
+   ],
+   [
+    "129"
+   ],
+   [
+    "130"
+   ],
+   [
+    "131"
+   ],
+   [
+    "132"
+   ],
+   [
+    "133"
+   ],
+   [
+    "134"
+   ],
+   [
+    "135"
+   ],
+   [
+    "136"
+   ],
+   [
+    "137"
+   ],
+   [
+    "138"
+   ],
+   [
+    "139"
+   ],
+   [
+    "140"
+   ],
+   [
+    "141"
+   ],
+   [
+    "142"
+   ],
+   [
+    "143"
+   ],
+   [
+    "144"
+   ],
+   [
+    "145"
+   ],
+   [
+    "146"
+   ],
+   [
+    "147"
+   ],
+   [
+    "148"
+   ],
+   [
+    "149"
+   ],
+   [
+    "150"
+   ],
+   [
+    "151"
+   ],
+   [
+    "152"
+   ],
+   [
+    "153"
+   ],
+   [
+    "154"
+   ],
+   [
+    "155"
+   ],
+   [
+    "156"
+   ],
+   [
+    "157"
+   ],
+   [
+    "158"
+   ],
+   [
+    "159"
+   ],
+   [
+    "160"
+   ],
+   [
+    "161"
+   ],
+   [
+    "162"
+   ],
+   [
+    "163"
+   ],
+   [
+    "164"
+   ],
+   [
+    "165"
+   ],
+   [
+    "166"
+   ],
+   [
+    "167"
+   ],
+   [
+    "168"
+   ],
+   [
+    "169"
+   ],
+   [
+    "170"
+   ],
+   [
+    "171"
+   ],
+   [
+    "172"
+   ],
+   [
+    "173"
+   ],
+   [
+    "174"
+   ],
+   [
+    "175"
+   ],
+   [
+    "176"
+   ],
+   [
+    "177"
+   ],
+   [
+    "178"
+   ],
+   [
+    "179"
+   ],
+   [
+    "180"
+   ],
+   [
+    "181"
+   ],
+   [
+    "182"
+   ],
+   [
+    "183"
+   ],
+   [
+    "184"
+   ],
+   [
+    "185"
+   ],
+   [
+    "186"
+   ],
+   [
+    "187"
+   ],
+   [
+    "188"
+   ],
+   [
+    "189"
+   ],
+   [
+    "190"
+   ],
+   [
+    "191"
+   ],
+   [
+    "192"
+   ],
+   [
+    "193"
+   ],
+   [
+    "194"
+   ],
+   [
+    "195"
+   ],
+   [
+    "196"
+   ],
+   [
+    "197"
+   ],
+   [
+    "198"
+   ],
+   [
+    "199"
+   ],
+   [
+    "200"
+   ]
+  ],
+  "Gangguan Instrumen": [
+   [
+    "No.",
+    "Status",
+    "Tanggal",
+    "Lokasi",
+    "Detail Instrumen",
+    "Jumlah",
+    "Waktu Kerusakan",
+    "Waktu Perbaikan/Ganti",
+    "Durasi",
+    "Detail Kerusakan",
+    "Analisis Penyebab dan Hasil Penanganan ",
+    "Tindakan Pencegahan",
+    "Pelapor",
+    "Bukti Serah terima Instrumen",
+    "Penerima/Tanggap Pengaduan",
+    "Area Kerja Penanggung Jawab",
+    "Sistem Terkait",
+    "Dokumentasi"
+   ],
+   [
+    "1",
+    "New",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ]
+  ],
+  "Gangguan Lain-Lain": [
+   [
+    "No.",
+    "Status",
+    "Tanggal",
+    "Waktu Pelaporan",
+    "Lokasi Gangguan",
+    "Nama Peralatan",
+    "Waktu Gangguan",
+    "Waktu Pemulihan",
+    "Durasi",
+    "Ruang Lingkup Dampak dan Fenomena Gangguan",
+    "Analisis Penyebab dan Hasil Penanganan ",
+    "Tindakan Pencegahan",
+    "Pelapor",
+    "Penerima/Tanggap Pengaduan",
+    "Area Kerja Penanggung Jawab",
+    "Sistem Terkait"
+   ],
+   [
+    "1",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "2",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "3",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "4",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "5",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "6",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "7",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "8",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "9",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "10",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "11",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "12",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "13",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "14",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "15",
+    "Open",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0 hari, 0 jam, 0 menit, dan 0 detik "
+   ],
+   [
+    "16"
+   ],
+   [
+    "17"
+   ],
+   [
+    "18"
+   ],
+   [
+    "19"
+   ],
+   [
+    "20"
+   ],
+   [
+    "21"
+   ],
+   [
+    "22"
+   ],
+   [
+    "23"
+   ],
+   [
+    "24"
+   ],
+   [
+    "25"
+   ],
+   [
+    "26"
+   ],
+   [
+    "27"
+   ],
+   [
+    "28"
+   ],
+   [
+    "29"
+   ],
+   [
+    "30"
+   ],
+   [
+    "31"
+   ],
+   [
+    "32"
+   ],
+   [
+    "33"
+   ],
+   [
+    "34"
+   ],
+   [
+    "35"
+   ],
+   [
+    "36"
+   ],
+   [
+    "37"
+   ],
+   [
+    "38"
+   ],
+   [
+    "39"
+   ],
+   [
+    "40"
+   ],
+   [
+    "41"
+   ],
+   [
+    "42"
+   ],
+   [
+    "43"
+   ],
+   [
+    "44"
+   ],
+   [
+    "45"
+   ],
+   [
+    "46"
+   ],
+   [
+    "47"
+   ],
+   [
+    "48"
+   ],
+   [
+    "49"
+   ],
+   [
+    "50"
+   ],
+   [
+    "51"
+   ],
+   [
+    "52"
+   ],
+   [
+    "53"
+   ],
+   [
+    "54"
+   ],
+   [
+    "55"
+   ],
+   [
+    "56"
+   ],
+   [
+    "57"
+   ],
+   [
+    "58"
+   ],
+   [
+    "59"
+   ],
+   [
+    "60"
+   ],
+   [
+    "61"
+   ],
+   [
+    "62"
+   ],
+   [
+    "63"
+   ],
+   [
+    "64"
+   ],
+   [
+    "65"
+   ],
+   [
+    "66"
+   ],
+   [
+    "67"
+   ],
+   [
+    "68"
+   ],
+   [
+    "69"
+   ],
+   [
+    "70"
+   ],
+   [
+    "71"
+   ],
+   [
+    "72"
+   ],
+   [
+    "73"
+   ],
+   [
+    "74"
+   ],
+   [
+    "75"
+   ],
+   [
+    "76"
+   ],
+   [
+    "77"
+   ],
+   [
+    "78"
+   ],
+   [
+    "79"
+   ],
+   [
+    "80"
+   ],
+   [
+    "81"
+   ],
+   [
+    "82"
+   ],
+   [
+    "83"
+   ],
+   [
+    "84"
+   ],
+   [
+    "85"
+   ],
+   [
+    "86"
+   ],
+   [
+    "87"
+   ],
+   [
+    "88"
+   ],
+   [
+    "89"
+   ],
+   [
+    "90"
+   ],
+   [
+    "91"
+   ],
+   [
+    "92"
+   ],
+   [
+    "93"
+   ],
+   [
+    "94"
+   ],
+   [
+    "95"
+   ],
+   [
+    "96"
+   ],
+   [
+    "97"
+   ],
+   [
+    "98"
+   ],
+   [
+    "99"
+   ],
+   [
+    "100"
+   ],
+   [
+    "101"
+   ],
+   [
+    "102"
+   ],
+   [
+    "103"
+   ],
+   [
+    "104"
+   ],
+   [
+    "105"
+   ],
+   [
+    "106"
+   ],
+   [
+    "107"
+   ],
+   [
+    "108"
+   ],
+   [
+    "109"
+   ],
+   [
+    "110"
+   ],
+   [
+    "111"
+   ],
+   [
+    "112"
+   ],
+   [
+    "113"
+   ],
+   [
+    "114"
+   ],
+   [
+    "115"
+   ],
+   [
+    "116"
+   ],
+   [
+    "117"
+   ],
+   [
+    "118"
+   ],
+   [
+    "119"
+   ],
+   [
+    "120"
+   ],
+   [
+    "121"
+   ],
+   [
+    "122"
+   ],
+   [
+    "123"
+   ],
+   [
+    "124"
+   ],
+   [
+    "125"
+   ],
+   [
+    "126"
+   ],
+   [
+    "127"
+   ],
+   [
+    "128"
+   ],
+   [
+    "129"
+   ],
+   [
+    "130"
+   ],
+   [
+    "131"
+   ],
+   [
+    "132"
+   ],
+   [
+    "133"
+   ],
+   [
+    "134"
+   ],
+   [
+    "135"
+   ],
+   [
+    "136"
+   ],
+   [
+    "137"
+   ],
+   [
+    "138"
+   ],
+   [
+    "139"
+   ],
+   [
+    "140"
+   ],
+   [
+    "141"
+   ],
+   [
+    "142"
+   ],
+   [
+    "143"
+   ],
+   [
+    "144"
+   ],
+   [
+    "145"
+   ],
+   [
+    "146"
+   ],
+   [
+    "147"
+   ],
+   [
+    "148"
+   ],
+   [
+    "149"
+   ],
+   [
+    "150"
+   ],
+   [
+    "151"
+   ],
+   [
+    "152"
+   ],
+   [
+    "153"
+   ],
+   [
+    "154"
+   ],
+   [
+    "155"
+   ],
+   [
+    "156"
+   ],
+   [
+    "157"
+   ],
+   [
+    "158"
+   ],
+   [
+    "159"
+   ],
+   [
+    "160"
+   ],
+   [
+    "161"
+   ],
+   [
+    "162"
+   ],
+   [
+    "163"
+   ],
+   [
+    "164"
+   ],
+   [
+    "165"
+   ],
+   [
+    "166"
+   ],
+   [
+    "167"
+   ],
+   [
+    "168"
+   ],
+   [
+    "169"
+   ],
+   [
+    "170"
+   ],
+   [
+    "171"
+   ],
+   [
+    "172"
+   ],
+   [
+    "173"
+   ],
+   [
+    "174"
+   ],
+   [
+    "175"
+   ],
+   [
+    "176"
+   ],
+   [
+    "177"
+   ],
+   [
+    "178"
+   ],
+   [
+    "179"
+   ],
+   [
+    "180"
+   ],
+   [
+    "181"
+   ],
+   [
+    "182"
+   ],
+   [
+    "183"
+   ],
+   [
+    "184"
+   ],
+   [
+    "185"
+   ],
+   [
+    "186"
+   ],
+   [
+    "187"
+   ],
+   [
+    "188"
+   ],
+   [
+    "189"
+   ],
+   [
+    "190"
+   ],
+   [
+    "191"
+   ],
+   [
+    "192"
+   ],
+   [
+    "193"
+   ],
+   [
+    "194"
+   ],
+   [
+    "195"
+   ],
+   [
+    "196"
+   ],
+   [
+    "197"
+   ],
+   [
+    "198"
+   ],
+   [
+    "199"
+   ],
+   [
+    "200"
+   ]
+  ]
+ }
+}

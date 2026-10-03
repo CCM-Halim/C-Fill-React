@@ -13,6 +13,7 @@ import { SLOT_MAP_OVERRIDES } from '../config/slotMapOverrides';
 import { logActivity } from './activityLog';
 import { getCurrentUser } from './googleAuth';
 import { summarizeJadwal } from './jadwalProgress';
+import { parseGangguanRows, summarizeGangguan } from './gangguanLog';
 
 // Struktur sheet "Lembar Verifikasi Pekerjaan" (boilerplate, sama di semua 69
 // file site): baris 6 = Januari, step 1/bulan, kolom C = Tanggal, D = Nama
@@ -571,37 +572,85 @@ export async function getJadwalKunjunganBulanIni() {
 }
 
 /**
- * ==== Dashboard: Log Gangguan ====
- * Baca daftar tab yang ada di file Log Gangguan (buat filter "dari sheet
- * apa"), lalu baca & filter datanya per tab/bulan. Kolom yang diambil (sesuai
- * struktur "Log Book Gangguan Dept Telco Halim"): E=Lokasi Gangguan,
- * G=Waktu Gangguan (tanggal alarm), H=Waktu Pemulihan (tanggal dipulihkan),
- * P=Sistem Terkait (kategori), B=Status (Open/Close).
+ * ==== Dashboard: Temuan & Gangguan (Log Book Gangguan) ====
+ *
+ * Baca semua tab (Gangguan Peralatan / AC / K3 / Kontruksi / Instrumen /
+ * Lain-Lain), parse pakai lib/gangguanLog.js.
+ *
+ * CATATAN PERBAIKAN: versi lama membaca kolom di POSISI TETAP
+ * ("lokasi = r[3]" = kolom E, "kategori = r[14]" = kolom P) padahal susunan
+ * kolomnya beda-beda antar tab (di "Gangguan K3" lokasi ada di kolom D, di
+ * "Gangguan Instrumen" Sistem Terkait ada di kolom Q). Akibatnya item dari tab
+ * itu hilang / salah kolom. Sekarang kolom dicari lewat NAMA HEADER.
+ *
+ * Bulan/tahun diambil dari kolom "Tanggal" yang di-parse jadi angka - bukan
+ * lagi mencocokkan "angka apa pun" di string tanggal. Lihat penjelasan lengkap
+ * di bagian atas src/lib/gangguanLog.js.
  */
+const LOG_GANGGUAN_RANGE = 'A2:R500';
+
 export async function getLogGangguanTabs() {
   if (!LOG_GANGGUAN_FILE_ID) return { available: false, reason: 'VITE_LOG_GANGGUAN_FILE_ID belum diatur di .env' };
   const tabs = await listSheetTabs(LOG_GANGGUAN_FILE_ID);
   return { available: true, tabs };
 }
 
+/** Ambil + parse SEMUA tab sekaligus. Hasilnya dipakai untuk semua filter di UI. */
+export async function getAllLogGangguan() {
+  if (!LOG_GANGGUAN_FILE_ID) {
+    return { available: false, reason: 'VITE_LOG_GANGGUAN_FILE_ID belum diatur di .env' };
+  }
+  const tabs = await listSheetTabs(LOG_GANGGUAN_FILE_ID);
+  // Dibaca paralel: 6 tab, masing-masing 1 request. Kalau salah satu tab gagal
+  // (mis. nama tabnya aneh), tab itu dilewati dan dicatat - bukan bikin seluruh
+  // Dashboard kosong.
+  const hasil = await Promise.all(tabs.map(async (tab) => {
+    try {
+      const resolved = await resolveTabName(LOG_GANGGUAN_FILE_ID, tab);
+      const rows = await readRawRange(LOG_GANGGUAN_FILE_ID, resolved, LOG_GANGGUAN_RANGE);
+      return { tab, rows, error: null };
+    } catch (e) {
+      return { tab, rows: [], error: e.message };
+    }
+  }));
+
+  const items = [];
+  const gagal = [];
+  for (const h of hasil) {
+    if (h.error) gagal.push(`${h.tab}: ${h.error}`);
+    items.push(...parseGangguanRows(h.rows, { tab: h.tab }));
+  }
+
+  if (items.length === 0) {
+    return {
+      available: false,
+      reason: `File Log Gangguan terbaca (${tabs.length} tab), tapi 0 kejadian ketemu. ` +
+        `Kemungkinan semua tab masih berisi baris template saja, atau struktur kolomnya berubah.` +
+        (gagal.length ? ` Tab yang gagal dibaca: ${gagal.join('; ')}` : ''),
+    };
+  }
+
+  return {
+    available: true,
+    tabs,
+    items,
+    ringkasan: summarizeGangguan(items),
+    sheetUrl: `https://docs.google.com/spreadsheets/d/${LOG_GANGGUAN_FILE_ID}/edit`,
+    gagalDibaca: gagal,
+  };
+}
+
+/**
+ * Dipakai kalau hanya butuh satu tab (dipertahankan supaya pemanggil lama tetap
+ * jalan). Disarankan pakai getAllLogGangguan() supaya filter status/tahun/bulan
+ * bekerja lintas tab.
+ */
 export async function getLogGangguanData(tabName) {
   if (!LOG_GANGGUAN_FILE_ID) return { available: false, reason: 'VITE_LOG_GANGGUAN_FILE_ID belum diatur di .env' };
   const resolvedTab = await resolveTabName(LOG_GANGGUAN_FILE_ID, tabName);
-  const rows = await readRawRange(LOG_GANGGUAN_FILE_ID, resolvedTab, 'B3:P500');
-
-  const items = [];
-  for (const r of rows) {
-    const lokasi = (r[3] || '').trim(); // E (index 3 dari kolom B)
-    if (!lokasi) continue;
-    items.push({
-      status: (r[0] || '').trim(),           // B
-      tanggalAlarm: (r[5] || '').trim(),      // G
-      lokasi,                                 // E
-      tanggalPulih: (r[6] || '').trim(),      // H
-      kategori: (r[14] || '').trim()          // P
-    });
-  }
-  return { available: true, items };
+  const rows = await readRawRange(LOG_GANGGUAN_FILE_ID, resolvedTab, LOG_GANGGUAN_RANGE);
+  const items = parseGangguanRows(rows, { tab: tabName });
+  return { available: true, items, ringkasan: summarizeGangguan(items) };
 }
 
 /* Fitur "Ganti Foto Header Login" DIHAPUS (22 Sep 2026 - permintaan Jo).

@@ -2,12 +2,14 @@ import React, { useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { preloadAuth } from '../lib/googleAuth';
 import { LOGIN_HEADER_IMAGE_URL } from '../config/loginHeader';
+import { APP_VERSION } from '../config/appInfo';
 
 // Identitas aplikasi — dipakai di footer card login.
-// APP_VERSION sengaja ditulis manual (bukan tanggal build otomatis) supaya
-// nomor versi = penanda rilis yang dikendalikan admin, bukan berubah tiap deploy.
+// APP_VERSION & tahun rilis ada di config/appInfo.js supaya cuma satu tempat
+// yang perlu diubah saat naik versi (dipakai juga di Sidebar).
 const APP_NAME_FULL = 'Communication Comprehensive Maintenance Halim';
-const APP_VERSION = 'v1.0';
+const RELEASE_YEAR = '2026';
+const COPYRIGHT_HOLDER = 'CCM-Halim';
 
 function GoogleIcon() {
   return (
@@ -69,7 +71,10 @@ export default function LoginScreen() {
 
           <div className="login-panel-footer">
             <span className="login-footer-app">C-Fill {APP_VERSION}</span>
-            <span className="login-footer-copy">&copy; {APP_NAME_FULL}</span>
+            <span className="login-footer-copy">
+              &copy; {RELEASE_YEAR} {COPYRIGHT_HOLDER}
+              <br />{APP_NAME_FULL}
+            </span>
           </div>
         </div>
       </div>

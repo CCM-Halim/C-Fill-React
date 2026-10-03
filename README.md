@@ -1,4 +1,12 @@
-# C-Fill — Communication Fillment (React + Google OAuth)
+# C-Fill v2.0 — Communication Fillment (React + Google OAuth)
+
+> **v2.0 (3 Oktober 2026).** Rilis ini memperbaiki dua masalah Dashboard —
+> donut **Progress Kerja** yang selalu tampil 0/0 dan kartu **Temuan & Gangguan**
+> yang salah membaca kolom serta salah memfilter bulan — plus **filter status
+> Open/Close** baru, halaman **Panduan Progress Kerja**, dan identitas
+> **logo v2.0 dengan hak cipta © 2026 CCM-Halim**.
+> Rinciannya: [`docs/dashboard-progress.md`](docs/dashboard-progress.md) ·
+> [`docs/brand.md`](docs/brand.md).
 
 Web app untuk:
 1. **Pengisian Checksheet** peralatan komunikasi (69 site fisik, 63 kategori
@@ -8,6 +16,9 @@ Web app untuk:
    atau baris baru.
 2. **Upload Dokumentasi Pekerjaan** — otomatis tersimpan ke folder Drive
    **"Dokumentasi Kegiatan"**, struktur `Bulan > Nama Site (tanggal)`.
+3. **Dashboard** — Progress Kerja per periode (1M/3M/6M/1Y) dari jadwal
+   kunjungan MR bulan berjalan, plus Temuan & Gangguan dari Log Book Gangguan
+   dengan filter status Open/Close, tahun, bulan, dan jenis gangguan.
 
 Stack: **React (Vite) + Google OAuth 2.0 (Identity Services) + Sheets API v4 +
 Drive API v3**, semuanya dipanggil langsung dari browser (tidak perlu backend

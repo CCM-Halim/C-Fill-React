@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { IconDashboard, IconClipboard, IconGauge, IconUpload, IconLogout, IconBolt, IconCheckShield, IconLogInOut, IconTrackInOut } from './Icons';
+import { APP_VERSION, COPYRIGHT_LINE } from '../config/appInfo';
 
 const NAV_ITEMS = [
   { to: '/', end: true, icon: IconDashboard, label: 'Dashboard' },
@@ -9,6 +10,7 @@ const NAV_ITEMS = [
   { to: '/instrumen', end: false, icon: IconGauge, label: 'Instrumen' },
   { to: '/entry-exit', end: false, icon: IconLogInOut, label: 'EntryExit' },
   { to: '/jalur', end: false, icon: IconTrackInOut, label: 'Jalur' },
+  { to: '/panduan', end: false, icon: IconClipboard, label: 'Panduan' },
   { to: '/dokumentasi', end: false, icon: IconUpload, label: 'Dokumentasi' }
 ];
 
@@ -20,7 +22,8 @@ const LABELS = {
   Dokumentasi: 'Upload Dokumentasi',
   Verifikasi: 'Verifikasi Pekerjaan',
   EntryExit: 'Entry/Exit Log',
-  Jalur: 'Masuk/Keluar Jalur'
+  Jalur: 'Masuk/Keluar Jalur',
+  Panduan: 'Panduan Progress Kerja'
 };
 
 export default function Sidebar() {
@@ -32,7 +35,7 @@ export default function Sidebar() {
     <>
       {/* Header mobile: brand + user + logout, cuma tampil di layar sempit */}
       <header className="mobile-header">
-        <div className="brand-mark"><IconBolt /> C‑Fill</div>
+        <div className="brand-mark"><IconBolt /> C‑Fill <span className="brand-version">{APP_VERSION}</span></div>
         <button className="mobile-logout" onClick={logout} aria-label="Keluar">
           <span className="user-avatar">{initial}</span>
         </button>
@@ -40,7 +43,7 @@ export default function Sidebar() {
 
       <aside className="sidebar">
         <div className="brand">
-          <div className="brand-mark"><IconBolt /> C‑Fill</div>
+          <div className="brand-mark"><IconBolt /> C‑Fill <span className="brand-version">{APP_VERSION}</span></div>
           <div className="brand-sub">Communication Fillment</div>
         </div>
         <nav className="nav">
@@ -57,6 +60,7 @@ export default function Sidebar() {
           </div>
           {isForeman ? <div className="badge" style={{ marginBottom: 4 }}>Foreman</div> : null}
           <button className="btn btn-ghost btn-block" onClick={logout}><IconLogout /> Keluar</button>
+          <div className="brand-copyright">{COPYRIGHT_LINE}</div>
         </div>
       </aside>
 

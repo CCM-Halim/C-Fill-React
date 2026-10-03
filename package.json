@@ -1,7 +1,7 @@
 {
   "name": "c-fill",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,13 @@
     "preview": "vite preview",
     "test": "node --test 'test/**/*.test.mjs'",
     "verify:dashboard": "vite-node scripts/verify-dashboard-render.mjs",
-    "fixtures:jadwal": "/usr/bin/python3 scripts/make-jadwal-fixtures.py"
+    "fixtures:jadwal": "/usr/bin/python3 scripts/make-jadwal-fixtures.py",
+    "verify:brand": "node scripts/verify-brand.mjs",
+    "brand": "~/zenith-brand/.venv-svg/bin/python scripts/make-brand.py",
+    "verify:live-gangguan": "node scripts/verify-live-gangguan.mjs",
+    "verify:live-jadwal": "node scripts/verify-live-data.mjs",
+    "fixtures:gangguan": "/usr/bin/python3 scripts/make-gangguan-fixtures.py",
+    "verify:all": "npm run build && npm test && npm run verify:dashboard && npm run verify:brand"
   },
   "dependencies": {
     "react": "^18.3.1",

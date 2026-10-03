@@ -16,6 +16,7 @@ import EntryExitPage from './pages/EntryExitPage';
 import MasukKeluarJalurPage from './pages/MasukKeluarJalurPage';
 import VerifikasiIndex from './pages/VerifikasiIndex';
 import VerifikasiSite from './pages/VerifikasiSite';
+import PanduanProgressPage from './pages/PanduanProgressPage';
 
 function AppShell() {
   const { user, isForeman, checkingSilent } = useAuth();
@@ -45,6 +46,7 @@ function AppShell() {
           <Route path="/dokumentasi" element={<DokumentasiPage />} />
           <Route path="/entry-exit" element={<EntryExitPage />} />
           <Route path="/jalur" element={<MasukKeluarJalurPage />} />
+          <Route path="/panduan" element={<PanduanProgressPage />} />
           {isForeman ? (
             <>
               <Route path="/verifikasi" element={<VerifikasiIndex />} />

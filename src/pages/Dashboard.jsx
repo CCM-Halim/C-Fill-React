@@ -1,52 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext';
-import { getJadwalKunjunganBulanIni, getLogGangguanTabs, getLogGangguanData } from '../lib/cfillService';
+import { getJadwalKunjunganBulanIni, getAllLogGangguan } from '../lib/cfillService';
 import ProgressKerjaCard from '../components/ProgressKerjaCard';
-
-const BULAN_ID = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+import TemuanGangguanCard from '../components/TemuanGangguanCard';
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [jadwal, setJadwal] = useState(null);
   const [jadwalError, setJadwalError] = useState(null);
-  const [gangguanTabs, setGangguanTabs] = useState(null);
-  const [selectedTab, setSelectedTab] = useState('');
-  const [selectedBulan, setSelectedBulan] = useState(new Date().getMonth());
-  const [gangguanItems, setGangguanItems] = useState(null);
-  const [gangguanLoading, setGangguanLoading] = useState(false);
-  const [gangguanError, setGangguanError] = useState(null);
-  const [periodModal, setPeriodModal] = useState(null); // { label, status, items } kalau lagi buka pop-up
 
+  const [log, setLog] = useState(null);
+  const [logLoading, setLogLoading] = useState(true);
+  const [logError, setLogError] = useState(null);
+
+  const [periodModal, setPeriodModal] = useState(null); // { label, status, items }
+  const [gangguanModal, setGangguanModal] = useState(null); // detail 1 kejadian
 
   useEffect(() => {
     getJadwalKunjunganBulanIni().then(setJadwal).catch((e) => setJadwalError(e.message));
-    getLogGangguanTabs().then((res) => {
-      setGangguanTabs(res);
-      if (res.available && res.tabs.length > 0) setSelectedTab(res.tabs[0]);
-    });
+
+    // Semua tab Log Gangguan dibaca sekali, lalu difilter di sisi client -
+    // supaya ganti-ganti filter tidak bolak-balik request ke Sheets.
+    getAllLogGangguan()
+      .then(setLog)
+      .catch((e) => setLogError(e.message))
+      .finally(() => setLogLoading(false));
   }, []);
-
-  useEffect(() => {
-    if (!selectedTab) return;
-    setGangguanLoading(true);
-    setGangguanError(null);
-    getLogGangguanData(selectedTab)
-      .then((res) => setGangguanItems(res.available ? res.items : []))
-      .catch((e) => setGangguanError(e.message))
-      .finally(() => setGangguanLoading(false));
-  }, [selectedTab]);
-
-  // Filter client-side per bulan yang dipilih - tanggal alarm formatnya kadang
-  // beda urutan (DD/MM/YYYY vs kadang tertulis lain), jadi dicek fleksibel:
-  // ambil semua angka di string tanggalnya, cek apakah nomor bulan yang dipilih
-  // ada di situ (di posisi manapun, bukan asumsi posisi tetap).
-  const filteredGangguan = (gangguanItems || []).filter((it) => {
-    const numbers = (it.tanggalAlarm || '').match(/\d+/g);
-    if (!numbers) return false;
-    return numbers.some((n) => parseInt(n, 10) === selectedBulan + 1 && parseInt(n, 10) <= 12);
-  });
 
   return (
     <section>
@@ -69,47 +50,12 @@ export default function Dashboard() {
         <ProgressKerjaCard jadwal={jadwal} onOpenPeriod={setPeriodModal} />
       )}
 
-      <div className="card">
-        <div className="card-title">Temuan & Gangguan</div>
-
-        <div style={{ display: 'flex', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
-          <select className="input" style={{ maxWidth: 160 }} value={selectedBulan} onChange={(e) => setSelectedBulan(Number(e.target.value))}>
-            {BULAN_ID.map((b, i) => <option key={b} value={i}>{b}</option>)}
-          </select>
-          {gangguanTabs && gangguanTabs.available && (
-            <select className="input" style={{ maxWidth: 200 }} value={selectedTab} onChange={(e) => setSelectedTab(e.target.value)}>
-              {gangguanTabs.tabs.map((t) => <option key={t} value={t}>{t}</option>)}
-            </select>
-          )}
-        </div>
-
-        {gangguanTabs && !gangguanTabs.available && (
-          <div className="notice-box">📋 {gangguanTabs.reason}</div>
-        )}
-        {gangguanLoading && <div className="muted">Memuat data gangguan...</div>}
-        {gangguanError && <div className="notice-box">Gagal memuat: {gangguanError}</div>}
-
-        {gangguanItems && !gangguanLoading && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {filteredGangguan.length === 0 && <div className="muted">Tidak ada temuan/gangguan di {BULAN_ID[selectedBulan]}.</div>}
-            {filteredGangguan.map((it, i) => (
-              <div key={i} style={{ borderBottom: '1px solid var(--border-soft)', paddingBottom: 10 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                  <div style={{ fontWeight: 700, fontSize: 13.5 }}>{it.lokasi}</div>
-                  <span className="badge" style={{
-                    background: it.status.toLowerCase().startsWith('close') ? 'var(--accent-soft)' : '#FCE4E4',
-                    color: it.status.toLowerCase().startsWith('close') ? 'var(--accent-strong)' : '#B4302F'
-                  }}>{it.status}</span>
-                </div>
-                <div className="muted" style={{ fontSize: 12 }}>{it.kategori}</div>
-                <div style={{ fontSize: 12, marginTop: 3 }}>
-                  Alarm: {it.tanggalAlarm || '-'} {it.tanggalPulih && `· Pulih: ${it.tanggalPulih}`}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <TemuanGangguanCard
+        log={log}
+        loading={logLoading}
+        error={logError}
+        onOpenItem={setGangguanModal}
+      />
 
       <div className="card" style={{ marginTop: 20 }}>
         <div className="card-title">Mulai Cepat</div>
@@ -139,6 +85,45 @@ export default function Dashboard() {
               </div>
             )}
             <button className="btn btn-ghost" style={{ marginTop: 16, width: '100%' }} onClick={() => setPeriodModal(null)}>Tutup</button>
+          </div>
+        </div>
+      )}
+
+      {gangguanModal && (
+        <div className="modal-overlay" onClick={() => setGangguanModal(null)}>
+          <div className="modal-box" onClick={(e) => e.stopPropagation()} style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+            <div className="card-title">{gangguanModal.lokasi}</div>
+            <div className="muted" style={{ fontSize: 12.5, marginBottom: 10 }}>
+              {gangguanModal.tab} · baris {gangguanModal.baris} di sheet · status {gangguanModal.statusRaw || '-'}
+            </div>
+            {[
+              ['Tanggal', gangguanModal.tanggalRaw || '(belum diisi)'],
+              ['Waktu gangguan', gangguanModal.mulaiRaw || '-'],
+              ['Waktu pemulihan', gangguanModal.pulihRaw || '-'],
+              ['Durasi (sheet)', gangguanModal.durasi || '-'],
+              ['Peralatan / item', gangguanModal.alat || '-'],
+              ['Sistem terkait', gangguanModal.sistem || '-'],
+              ['Pelapor', gangguanModal.pelapor || '-'],
+              ['Fenomena', gangguanModal.fenomena || '-'],
+              ['Analisis & penanganan', gangguanModal.analisis || '-'],
+              ['Tindakan pencegahan', gangguanModal.pencegahan || '-'],
+            ].map(([k, v]) => (
+              <div key={k} style={{ fontSize: 12.5, marginTop: 6 }}>
+                <span className="muted">{k}: </span>{v}
+              </div>
+            ))}
+            {gangguanModal.tanggalAmbigu && (
+              <div className="notice-box" style={{ fontSize: 11.5, marginTop: 10 }}>
+                ⚠️ Kolom Tanggal ({gangguanModal.tanggalRaw}) dan Waktu Gangguan ({gangguanModal.mulaiRaw})
+                menunjukkan hari/bulan yang tertukar. Filter bulan memakai kolom Tanggal — betulkan di sheet
+                kalau perlu.
+              </div>
+            )}
+            <a href={log?.sheetUrl} target="_blank" rel="noreferrer" className="link-like"
+              style={{ display: 'inline-block', fontSize: 13, marginTop: 12 }}>
+              Buka Log Book di Google Sheets →
+            </a>
+            <button className="btn btn-ghost" style={{ marginTop: 16, width: '100%' }} onClick={() => setGangguanModal(null)}>Tutup</button>
           </div>
         </div>
       )}
