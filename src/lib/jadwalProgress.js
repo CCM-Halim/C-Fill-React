@@ -128,6 +128,25 @@ export function parseSheetPlanCounters(rows) {
 }
 
 /**
+ * Sel di kolom bantu (L:O) yang BUKAN angka - mis. "#NUM!" (rumus Sheets yang
+ * error) atau "#DIV/0!". Dikumpulkan supaya bisa DITAMPILKAN sebagai catatan
+ * kualitas data, bukan diam-diam diabaikan seolah-olah selnya kosong.
+ */
+export function findInvalidPlanCells(rows) {
+  const rusak = [];
+  rows.forEach((r, i) => {
+    PERIODS.forEach((p, j) => {
+      const v = cell(r, 10 + j);
+      if (v === '') return;
+      if (Number.isNaN(Number(v))) {
+        rusak.push({ baris: i + 1, periode: p, nilai: v, kolom: 'LMNO'[j] });
+      }
+    });
+  });
+  return rusak;
+}
+
+/**
  * Ringkasan lengkap untuk Dashboard.
  * `total` = jumlah baris pekerjaan (bukan jumlah penjumlahan periode - satu
  * baris multi-periode tetap satu pekerjaan).
@@ -149,5 +168,9 @@ export function summarizeJadwal(rows) {
     periodBreakdown,
     sheetPlanCounters: parseSheetPlanCounters(rows),
     unlabeledRows,
+    // Sel kolom bantu (L:O) yang isinya bukan angka - mis. "#NUM!" dari rumus
+    // Sheets yang error. Ditampilkan sebagai catatan kualitas data supaya
+    // kelihatan kalau ada yang perlu dibetulkan di file sumbernya.
+    selRencanaRusak: findInvalidPlanCells(rows),
   };
 }

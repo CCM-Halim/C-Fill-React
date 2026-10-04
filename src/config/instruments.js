@@ -18,15 +18,15 @@ export const INSTRUMENTS = [
   "Level Meter",
   "Lightning Protection Unit Tester",
   "Multimeter",
-  "Network Performance Tester/analyzer (10 G)",
+  "Network Performance Tester_analyzer (10 G)",
   "Network cable tester (LAN Tester)",
   "OTDR",
   "Optic Power Meter (OPM)",
-  "Optic Power Source (OPS/OLS)",
+  "Optic Power Source (OPS_OLS)",
   "Optical Cable Path Detector",
   "Optical Fiber Splicer",
   "Portable Field Strenght Tester (Spectrum Analyzer)",
-  "Power Meter / Dynamometer",
+  "Power Meter _ Dynamometer",
   "Telephone GSMR (OPH)",
   "Temperature and humidity meter",
   "Teropong Binocular (Telescope)",
@@ -34,8 +34,43 @@ export const INSTRUMENTS = [
   "VSWR Tester (Standing wave ratio tester)",
   "Video Surveillence Tester",
   "kompas Gonometer",
-  "portable GSM-R / GPRS Network drive test device (501)"
+  "portable GSM-R _ GPRS Network drive test device (501)"
 ];
+
+/**
+ * Nama alternatif -> nama kanonik yang benar-benar ada sebagai file di Drive.
+ *
+ * Empat alat di bawah NAMANYA DITULIS DENGAN "/" di dokumen aslinya, tetapi
+ * Google Drive TIDAK MENGIZINKAN karakter "/" di nama file - saat diunggah,
+ * "/" berubah jadi "_" (spasi di sekitarnya tetap). Jadi nama bertanda "/"
+ * tetap diterima di formulir (orang lapangan mengetiknya begitu), lalu
+ * diterjemahkan ke nama file yang sebenarnya.
+ *
+ * Daftar INSTRUMENTS di atas memakai nama FILE (pakai "_") supaya cocok dengan
+ * isi Drive; alias ini yang membuat penulisan asli tetap bisa dipakai.
+ */
+export const INSTRUMENT_ALIASES = {
+  "Network Performance Tester/analyzer (10 G)": "Network Performance Tester_analyzer (10 G)",
+  "Optic Power Source (OPS/OLS)": "Optic Power Source (OPS_OLS)",
+  "Power Meter / Dynamometer": "Power Meter _ Dynamometer",
+  "portable GSM-R / GPRS Network drive test device (501)": "portable GSM-R _ GPRS Network drive test device (501)"
+};
+
+/**
+ * Nama instrumen -> nama file .xlsx yang dipakai di Drive.
+ * Terima nama kanonik maupun alias (beda huruf besar/kecil & spasi juga aman).
+ */
+export function resolveInstrumentName(nama) {
+  const raw = String(nama || "").trim();
+  if (!raw) return raw;
+  const kunci = (s) => String(s || "").replace(/\s+/g, " ").trim().toLowerCase();
+  const target = kunci(raw);
+  for (const [alias, kanonik] of Object.entries(INSTRUMENT_ALIASES)) {
+    if (kunci(alias) === target || kunci(kanonik) === target) return kanonik;
+  }
+  const kanonik = INSTRUMENTS.find((i) => kunci(i) === target);
+  return kanonik || raw;
+}
 
 export const INSTRUMENT_ITEMS = [
   {

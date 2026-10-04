@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { INSTRUMENTS, INSTRUMENT_ITEMS, INSTRUMENT_SLOT_MAP } from '../config/instruments';
+import { INSTRUMENTS, INSTRUMENT_ITEMS, INSTRUMENT_SLOT_MAP, INSTRUMENT_ALIASES } from '../config/instruments';
 import { submitInstrumentChecksheet, previewSlot } from '../lib/cfillService';
 import { useToast } from '../components/Toast';
 import LocationNoteInput, { serializeLocationNote } from '../components/LocationNoteInput';
@@ -82,7 +82,14 @@ export default function InstrumenPage() {
               onChange={(e) => setNamaInstrumen(e.target.value)}
             />
             <datalist id="instrumentList">
-              {INSTRUMENTS.map((i) => <option key={i} value={i} />)}
+              {/* Yang DITAMPILKAN nama asli dari dokumen (mis. "Power Meter /
+                  Dynamometer"), tetapi yang DIKIRIM nama file Drive-nya (pakai
+                  "_") - Drive tidak mengizinkan "/" di nama file. Pemetaannya
+                  ada di config/instruments.js (INSTRUMENT_ALIASES). */}
+              {INSTRUMENTS.map((kanonik) => {
+                const alias = Object.keys(INSTRUMENT_ALIASES).find((a) => INSTRUMENT_ALIASES[a] === kanonik);
+                return <option key={kanonik} value={alias || kanonik} />;
+              })}
             </datalist>
           </div>
           <div className="field">

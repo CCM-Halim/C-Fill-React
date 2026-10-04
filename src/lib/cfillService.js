@@ -5,10 +5,10 @@
  * yang sudah ada di dalamnya - BUKAN menambah baris baru di bawah.
  */
 import { writeMonthlySlot, writeMatrixSlot, getSpreadsheetUrl, getSheetGid, computeSlotRow, readSlotRow, writeVerificationRow, findNextEmptyRow, writeEntryExitRow, readEntryExitDates, getRowCellValues, resolveTabName, readRawRange, listSheetTabs } from './sheetsApi';
-import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, uploadPublicImage, findFolderContaining, replaceFileContent, makeFilePublic, readFileContentAsText, writeFileContentAsText, extractDriveFileId } from './driveApi';
+import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConvertSiteSpreadsheet, findAllSheetsForName, uploadPublicImage, findFolderContaining, replaceFileContent, makeFilePublic, readFileContentAsText, writeFileContentAsText, extractDriveFileId } from './driveApi';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
-import { INSTRUMENT_SLOT_MAP } from '../config/instruments';
+import { INSTRUMENT_SLOT_MAP, resolveInstrumentName } from '../config/instruments';
 import { SLOT_MAP_OVERRIDES } from '../config/slotMapOverrides';
 import { logActivity } from './activityLog';
 import { getCurrentUser } from './googleAuth';
@@ -30,6 +30,28 @@ const FOTO_MASUK_JALUR_FOLDER_ID = import.meta.env.VITE_FOTO_MASUK_JALUR_FOLDER_
 const FOTO_KELUAR_JALUR_FOLDER_ID = import.meta.env.VITE_FOTO_KELUAR_JALUR_FOLDER_ID;
 const REKAMAN_MASUK_JALUR_FOLDER_ID = import.meta.env.VITE_REKAMAN_MASUK_JALUR_FOLDER_ID;
 const REKAMAN_KELUAR_JALUR_FOLDER_ID = import.meta.env.VITE_REKAMAN_KELUAR_JALUR_FOLDER_ID;
+
+/**
+ * Ambil id spreadsheet Google Sheets milik sebuah site TANPA mengonversi.
+ * Dipakai jalur baca-saja (mis. cek nilai existing di form) - kalau file
+ * Sheets-nya memang belum pernah dibuat, hasilnya null dan pemanggil harus
+ * memperlakukannya sebagai "belum ada isian", bukan sebagai error.
+ */
+async function getSiteSpreadsheetId(bcFolderId, originalFileName) {
+  const found = await findAllSheetsForName(bcFolderId, originalFileName);
+  return found.length > 0 ? found[0].id : null;
+}
+
+/**
+ * Kandidat nama tab untuk sebuah kategori: nama utama dulu, baru alias.
+ * Sebagian file memakai nama tab yang berbeda penulisan dari config - mis.
+ * kategori "Telephone dan Softswitch AG" yang di 4 site (Halim CC, dst)
+ * tab-nya bernama pendek "Telephone AG (3,6M)". Keduanya nama yang sah,
+ * jadi dicoba berurutan (lihat lib/tabNames.js).
+ */
+function tabKandidat(category) {
+  return [category.sheetName, ...(category.sheetAliases || [])];
+}
 
 const BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
@@ -94,13 +116,30 @@ export async function checkMonthAlreadyFilled({ buildingCategory, siteName, cate
   if (!site) return { hasExisting: false, existingValues: {} };
 
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
-  const tabName = await resolveTabName(spreadsheetId, category.sheetName);
+  // CATATAN: fungsi ini HANYA MEMBACA nilai yang sudah ada, tidak menulis apa
+  // pun. Karena itu konversi .xlsx -> Google Sheets TIDAK dijalankan di sini -
+  // konversi makan waktu 10-20 detik dan sebelumnya ikut terpicu cuma karena
+  // teknisi MEMBUKA form (bukan menyimpan), sehingga terasa menggantung.
+  // Konversi dijalankan saat submit - lihat submitChecksheet.
+  const spreadsheetId = await getSiteSpreadsheetId(bcFolderId, site.originalFileName);
   const override = SLOT_MAP_OVERRIDES[site.originalFileName]?.[categoryId];
   const slotMap = override || category.slotMap;
-
   const row = computeSlotRow(slotMap, tanggal);
-  const existingValues = await getRowCellValues(spreadsheetId, tabName, row, slotMap.itemColumns);
+
+  // File Sheets belum pernah dibuat (= belum pernah diisi) -> tidak ada nilai
+  // existing, dan TIDAK perlu dikonversi cuma untuk memeriksa.
+  if (!spreadsheetId) return { hasExisting: false, existingValues: {} };
+
+  let existingValues = {};
+  try {
+    const tabName = await resolveTabName(spreadsheetId, tabKandidat(category));
+    existingValues = await getRowCellValues(spreadsheetId, tabName, row, slotMap.itemColumns);
+  } catch {
+    // Tab belum ada di file yang sudah dikonversi -> anggap belum ada isian.
+    // Cek ini bersifat informasi untuk dialog "sudah pernah diisi?" - gagal di
+    // sini TIDAK boleh menghalangi teknisi membuka & submit form.
+    return { hasExisting: false, existingValues: {} };
+  }
   const hasExisting = Object.values(existingValues).some((v) => v && v.trim());
   return { hasExisting, existingValues };
 }
@@ -122,7 +161,7 @@ export async function submitChecksheet({ buildingCategory, siteName, categoryId,
 
   const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
   const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
-  const tabName = await resolveTabName(spreadsheetId, category.sheetName);
+  const tabName = await resolveTabName(spreadsheetId, tabKandidat(category));
   const override = SLOT_MAP_OVERRIDES[site.originalFileName]?.[categoryId];
   const slotMap = override || category.slotMap;
 
@@ -151,7 +190,10 @@ export async function submitChecksheet({ buildingCategory, siteName, categoryId,
  */
 export async function submitInstrumentChecksheet({ namaInstrumen, tanggal, petugas, answers }) {
   requireFolderConfig(ROOT_INSTRUMEN_FOLDER_ID, 'VITE_ROOT_INSTRUMEN_FOLDER_ID');
-  const originalFileName = namaInstrumen + '.xlsx';
+  // Nama file di Drive tidak boleh memuat '/' - empat alat di daftar aslinya
+  // ditulis pakai '/' dan tersimpan sebagai '_'. Diterjemahkan di sini supaya
+  // penulisan aslinya tetap boleh diketik di formulir.
+  const originalFileName = resolveInstrumentName(namaInstrumen) + '.xlsx';
   const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(ROOT_INSTRUMEN_FOLDER_ID, originalFileName);
   const tabName = await resolveTabName(spreadsheetId, 'Instrumen Telekomunikasi');
 
@@ -525,10 +567,21 @@ export async function getJadwalKunjunganBulanIni() {
     // Struktur folder: [Root] / [Bulan, mis. "9. September"] / [file jadwal] -
     // ada 1 lapis folder bulan dulu SEBELUM file-nya, jadi cari folder bulan ini
     // dulu, baru cari file di dalamnya (bukan cari file langsung di folder root).
+    // Folder bulan di Drive TIDAK seragam: root memakai "9. September" (tanpa
+    // nol di depan) sedangkan folder Dokumentasi Kegiatan memakai
+    // "09. September". Pencocokan karena itu mengabaikan AWALAN NOMOR-nya dan
+    // mencari nama bulan sebagai kata utuh, supaya kedua bentuk itu ketemu.
     const entries = await listFilesInFolder(JADWAL_KUNJUNGAN_FOLDER_ID);
-    const monthFolder = entries.find((f) => f.name.includes(namaBulan));
+    const bulanLower = namaBulan.toLowerCase();
+    const cocokBulan = (nama) => {
+      const n = String(nama || '').toLowerCase();
+      const tanpaNomor = n.replace(/^\s*\d+\s*[.\-)]?\s*/, '');
+      return tanpaNomor.startsWith(bulanLower) || n.includes(bulanLower);
+    };
+    const monthFolder = entries.find((f) => cocokBulan(f.name));
     if (!monthFolder) {
-      return { available: false, reason: `Folder bulan "${namaBulan}" belum ditemukan di folder Jadwal Kunjungan, dan admin belum tempel link manual. Pastikan ada folder yang namanya mengandung "${namaBulan}", atau minta admin tempel link lewat Dashboard.` };
+      const ada = entries.map((f) => `"${f.name}"`).join(', ') || '(folder kosong)';
+      return { available: false, reason: `Folder bulan "${namaBulan}" belum ditemukan di folder Jadwal Kunjungan, dan admin belum tempel link manual. Folder yang ada di sana: ${ada}. Pastikan salah satunya memuat nama bulan "${namaBulan}", atau minta admin tempel link lewat Dashboard.` };
     }
 
     const filesInMonth = await listFilesInFolder(monthFolder.id);
@@ -541,7 +594,11 @@ export async function getJadwalKunjunganBulanIni() {
     }
   }
 
-  const tabName = await resolveTabName(target.id, 'Jadwal Kunjungan MR');
+  // Nama tab jadwal di sebagian bulan berbeda: "jadwal kunjungan MR New"
+  // (Januari & Februari) sementara yang lain "Jadwal Kunjungan MR". Kandidat
+  // dicoba berurutan; kalau tidak ada satu pun yang cocok, error yang dilempar
+  // menyebutkan daftar tab yang benar-benar ada di file itu.
+  const tabName = await resolveTabName(target.id, ['Jadwal Kunjungan MR', 'Jadwal Kunjungan MR New', 'jadwal kunjungan MR New']);
   // Range sampai kolom O: L:O = kolom bantu rencana (1M/3M/6M/1Y) yang dipakai
   // sebagai pembanding angka rencana. Parsing-nya ada di lib/jadwalProgress.js
   // (modul murni, ada test-nya di test/jadwalProgress.test.mjs).
@@ -616,9 +673,15 @@ export async function getAllLogGangguan() {
 
   const items = [];
   const gagal = [];
+  const kosong = [];
   for (const h of hasil) {
-    if (h.error) gagal.push(`${h.tab}: ${h.error}`);
-    items.push(...parseGangguanRows(h.rows, { tab: h.tab }));
+    if (h.error) { gagal.push(`${h.tab}: ${h.error}`); continue; }
+    const parsed = parseGangguanRows(h.rows, { tab: h.tab });
+    // Tab yang isinya CUMA baris template (belum pernah ada gangguan nyata)
+    // dibedakan dari tab yang benar-benar tidak terbaca - supaya tidak
+    // dilaporkan sebagai masalah.
+    if (parsed.length === 0) kosong.push(h.tab);
+    items.push(...parsed);
   }
 
   if (items.length === 0) {
@@ -637,6 +700,10 @@ export async function getAllLogGangguan() {
     ringkasan: summarizeGangguan(items),
     sheetUrl: `https://docs.google.com/spreadsheets/d/${LOG_GANGGUAN_FILE_ID}/edit`,
     gagalDibaca: gagal,
+    // Tab yang ada tapi belum punya satu pun kejadian nyata (isinya masih
+    // baris template). Normal kalau memang belum pernah ada gangguan di
+    // kategori itu - ditampilkan supaya jelas, bukan dianggap error.
+    tabKosong: kosong,
   };
 }
 

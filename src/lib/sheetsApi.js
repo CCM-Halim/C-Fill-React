@@ -5,6 +5,7 @@
  * (lihat config/categories.js), hasil pemetaan struktur template Excel asli.
  */
 import { getValidAccessToken } from './googleAuth';
+import { matchTabNameFromCandidates } from './tabNames';
 
 const SHEETS_BASE = 'https://sheets.googleapis.com/v4/spreadsheets';
 
@@ -412,45 +413,58 @@ export async function readRawRange(spreadsheetId, tabName, range) {
 }
 
 /**
- * Cari nama tab yang SEBENARNYA ada di spreadsheet, toleran terhadap variasi
- * kecil (spasi beda, dll) - mis. data kita simpan "Baterai HFSPS Grup 1
- * (1M,3M)" tapi beberapa file aslinya ternyata "Grup1" (tanpa spasi). Kalau
- * ditulis pakai nama yang PERSIS beda spasi begini, Google Sheets API gagal
- * total ("Unable to parse range") karena dianggap sheet itu nggak ada.
+ * Cari nama tab yang SEBENARNYA ada di spreadsheet.
  *
- * Perbandingan dilakukan setelah SEMUA SPASI dihapus & disamakan huruf kecil,
- * jadi "Grup 1" vs "Grup1" vs "GRUP 1" semua dianggap cocok. Di-cache di
- * memori per sesi (folderId+expectedName) biar nggak fetch metadata berulang
- * tiap submit ke kategori yang sama.
+ * Aturan pencocokan (dari paling ketat ke paling longgar) ada di
+ * lib/tabNames.js - murni, ada test-nya. Yang ditangani:
+ *
+ *   - beda spasi & huruf besar/kecil
+ *     "Baterai HFSPS Grup 1 (1M,3M)" == "Baterai HFSPS Grup1 (1M,3M)"
+ *     "Lembar Verifikasi pekerjaan"  == "Lembar Verifikasi Pekerjaan"
+ *   - akhiran pendek
+ *     "jadwal kunjungan MR New"      <- "Jadwal Kunjungan MR"
+ *   - nama terpotong batas 31 karakter Excel (Sheets memotong lagi dengan
+ *     aturan sendiri, jadi hasilnya bisa beda 1-3 karakter dari file .xlsx)
+ *     "Pemeriksaan jalur FO (1M, 3M, 1Y)" <- "Pemeriksaan jalur FO (1M, 3M, 1"
+ *   - alias nama kategori yang memang dipakai beda di sebagian file
+ *     "Telephone AG (3,6M)"          <- "Telephone dan Softswitch AG (3M, 6M)"
+ *
+ * HASILNYA DI-CACHE, TERMASUK KEGAGALANNYA - kalau dulu gagal lalu sekarang
+ * pakai nama asli, tiap submit akan menembak Sheets dengan tab yang tidak ada
+ * dan error "Unable to parse range" muncul berulang. Sekarang kegagalan
+ * dilempar SEKALI dengan daftar tab yang benar-benar ada.
+ *
+ * `expected` boleh berupa array (nama utama + alias) - dicoba berurutan.
  */
 const tabNameCache = new Map();
 
-export async function resolveTabName(spreadsheetId, expectedTabName) {
-  const cacheKey = spreadsheetId + '|' + expectedTabName;
-  if (tabNameCache.has(cacheKey)) return tabNameCache.get(cacheKey);
+export async function resolveTabName(spreadsheetId, expected) {
+  const kandidat = (Array.isArray(expected) ? expected : [expected])
+    .map((s) => String(s || '').trim())
+    .filter(Boolean);
+  if (kandidat.length === 0) throw new Error('resolveTabName: nama tab kosong.');
+
+  const cacheKey = spreadsheetId + '|' + kandidat.join('\u0000');
+  const cached = tabNameCache.get(cacheKey);
+  if (cached) {
+    if (cached.error) throw new Error(cached.error);
+    return cached.tab;
+  }
 
   const meta = await sheetsFetch(`/${spreadsheetId}?fields=sheets.properties`);
   const titles = meta.sheets.map((s) => s.properties.title);
 
-  // 1. Cocok persis - kasus normal, paling umum
-  if (titles.includes(expectedTabName)) {
-    tabNameCache.set(cacheKey, expectedTabName);
-    return expectedTabName;
+  const { tab, dari } = matchTabNameFromCandidates(titles, kandidat);
+  if (tab) {
+    tabNameCache.set(cacheKey, { tab });
+    return tab;
   }
 
-  // 2. Cocok setelah spasi & huruf besar/kecil dinormalisasi
-  const normalize = (s) => s.replace(/\s+/g, '').toLowerCase();
-  const normalizedExpected = normalize(expectedTabName);
-  const match = titles.find((t) => normalize(t) === normalizedExpected);
-  if (match) {
-    tabNameCache.set(cacheKey, match);
-    return match;
-  }
-
-  // 3. Tidak ketemu sama sekali - pakai nama asli, biar error yang muncul
-  // tetap jelas ("sheet tidak ditemukan") daripada disamarkan jadi error lain.
-  tabNameCache.set(cacheKey, expectedTabName);
-  return expectedTabName;
+  const pesan = `Tab "${kandidat.join('" / "')}" tidak ada di spreadsheet ini. ` +
+    `Tab yang benar-benar ada (${titles.length}): ${titles.join(' | ')}. ` +
+    `Perbaiki nama tab di file Drive-nya, atau samakan "sheetName" di config kategori.`;
+  tabNameCache.set(cacheKey, { error: pesan });
+  throw new Error(pesan);
 }
 
 /**

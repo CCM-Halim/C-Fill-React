@@ -12,6 +12,7 @@
  * (dianggap tidak ada) padahal filenya betul-betul ada.
  */
 import { getValidAccessToken } from './googleAuth';
+import { nameVariants } from './tabNames';
 
 const DRIVE_BASE = 'https://www.googleapis.com/drive/v3';
 const UPLOAD_BASE = 'https://www.googleapis.com/upload/drive/v3';
@@ -84,7 +85,7 @@ export async function findAllFilesByName(folderId, name, mimeType) {
   const q = encodeURIComponent(
     `'${folderId}' in parents and name = '${name.replace(/'/g, "\\'")}'${mimeFilter} and trashed = false`
   );
-  const list = await driveFetch(`/files?q=${q}&fields=files(id,name,mimeType,createdTime)&corpora=allDrives&orderBy=createdTime`);
+  const list = await driveFetch(`/files?q=${q}&fields=files(id,name,mimeType,createdTime,modifiedTime)&corpora=allDrives&orderBy=createdTime`);
   return list.files || [];
 }
 
@@ -113,9 +114,12 @@ export async function findFileByExactName(folderId, name, mimeType) {
  */
 export async function findAllSheetsForName(folderId, originalFileName) {
   const SHEETS_MIME = 'application/vnd.google-apps.spreadsheet';
-  const withoutExt = originalFileName.replace(/\.xlsx$/i, '');
 
-  const names = withoutExt === originalFileName ? [originalFileName] : [originalFileName, withoutExt];
+  // nameVariants mencakup 4 bentuk sekaligus: nama apa adanya, tanpa ".xlsx",
+  // versi '/' -> '_' (aturan Drive), dan versi itu tanpa ".xlsx". Untuk nama
+  // file biasa (tanpa '/') hasilnya cuma 2 varian - sama seperti sebelumnya,
+  // jadi tidak ada tambahan permintaan API di kasus normal.
+  const names = nameVariants(originalFileName);
 
   const results = await Promise.all(
     names.map((n) => findAllFilesByName(folderId, n, SHEETS_MIME))
@@ -245,11 +249,46 @@ function saveCacheEntry(key, spreadsheetId) {
   }
 }
 
+/**
+ * Ringkas daftar salinan Google Sheets dengan nama sama supaya bisa
+ * DITAMPILKAN ke user (id + tanggal), bukan cuma disebut jumlahnya. Tanpa
+ * id, teknisi/admin tidak bisa membuka salinan mana yang mau digabung/dihapus
+ * - dan itulah satu-satunya tindakan yang benar untuk masalah ini.
+ */
+function ringkasDuplikat(files) {
+  return files.map((f, i) => ({
+    urutan: i + 1,
+    id: f.id,
+    nama: f.name,
+    dipakai: i === 0,
+    dibuat: (f.createdTime || '').slice(0, 10),
+    diubah: (f.modifiedTime || '').slice(0, 10),
+    url: `https://docs.google.com/spreadsheets/d/${f.id}/edit`
+  }));
+}
+
+/**
+ * Peringatan duplikat yang BISA DITINDAKLANJUTI: menyebut file mana yang
+ * dipakai (dengan tanggal) dan salinan mana saja yang diabaikan.
+ *
+ * Catatan: aplikasi TIDAK pernah menghapus file berisi data - salinan hanya
+ * dihapus otomatis kalau baru saja dibuat sendiri (lihat resolveSiteSpreadsheet),
+ * jadi penggabungan & penghapusan salinan lama tetap keputusan manual admin.
+ */
+function peringatanDuplikat(jumlah, namaDipakai, duplikat) {
+  if (jumlah <= 1) return null;
+  const lain = (duplikat || []).filter((d) => !d.dipakai);
+  const daftar = lain.map((d) => `${d.urutan}. dibuat ${d.dibuat}, terakhir diubah ${d.diubah}`).join('; ');
+  return `Ditemukan ${jumlah} file Google Sheets bernama sama di folder ini. Aplikasi memakai yang PALING LAMA dibuat ("${namaDipakai}"). ` +
+    `Salinan yang diabaikan - ${daftar}. ` +
+    `Kalau ada isian di salinan lain, gabungkan dulu ke file yang dipakai, lalu hapus salinan sisanya.`;
+}
+
 export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {
   const cacheKey = folderId + '|' + originalFileName;
   const cache = loadCache();
   if (cache[cacheKey]) {
-    return { spreadsheetId: cache[cacheKey], duplicateWarning: null };
+    return { spreadsheetId: cache[cacheKey], duplicateWarning: null, duplicates: null, usedName: null };
   }
 
   // Kalau ada panggilan lain (tab yang sama) yang sedang menyiapkan spreadsheet
@@ -287,17 +326,29 @@ async function resolveSiteSpreadsheet(folderId, originalFileName, cacheKey) {
       // terpilih - bukan hasil acak.
       const chosen = allSheets[0];
       saveCacheEntry(cacheKey, chosen.id);
-      const duplicateWarning = allSheets.length > 1
-        ? `Ditemukan ${allSheets.length} file Google Sheets dengan nama sama di folder ini. Aplikasi selalu memakai yang paling lama dibuat - kalau ada yang mengedit salinan lain secara manual, editan itu tidak akan terbaca. Sebaiknya hapus salinan duplikat dan gabungkan datanya secara manual.`
-        : null;
-      return { spreadsheetId: chosen.id, duplicateWarning };
+      const duplikat = allSheets.length > 1 ? ringkasDuplikat(allSheets) : null;
+      return {
+        spreadsheetId: chosen.id,
+        usedName: chosen.name,
+        duplicates: duplikat,
+        duplicateWarning: peringatanDuplikat(allSheets.length, chosen.name, duplikat)
+      };
     }
 
     // Belum ketemu. Kalau file .xlsx aslinya JUGA belum ada, berarti ini
     // memang site yang belum pernah dikonversi sama sekali -> langsung
     // konversi, tidak perlu ngulang-ngulang pencarian (hemat waktu ~4,5 detik
     // per site baru).
-    const xlsx = await findFileByExactName(folderId, originalFileName, xlsxMime);
+    // .xlsx aslinya juga dicari dengan varian nama (nama file di Drive tidak
+    // boleh memuat '/', jadi "Power Meter / Dynamometer" tersimpan sebagai
+    // "Power Meter _ Dynamometer").
+    let xlsx = await findFileByExactName(folderId, originalFileName, xlsxMime);
+    if (!xlsx) {
+      for (const v of nameVariants(originalFileName)) {
+        xlsx = await findFileByExactName(folderId, v, xlsxMime);
+        if (xlsx) break;
+      }
+    }
     if (!xlsx) {
       throw new Error(
         `File asli "${originalFileName}" tidak ditemukan di folder site ini. ` +
@@ -319,10 +370,13 @@ async function resolveSiteSpreadsheet(folderId, originalFileName, cacheKey) {
     if (afterWait.length > 0) {
       const chosen = afterWait[0];
       saveCacheEntry(cacheKey, chosen.id);
-      const duplicateWarning = afterWait.length > 1
-        ? `Ditemukan ${afterWait.length} file Google Sheets dengan nama sama di folder ini. Aplikasi selalu memakai yang paling lama dibuat - kalau ada yang mengedit salinan lain secara manual, editan itu tidak akan terbaca. Sebaiknya hapus salinan duplikat dan gabungkan datanya secara manual.`
-        : null;
-      return { spreadsheetId: chosen.id, duplicateWarning };
+      const duplikat = afterWait.length > 1 ? ringkasDuplikat(afterWait) : null;
+      return {
+        spreadsheetId: chosen.id,
+        usedName: chosen.name,
+        duplicates: duplikat,
+        duplicateWarning: peringatanDuplikat(afterWait.length, chosen.name, duplikat)
+      };
     }
 
     // Benar-benar tidak ada -> konversi. SETELAH konversi selesai, pastikan
@@ -357,12 +411,14 @@ async function resolveSiteSpreadsheet(folderId, originalFileName, cacheKey) {
       saveCacheEntry(cacheKey, winner.id);
       return {
         spreadsheetId: winner.id,
+        usedName: winner.name,
+        duplicates: null,
         duplicateWarning: 'Ada perangkat lain yang lebih dulu membuat file ini. Salinan kosong yang baru dibuat otomatis dibuang; yang dipakai adalah file yang lebih dulu ada.'
       };
     }
 
     saveCacheEntry(cacheKey, converted.id);
-    return { spreadsheetId: converted.id, duplicateWarning: null };
+    return { spreadsheetId: converted.id, usedName: converted.name, duplicates: null, duplicateWarning: null };
   }
 }
 
