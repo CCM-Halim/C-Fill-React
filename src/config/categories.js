@@ -3693,6 +3693,7 @@ export const CATEGORIES = [
   {
     "id": "cat30",
     "sheetName": "HFSPS (1Y)",
+    "sheetAliases": ["HFSPS (6M, 1Y)"],
     "title": "Lembar Pemeriksaan dan Perawatan Peralatan High-frequency switching power supply (6 Bulanan, 1 Tahunan)",
     "short_name": "High-frequency switching power supply",
     "items": [

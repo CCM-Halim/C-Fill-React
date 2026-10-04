@@ -191,6 +191,38 @@ test('alias: tidak ada yang cocok -> null (bukan menebak)', () => {
 });
 
 // ---------------------------------------------------------------------------
+// cat30 HFSPS - kasus K27+985 di mana (1Y) digabung ke tab (6M, 1Y)
+// ---------------------------------------------------------------------------
+
+test('cat30: K27+985 memakai tab "HFSPS (6M, 1Y)" untuk pemeriksaan 1 tahunan', () => {
+  // Di 31 site lain namanya "HFSPS (1Y)". Di K27+985 pemeriksaan tahunannya
+  // MEMANG dijadikan satu dengan tab (6M, 1Y) - dikonfirmasi Jo 4 Okt 2026,
+  // dan dibuktikan lewat perbandingan merged-cell: susunan baris tab itu
+  // identik dengan tab "HFSPS (1Y)" di K12+075, jadi slotMap yang sama tetap
+  // menulis di baris yang benar.
+  const kandidat = ['HFSPS (1Y)', 'HFSPS (6M, 1Y)'];
+
+  // Site biasa: nama utama yang menang.
+  assert.deepEqual(
+    matchTabNameFromCandidates(['HFSPS (1Y)', 'HFSPS (1M, 3M)'], kandidat),
+    { tab: 'HFSPS (1Y)', dari: 'HFSPS (1Y)' }
+  );
+
+  // K27+985: cuma ada (6M, 1Y) -> alias yang menangkap.
+  assert.deepEqual(
+    matchTabNameFromCandidates(['HFSPS (1M, 3M)', 'HFSPS (6M, 1Y)'], kandidat),
+    { tab: 'HFSPS (6M, 1Y)', dari: 'HFSPS (6M, 1Y)' }
+  );
+});
+
+test('cat30: alias TIDAK membuat (1Y) cocok dengan (1M, 3M)', () => {
+  // Yang paling berbahaya kalau aturan pencocokan terlalu longgar: nilai
+  // pemeriksaan tahunan tertulis ke tab bulanan/triwulanan.
+  const kandidat = ['HFSPS (1Y)', 'HFSPS (6M, 1Y)'];
+  assert.equal(matchTabNameFromCandidates(['HFSPS (1M, 3M)'], kandidat).tab, null);
+});
+
+// ---------------------------------------------------------------------------
 // normalizeName
 // ---------------------------------------------------------------------------
 

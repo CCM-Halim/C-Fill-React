@@ -57,7 +57,10 @@ jalankan "9. Nama tab setelah perbaikan (semua site x kategori)" \
 jalankan "10. Instrumen setelah perbaikan (nama file memuat /)" \
   node scripts/qa/15-instrumen-pasca-fix.mjs
 
-jalankan "11. UI produksi (Chrome headless)" \
+jalankan "11. Kasus khusus K27+985 HFSPS (alias 6M,1Y)" \
+  npx vite-node -c scripts/qa/vite.qa.config.mjs scripts/qa/17-k27-hfsps.mjs
+
+jalankan "12. UI produksi (Chrome headless)" \
   node scripts/qa/10-ui.mjs
 
 echo ""
