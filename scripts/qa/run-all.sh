@@ -63,6 +63,9 @@ jalankan "11. Kasus khusus K27+985 HFSPS (alias 6M,1Y)" \
 jalankan "12. UI produksi (Chrome headless)" \
   node scripts/qa/10-ui.mjs
 
+jalankan "13. Tombol Ulangi unggah Dokumentasi (klik nyata)" \
+  bash scripts/qa/run-20.sh
+
 echo ""
 echo "══════════════════════════════════════════════════════════════════"
 echo "  UJI TULIS DI SANDBOX (salinan Drive, dihapus lagi)"

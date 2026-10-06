@@ -414,6 +414,20 @@ a{color:var(--accent);}
 
 .upload-progress{margin-top:12px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-soft);}
 
+/* Baris hasil upload: nama+status di kiri, tombol Ulangi di kanan.
+   Di HP barisnya menumpuk kalau namanya panjang, biar tombol tetap kelihatan. */
+.upload-row{display:flex;align-items:center;gap:8px;justify-content:space-between;}
+.upload-row-nama{flex:1 1 auto;min-width:0;overflow-wrap:anywhere;}
+
+.btn-ulangi{
+  flex:0 0 auto;padding:5px 12px;border-radius:999px;cursor:pointer;
+  font-size:12px;font-weight:600;line-height:1.2;
+  border:1px solid var(--accent);background:transparent;color:var(--accent);
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-ulangi:active{background:var(--accent);color:#fff;}
+.btn-ulangi:disabled{opacity:.45;cursor:default;border-color:var(--border-soft);color:var(--ink-soft);}
+
 .spinner{
   width:15px;height:15px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;
   border-radius:50%;display:inline-block;animation:spin .6s linear infinite;

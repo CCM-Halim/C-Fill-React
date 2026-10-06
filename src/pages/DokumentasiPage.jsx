@@ -3,6 +3,7 @@ import { BUILDING_CATEGORIES } from '../config/sites';
 import { getSitesForBuildingCategory, uploadDocumentation, listDocumentationFiles } from '../lib/cfillService';
 import { useToast } from '../components/Toast';
 import { compressImageIfNeeded, blobToFile } from '../lib/imageCompression';
+import { withRetry, pesanGagal, isTransientError } from '../lib/uploadRetry';
 
 function formatSize(bytes) {
   if (bytes < 1024) return bytes + ' B';
@@ -18,6 +19,9 @@ export default function DokumentasiPage() {
   const [uploadRows, setUploadRows] = useState([]);
   const [docHistory, setDocHistory] = useState(null);
   const [uploading, setUploading] = useState(false);
+  // Revisi form input file - dipakai utk MENGHAPUS pilihan lama dari kotak
+  // input setelah upload (biar user tidak tidak sengaja mengunggah ulang).
+  const [fileInputKey, setFileInputKey] = useState(0);
 
   const sites = buildingCategory ? getSitesForBuildingCategory(buildingCategory) : [];
 
@@ -45,6 +49,32 @@ export default function DokumentasiPage() {
     }
   }
 
+  /**
+   * Unggah SATU file: kompres -> unggah, dengan percobaan ulang otomatis kalau
+   * jaringannya kedip. Dipakai bersama oleh proses borongan (tombol Upload)
+   * maupun tombol "Ulangi" per baris - supaya jalur kodenya cuma satu.
+   */
+  async function uploadSatu(file, laporStatus) {
+    laporStatus('Mengompres...');
+
+    const blob = await compressImageIfNeeded(file);
+    const fileToUpload = blob === file ? file : blobToFile(blob, file.name);
+    const savedInfo = blob !== file
+      ? ` (${formatSize(file.size)} → ${formatSize(fileToUpload.size)})`
+      : '';
+
+    await withRetry(
+      () => uploadDocumentation({ buildingCategory, siteName, file: fileToUpload }),
+      {
+        attempts: 3,
+        baseDelayMs: 800,
+        onRetry: (n, total) => laporStatus(`Mengupload${savedInfo} — koneksi terputus, percobaan ${n}/${total}...`)
+      }
+    );
+
+    return { savedInfo };
+  }
+
   async function handleUpload() {
     if (!buildingCategory || !siteName) {
       showToast('Pilih Kategori Bangunan dan Site terlebih dahulu.', true);
@@ -55,37 +85,103 @@ export default function DokumentasiPage() {
       return;
     }
     setUploading(true);
-    const rows = files.map((f) => ({ name: f.name, status: 'Mengupload...' }));
+
+    const rows = files.map((f) => ({ name: f.name, status: 'Menunggu...', _file: f }));
     setUploadRows(rows);
+    const ubah = (i, status) => {
+      rows[i] = { ...rows[i], status };
+      setUploadRows([...rows]);
+    };
 
-    for (let i = 0; i < files.length; i++) {
+    let gagal = 0;
+    for (let i = 0; i < rows.length; i++) {
       try {
-        const original = files[i];
-        rows[i] = { name: original.name, status: 'Mengompres...' };
-        setUploadRows([...rows]);
-
-        const compressedBlob = await compressImageIfNeeded(original);
-        const fileToUpload = compressedBlob === original ? original : blobToFile(compressedBlob, original.name);
-        const savedInfo = compressedBlob !== original
-          ? ` (${formatSize(original.size)} → ${formatSize(fileToUpload.size)})`
-          : '';
-
-        rows[i] = { name: original.name, status: 'Mengupload...' + savedInfo };
-        setUploadRows([...rows]);
-
-        await uploadDocumentation({ buildingCategory, siteName, file: fileToUpload });
-        rows[i] = { name: original.name, status: '✅ berhasil' + savedInfo };
+        const { savedInfo } = await uploadSatu(rows[i]._file, (s) => ubah(i, s));
+        rows[i] = { ...rows[i], status: '✅ berhasil' + savedInfo, _file: null };
       } catch (e) {
-        rows[i] = { name: files[i].name, status: '❌ gagal: ' + e.message };
+        gagal++;
+        rows[i] = { ...rows[i], status: '❌ gagal: ' + pesanGagal(e) };
       }
       setUploadRows([...rows]);
     }
 
     setUploading(false);
     setFiles([]);
-    showToast('Proses upload selesai.');
+    setFileInputKey((k) => k + 1); // bersihkan kotak input file
+    showToast(gagal === 0
+      ? 'Proses upload selesai.'
+      : `Selesai — ${rows.length - gagal} berhasil, ${gagal} gagal. Tekan "Ulangi" pada file yang gagal.`, gagal > 0);
     refreshHistory();
   }
+
+  /**
+   * Unggah ulang file yang gagal, tanpa perlu memilih lagi dari penyimpanan HP.
+   * File-nya masih dipegang di memori (rows._file), jadi tidak perlu akses galeri.
+   * Bisa dipakai berulang sampai berhasil.
+   */
+  async function handleRetry(i) {
+    const row = uploadRows[i];
+    if (!row?._file) {
+      showToast('File ini tidak lagi bisa diulang - silakan pilih ulang dari penyimpanan.', true);
+      return;
+    }
+    setUploading(true);
+    const rows = [...uploadRows];
+    rows[i] = { ...rows[i], status: 'Mengompres...' };
+    setUploadRows(rows);
+
+    try {
+      const { savedInfo } = await uploadSatu(row._file, (s) => {
+        rows[i] = { ...rows[i], status: s };
+        setUploadRows([...rows]);
+      });
+      rows[i] = { ...rows[i], status: '✅ berhasil' + savedInfo, _file: null };
+      setUploadRows([...rows]);
+      showToast('Berhasil diunggah pada percobaan ulang.');
+      refreshHistory();
+    } catch (e) {
+      rows[i] = { ...rows[i], status: '❌ gagal: ' + pesanGagal(e) };
+      setUploadRows([...rows]);
+      showToast('Masih gagal — cek sinyal lalu tekan Ulangi lagi.', true);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function handleRetrySemua() {
+    const gagalIdx = uploadRows.map((r, i) => (r._file ? i : -1)).filter((i) => i >= 0);
+    if (gagalIdx.length === 0) {
+      showToast('Tidak ada file gagal yang bisa diulang.', true);
+      return;
+    }
+    setUploading(true);
+    let masihGagal = 0;
+    for (const i of gagalIdx) {
+      const rows = [...uploadRows];
+      try {
+        rows[i] = { ...rows[i], status: 'Mengompres...' };
+        setUploadRows(rows);
+        const { savedInfo } = await uploadSatu(rows[i]._file, (s) => {
+          const r2 = [...uploadRows];
+          r2[i] = { ...r2[i], status: s };
+          setUploadRows(r2);
+        });
+        rows[i] = { ...rows[i], status: '✅ berhasil' + savedInfo, _file: null };
+      } catch (e) {
+        masihGagal++;
+        rows[i] = { ...rows[i], status: '❌ gagal: ' + pesanGagal(e) };
+      }
+      setUploadRows([...rows]);
+    }
+    setUploading(false);
+    showToast(masihGagal === 0
+      ? `Semua file berhasil diunggah (${gagalIdx.length} file).`
+      : `Masih ada ${masihGagal} file gagal — coba lagi saat sinyal lebih baik.`, masihGagal > 0);
+    refreshHistory();
+  }
+
+  const jumlahGagal = uploadRows.filter((r) => r._file).length;
+  const adaHasil = uploadRows.length > 0;
 
   return (
     <section>
@@ -97,6 +193,8 @@ export default function DokumentasiPage() {
           site untuk bulan ini sudah ada, file akan ditambahkan ke situ (bukan bikin folder baru).
           Foto otomatis dikompres kalau ukurannya lebih dari 800 KB (kualitas & resolusi
           diturunkan bertahap seminimal mungkin, bukan dokumen/PDF - itu diupload apa adanya).
+          Kalau koneksi sempat putus, file dicoba ulang 3x sendiri; kalau tetap gagal, tekan
+          tombol <strong>Ulangi</strong> tanpa perlu memilih lagi dari penyimpanan.
         </p>
 
         <div className="field-grid">
@@ -119,11 +217,13 @@ export default function DokumentasiPage() {
         <div className="field">
           <label>Pilih File (foto / dokumen, bisa lebih dari 1)</label>
           <input
+            key={fileInputKey}
             type="file"
             className="input"
             multiple
             onChange={(e) => setFiles(Array.from(e.target.files))}
           />
+          {files.length > 0 && <div className="muted" style={{ marginTop: 6 }}>{files.length} file dipilih.</div>}
         </div>
 
         <button className="btn btn-primary btn-block" onClick={handleUpload} disabled={uploading}>
@@ -131,9 +231,23 @@ export default function DokumentasiPage() {
           {uploading ? 'Mengupload...' : 'Upload Dokumentasi'}
         </button>
 
-        {uploadRows.length > 0 && (
+        {adaHasil && (
           <div className="upload-progress">
-            {uploadRows.map((r, i) => <div key={i}>{r.name} — {r.status}</div>)}
+            {jumlahGagal > 0 && (
+              <button className="btn btn-outline btn-block" onClick={handleRetrySemua} disabled={uploading} style={{ marginBottom: 10 }}>
+                {uploading ? 'Mengulang...' : `Ulangi ${jumlahGagal} file yang gagal`}
+              </button>
+            )}
+            {uploadRows.map((r, i) => (
+              <div key={i} className="upload-row">
+                <span className="upload-row-nama">{r.name} — {r.status}</span>
+                {r._file && (
+                  <button className="btn-ulangi" onClick={() => handleRetry(i)} disabled={uploading}>
+                    Ulangi
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
         )}
       </div>
