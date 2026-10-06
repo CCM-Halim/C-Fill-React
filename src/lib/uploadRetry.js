@@ -80,6 +80,18 @@ export function pesanGagal(err) {
   if (/sesi login berakhir/i.test(pesan)) {
     return 'sesi login berakhir - silakan login ulang lalu coba lagi';
   }
+
+  // Status HTTP dari Drive: kode saja tidak berarti apa-apa buat teknisi.
+  const kode = pesan.match(/\b(4\d{2})\b/);
+  if (kode) {
+    const n = kode[1];
+    if (n === '401') return 'sesi login berakhir - silakan login ulang lalu coba lagi';
+    if (n === '403') return 'tidak punya izin menyimpan ke folder tujuan';
+    if (n === '404') return 'folder tujuan tidak ditemukan';
+    if (n === '409') return 'file ini sudah ada di folder tujuan';
+    return `permintaan ditolak Google (kode ${n})`;
+  }
+
   return pesan;
 }
 

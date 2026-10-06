@@ -128,21 +128,40 @@ if (!adaJudul) {
 }
 
 // ---- pilih kategori & site ----
+// Daftar site diambil dari Drive, jadi butuh waktu. Tunggu sampai benar-benar
+// ada isinya - kalau tidak, uji ini bisa "gagal" padahal aplikasinya sehat.
+async function tungguSampai(expr, batasDetik, label) {
+  for (let i = 0; i < batasDetik * 4; i++) {
+    if (await evalJs(expr)) return true;
+    await sleep(250);
+  }
+  cek(`prasyarat: ${label}`, false, 'tidak siap dalam batas waktu');
+  return false;
+}
+
 await evalJs(`(() => {
   const s = document.querySelectorAll('select');
   if (s[0]) { s[0].selectedIndex = 1; s[0].dispatchEvent(new Event('change', { bubbles: true })); }
   return s.length;
 })()`);
-await sleep(800);
+
+const kategoriSiap = await tungguSampai(
+  `document.querySelectorAll('select')[0]?.selectedIndex > 0`, 15, 'kategori bangunan terpilih');
+if (!kategoriSiap) { chrome.kill(); process.exit(1); }
+
+await tungguSampai(`(document.querySelectorAll('select')[1]?.options.length || 0) > 1`,
+  30, 'daftar site termuat dari Drive');
+
 await evalJs(`(() => {
   const s = document.querySelectorAll('select');
   if (s[1]) { s[1].selectedIndex = 1; s[1].dispatchEvent(new Event('change', { bubbles: true })); }
   return true;
 })()`);
-await sleep(1200);
+await sleep(1500);
 
 const site = await evalJs(`document.querySelectorAll('select')[1]?.value || ''`);
 console.log(`  site terpilih: ${site || '(tidak ada)'}`);
+if (!site) { console.log('\n  Site tidak terpilih - uji dihentikan, bukan bug aplikasi.'); chrome.kill(); process.exit(1); }
 
 // ---- sisipkan file uji langsung ke input (tanpa dialog HP) ----
 const NAMA_UJI = 'uji-ulangi-qa.png';

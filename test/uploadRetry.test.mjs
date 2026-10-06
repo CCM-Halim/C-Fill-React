@@ -143,7 +143,22 @@ test('pesanGagal: sesi login habis -> arahan yang benar', () => {
   assert.match(pesanGagal(new Error('Sesi login berakhir. Silakan login ulang.')), /login ulang/i);
 });
 
+test('pesanGagal: 403 dijelaskan, bukan ditampilkan sebagai kode', () => {
+  const p = pesanGagal(new Error('Upload gagal (403): insufficient permissions'));
+  assert.match(p, /tidak punya izin/i);
+  assert.doesNotMatch(p, /403/, 'kode HTTP mentah tidak berguna buat teknisi di lapangan');
+});
+
+test('pesanGagal: 404 dan 409 juga dijelaskan', () => {
+  assert.match(pesanGagal(new Error('Upload gagal (404)')), /tidak ditemukan/i);
+  assert.match(pesanGagal(new Error('Upload gagal (409)')), /sudah ada/i);
+});
+
+test('pesanGagal: kode 4xx yang belum dikenal tetap disebutkan angkanya', () => {
+  assert.match(pesanGagal(new Error('Upload gagal (418)')), /418/);
+});
+
 test('pesanGagal: kesalahan lain dibiarkan apa adanya (jangan disembunyikan)', () => {
-  assert.equal(pesanGagal(new Error('Upload gagal (403): insufficient permissions')),
-    'Upload gagal (403): insufficient permissions');
+  const asli = 'Kuota penyimpanan Drive penuh';
+  assert.equal(pesanGagal(new Error(asli)), asli);
 });
