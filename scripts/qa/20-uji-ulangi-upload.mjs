@@ -92,8 +92,10 @@ await send('DOM.enable');
 console.log('=== QA 20: UJI TOMBOL ULANGI (aplikasi produksi) ===\n');
 
 // ---- isi sesi sandbox SEBELUM skrip halaman jalan ----
-// Sesi disimpan di sessionStorage dengan kunci 'cfill_auth_session_v1' dan
+// Sesi disimpan di localStorage dengan kunci 'cfill_auth_session_v1' dan
 // dipulihkan SEKALI saat modul googleAuth.js dimuat (lihat src/lib/googleAuth.js).
+// Sejak 6 Okt 2026 sesi pindah dari sessionStorage ke localStorage (fitur
+// "login sekali"), jadi ujinya harus menyuntik ke localStorage.
 // Karena itu harus disuntikkan sebelum skrip halaman berjalan - bukan sesudah,
 // sebab kalau sesudah, restore-nya sudah terlanjur kosong.
 //
@@ -102,7 +104,7 @@ console.log('=== QA 20: UJI TOMBOL ULANGI (aplikasi produksi) ===\n');
 await send('Page.addScriptToEvaluateOnNewDocument', {
   source: `
     try {
-      sessionStorage.setItem('cfill_auth_session_v1', JSON.stringify({
+      localStorage.setItem('cfill_auth_session_v1', JSON.stringify({
         token: { access_token: ${JSON.stringify(TOKEN)}, expires_at: Date.now() + 3600e3 },
         user: { email: 'ccmhalimonsite@gmail.com', name: 'QA Sandbox', picture: '' }
       }));
@@ -195,9 +197,19 @@ await send('Network.setBlockedURLs', { urls: ['*googleapis.com/upload/*'] });
 
 console.log('\n  --- jaringan upload DIPUTUS, klik Upload ---');
 await evalJs(`(() => { [...document.querySelectorAll('button')].find(b=>/Upload Dokumentasi/.test(b.textContent)).click(); return true; })()`);
-await sleep(12000); // 3 percobaan ulang x jeda
 
-const teksGagal = await evalJs(`document.querySelector('.upload-progress')?.innerText || '(tidak ada)'`);
+// Tunggu sampai proses benar-benar SELESAI, bukan sekadar menunggu durasi tetap.
+// Percobaan ulang berjeda bertingkat 0,8 + 1,6 + 3,2 detik (~5,6 detik) di atas
+// waktu unggah tiap percobaan, jadi totalnya bisa lewat dari 12 detik. Uji yang
+// memakai jeda tetap mengukur di TENGAH proses (masih "percobaan 2/3") lalu
+// menyimpulkan gagal - itu uji yang rapuh, bukan bug aplikasi.
+let teksGagal = '(tidak ada)';
+for (let i = 0; i < 40; i++) {
+  await sleep(1000);
+  teksGagal = await evalJs(`document.querySelector('.upload-progress')?.innerText || '(tidak ada)'`);
+  const selesai = /gagal:/i.test(teksGagal) && !/Mengulang|Mengupload/i.test(teksGagal);
+  if (selesai) break;
+}
 console.log(teksGagal.split('\n').map((l) => '     ' + l).join('\n'));
 
 cek('unggahan gagal saat jaringan diputus', /gagal/i.test(teksGagal), teksGagal.slice(0, 120));

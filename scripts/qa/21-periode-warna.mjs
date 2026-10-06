@@ -80,14 +80,15 @@ await send('Emulation.setDeviceMetricsOverride', {
 });
 
 // ---- sesi sandbox supaya tidak terhalang layar login ----
-// Sesi disimpan di sessionStorage dengan kunci 'cfill_auth_session_v1' dan
+// Sesi disimpan di localStorage dengan kunci 'cfill_auth_session_v1' dan
 // dipulihkan SEKALI saat googleAuth.js dimuat, jadi harus disuntikkan SEBELUM
 // skrip halaman berjalan. Bentuknya mengikuti QA 20 yang sudah terbukti.
+// Sejak 6 Okt 2026 sesi pindah ke localStorage (fitur "login sekali").
 // Email HARUS ada di daftar izin (src/config/access.js) atau sesinya dibuang.
 await send('Page.addScriptToEvaluateOnNewDocument', {
   source: `
     try {
-      sessionStorage.setItem('cfill_auth_session_v1', JSON.stringify({
+      localStorage.setItem('cfill_auth_session_v1', JSON.stringify({
         token: { access_token: 'qa-sandbox', expires_at: Date.now() + 3600e3 },
         user: { email: 'ccmhalimonsite@gmail.com', name: 'QA Sandbox', picture: '' }
       }));

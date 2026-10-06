@@ -356,6 +356,24 @@ async function resolveSiteSpreadsheet(folderId, originalFileName, cacheKey) {
       );
     }
 
+    // ---------------------------------------------------------------------
+    // PENTING (perbaikan 6 Okt 2026 — "file baru lagi"):
+    //
+    // Sebelumnya, kalau pencarian di atas gagal, app LANGSUNG meng-KONVERSI
+    // tanpa memakai `round`. Akibatnya jeda bertingkat (sleep) dan pengecekan
+    // ulang yang sudah ditulis di bawah tidak pernah jalan — padahal itulah
+    // satu-satunya pengaman untuk kasus "perangkat lain baru saja membuat
+    // file, tapi indeks Drive belum sempat memperlihatkannya". Karena jeda
+    // tidak pernah dijalankan, percobaan VERIFIKASI sesudah konversi pun
+    // sering sudah berakhir sebelum file lama muncul -> app mengira salinan
+    // miliknya yang paling tua -> tersimpan sebagai file baru di samping file
+    // lama yang berisi data. Itulah asal 13 pasang file kembar di Drive.
+    //
+    // Sekarang: tunggu sebentar lalu CARI ULANG sebelum memutuskan mengonversi.
+    // Hanya perangkat yang benar-benar kalah balapan cepat (indeks Drive belum
+    // update setelah ~3,5 detik) yang akan mengonversi — dan itu tetap
+    // tertangkap oleh pengecekan pasca-konversi di bawah.
+    // ---------------------------------------------------------------------
     if (round < MAX_SEARCH_ROUNDS) {
       await sleep(round * 1500);
       continue;
@@ -388,11 +406,19 @@ async function resolveSiteSpreadsheet(folderId, originalFileName, cacheKey) {
     // yang baru saja kita buat sendiri barusan - tidak pernah file berisi data).
     const converted = await convertXlsxToSheets(xlsx.id, folderId, originalFileName);
 
+    // Tunggu file kita muncul, DAN setelah itu masih cari di luar file kita
+    // sendiri beberapa putaran lagi — supaya salinan yang dibuat perangkat
+    // lain (indeks Drive-nya bisa telat) tetap sempat terlihat. Sebelumnya
+    // loop ini berhenti di putaran pertama begitu file kita terlihat, jadi
+    // salinan lama sering belum keburu muncul.
     let verify = [];
-    for (let wait = 1; wait <= 6; wait++) {
+    for (let wait = 1; wait <= 8; wait++) {
       await sleep(wait * 1200);
       verify = await findAllSheetsForName(folderId, originalFileName);
-      if (verify.some((f) => f.id === converted.id)) break; // index sudah menangkap file kita
+      // Syarat lanjut: file kita sudah terlihat DAN sudah ada putaran
+      // pengecekan lagi setelah itu untuk mengintip salinan yang lebih tua.
+      const terlihat = verify.some((f) => f.id === converted.id);
+      if (terlihat && wait >= 2) break;
     }
 
     const createdAt = new Date(converted.createdTime).getTime();
@@ -412,6 +438,30 @@ async function resolveSiteSpreadsheet(folderId, originalFileName, cacheKey) {
       return {
         spreadsheetId: winner.id,
         usedName: winner.name,
+        duplicates: null,
+        duplicateWarning: 'Ada perangkat lain yang lebih dulu membuat file ini. Salinan kosong yang baru dibuat otomatis dibuang; yang dipakai adalah file yang lebih dulu ada.'
+      };
+    }
+
+    // Pengecekan terakhir SEBELUM memakai file sendiri: kalau ternyata file
+    // yang lebih tua baru muncul belakangan, pakai itu dan buang punya kita.
+    // Satu putaran lagi dengan jeda lebih panjang — ini murah (~1,5 detik)
+    // dibanding risiko membuat file kembar yang isinya terpisah.
+    await sleep(1500);
+    const finalCheck = await findAllSheetsForName(folderId, originalFileName);
+    const lebihTua = finalCheck
+      .filter((f) => f.id !== converted.id)
+      .filter((f) => new Date(f.createdTime).getTime() < createdAt);
+    if (lebihTua.length > 0) {
+      try {
+        await trashFile(converted.id);
+      } catch {
+        /* abaikan — data tetap masuk ke file yang benar */
+      }
+      saveCacheEntry(cacheKey, lebihTua[0].id);
+      return {
+        spreadsheetId: lebihTua[0].id,
+        usedName: lebihTua[0].name,
         duplicates: null,
         duplicateWarning: 'Ada perangkat lain yang lebih dulu membuat file ini. Salinan kosong yang baru dibuat otomatis dibuang; yang dipakai adalah file yang lebih dulu ada.'
       };

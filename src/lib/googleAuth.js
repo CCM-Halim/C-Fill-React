@@ -2,17 +2,38 @@
  * googleAuth.js
  * Login & manajemen access token pakai Google Identity Services (GIS).
  *
- * Pola yang dipakai: OAuth 2.0 Token Client (implicit-ish, tapi lewat GIS resmi,
- * bukan deprecated gapi.auth2). Token & info user disimpan di sessionStorage
- * (bukan localStorage) - jadi REFRESH halaman nggak perlu login ulang (sesi
- * tetap ada selama tab ini masih terbuka), tapi begitu tab/browser ditutup
- * total, sesi otomatis hilang (lebih aman drpd localStorage yang bertahan
- * selamanya sampai dihapus manual).
+ * Pola penyimpanan (DIUBAH 6 Okt 2026): sesi disimpan di **localStorage**,
+ * bukan sessionStorage. Sebelumnya sesi hilang begitu tab/browser ditutup,
+ * sehingga teknisi harus login ulang tiap kali membuka aplikasi. Sekarang cukup
+ * **login sekali** per device: saat app dibuka lagi, sesi dipulihkan dari
+ * localStorage dan token disegarkan DIAM-DIAM (tanpa popup) — lihat
+ * silentLogin() + lib/sessionStore.js.
+ *
+ * Yang tetap tidak bisa dipaksa: kalau cookie sesi Google milik *user* sudah
+ * benar-benar hilang (dia logout dari Google sendiri / cookie pihak ketiga
+ * dibersihkan browser), Google mewajibkan interaksi. Dalam kondisi itu app
+ * tetap membuka halaman login — tapi tidak akan pernah minta login ulang selama
+ * sesi masih bisa disegarkan.
  */
 
+import {
+  saveSession,
+  readSession,
+  clearSession,
+  touchSession,
+  isTokenValid,
+  shouldAttemptSilentLogin,
+  HAS_LOGGED_IN_BEFORE_KEY,
+} from './sessionStore';
+
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-const SESSION_KEY = 'cfill_auth_session_v1';
-const HAS_LOGGED_IN_BEFORE_KEY = 'cfill_has_logged_in_before'; // localStorage (bukan sessionStorage) - bertahan lintas sesi, biar tau apakah device ini PERNAH login sebelumnya
+
+/**
+ * Penanda bahwa user MENEKAN tombol logout sendiri. Dipakai supaya app tidak
+ * "membantu" login ulang diam-diam setelah dia sengaja keluar — itu justru
+ * menjengkelkan dan bisa terasa seperti tidak bisa logout.
+ */
+const MANUAL_LOGOUT_KEY = 'cfill_manual_logout';
 
 const SCOPES = [
   'https://www.googleapis.com/auth/spreadsheets',
@@ -25,30 +46,50 @@ let tokenClient = null;
 let currentToken = null; // { access_token, expires_at }
 let currentUser = null;  // { email, name, picture }
 
-// Pulihkan sesi dari sessionStorage begitu module ini dimuat (sebelum React
-// sempat render apapun) - biar refresh halaman nggak sempat kelihatan layar
-// login sama sekali kalau sesi lama masih valid.
+/**
+ * Seragamkan bentuk token. Ada dua sumber bentuk:
+ *  - token dari GIS (memakai `access_token` + `expires_in`)
+ *  - token dari file token eksternal (memakai `token`)
+ * Dipakai juga oleh skrip QA yang menyuntik sesi ke localStorage, jadi
+ * keduanya harus diterima — bukan cuma bentuk GIS.
+ */
+function normalisasiToken(t) {
+  if (!t || typeof t !== 'object') return null;
+  const access = t.access_token || t.token;
+  const exp = t.expires_at || (t.expiry ? new Date(t.expiry).getTime() : null);
+  if (!access || !exp) return null;
+  return { access_token: access, expires_at: Number(exp) };
+}
+
+function bacaStorage(key) {
+  try { return localStorage.getItem(key); } catch { return null; }
+}
+function tulisStorage(key, val) {
+  try { localStorage.setItem(key, val); } catch { /* abaikan */ }
+}
+
+/**
+ * Pulihkan sesi dari localStorage begitu module ini dimuat (sebelum React
+ * sempat render apapun) — biar refresh halaman maupun buka-ulang app nggak
+ * sempat kelihatan layar login sama sekali.
+ *
+ * BEDA dengan sebelumnya: sesi diterima WALAU tokennya sudah kedaluwarsa.
+ * Dulu token basi langsung dibuang di sini (itu sebabnya user terlempar ke
+ * layar login sebelum app sempat coba menyegarkan token). Sekarang token basi
+ * tetap dipakai sebagai "identitas" + pemicu penyegaran diam-diam.
+ */
 (function restoreSession() {
-  try {
-    const raw = sessionStorage.getItem(SESSION_KEY);
-    if (!raw) return;
-    const saved = JSON.parse(raw);
-    if (saved.token && saved.token.expires_at > Date.now()) {
-      currentToken = saved.token;
-      currentUser = saved.user;
-    } else {
-      sessionStorage.removeItem(SESSION_KEY);
-    }
-  } catch {
-    sessionStorage.removeItem(SESSION_KEY);
-  }
+  const saved = readSession(localStorage);
+  if (!saved) return;
+  currentUser = saved.user;
+  currentToken = normalisasiToken(saved.token);
 })();
 
 function persistSession() {
-  if (currentToken && currentUser) {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ token: currentToken, user: currentUser }));
+  if (currentUser) {
+    saveSession(localStorage, { token: currentToken, user: currentUser });
   } else {
-    sessionStorage.removeItem(SESSION_KEY);
+    clearSession(localStorage);
   }
 }
 
@@ -108,15 +149,16 @@ async function ensureTokenClient() {
           access_token: resp.access_token,
           expires_at: Date.now() + (resp.expires_in * 1000) - 60000 // buffer 1 menit
         };
-        fetchUserInfo().then(() => {
+        fetchUserInfo().then((info) => {
+          // Info user gagal diambil (jaringan), TAPI kita sudah punya user dari
+          // sesi tersimpan -> pakai itu. Tanpa email kita tidak bisa cek
+          // whitelist, jadi jangan lanjutkan diam-diam kalau memang tidak ada.
           if (!currentUser || !currentUser.email) {
-            // Token didapat tapi info user gagal diambil (jaringan). Tanpa email
-            // kita tidak bisa cek whitelist, jadi jangan lanjutkan diam-diam.
             pending.reject('Gagal mengambil data akun Google. Cek koneksi lalu coba lagi.');
             return;
           }
           persistSession();
-          try { localStorage.setItem(HAS_LOGGED_IN_BEFORE_KEY, 'true'); } catch { /* abaikan */ }
+          tulisStorage(HAS_LOGGED_IN_BEFORE_KEY, 'true');
           pending.resolve({ token: currentToken, user: currentUser });
         }).catch((e) => {
           pending.reject(e?.message || 'Gagal mengambil info user Google.');
@@ -166,13 +208,12 @@ async function fetchUserInfo() {
 }
 
 /**
- * Coba dapetin token TANPA popup (silent) - manfaatin sesi Google browser yang
+ * Coba dapetin token TANPA popup (silent) — manfaatin sesi Google browser yang
  * masih aktif + consent yang udah pernah diberikan sebelumnya. Dipanggil pas
  * aplikasi baru dibuka/di-refresh, biar teknisi nggak perlu klik "Login
- * dengan Google" ulang tiap kali refresh halaman. Resolve `null` (BUKAN
- * reject) kalau gagal - ini emang cuma "coba dulu diam-diam", gagalnya wajar
- * (mis. sesi Google browser udah habis / belum pernah login sama sekali) dan
- * BUKAN error yang perlu ditampilkan - biarkan fallback ke tombol login biasa.
+ * dengan Google" ulang. Resolve `null` (BUKAN reject) kalau gagal — ini emang
+ * cuma "coba dulu diam-diam", gagalnya wajar (mis. sesi Google browser udah
+ * habis) dan BUKAN error yang perlu ditampilkan.
  */
 export function silentLogin() {
   return new Promise((resolve) => {
@@ -210,13 +251,25 @@ export async function login() {
 }
 
 /**
- * Apakah device/browser ini PERNAH berhasil login sebelumnya - dipakai buat
+ * Apakah device/browser ini PERNAH berhasil login sebelumnya — dipakai buat
  * mutuskan apakah aman coba silentLogin() otomatis pas app dibuka (aman buat
  * yang udah pernah kasih consent, TAPI JANGAN buat user baru yang belum
  * pernah - itu yang bikin popup Google muncul sendiri sebelum user klik apapun).
  */
 export function hasLoggedInBefore() {
-  return localStorage.getItem(HAS_LOGGED_IN_BEFORE_KEY) === 'true';
+  return bacaStorage(HAS_LOGGED_IN_BEFORE_KEY) === 'true';
+}
+
+/** User menekan logout sendiri? Kalau ya, jangan login ulang diam-diam. */
+export function wasManuallyLoggedOut() {
+  return bacaStorage(MANUAL_LOGOUT_KEY) === 'true';
+}
+
+/** Tandai sesi terakhir baru saja disegarkan (memperpanjang jendela silent refresh). */
+function catatPenyegaranBerhasil() {
+  tulisStorage(MANUAL_LOGOUT_KEY, 'false');
+  tulisStorage(HAS_LOGGED_IN_BEFORE_KEY, 'true');
+  touchSession(localStorage);
 }
 
 export function logout() {
@@ -226,6 +279,8 @@ export function logout() {
   currentToken = null;
   currentUser = null;
   persistSession();
+  // Penanda logout sengaja — app tidak akan mencoba login ulang sendiri.
+  tulisStorage(MANUAL_LOGOUT_KEY, 'true');
 }
 
 export function getCurrentUser() {
@@ -237,18 +292,33 @@ export function isLoggedIn() {
 }
 
 /**
+ * Boleh coba pulihkan sesi tanpa popup? Butuh: (1) user sudah pernah login,
+ * (2) bukan habis logout sendiri, (3) sesi terakhir belum terlalu tua.
+ */
+export function bisaPulihkanSesiDiamDiam() {
+  const sesi = readSession(localStorage);
+  return shouldAttemptSilentLogin({
+    hasLoggedInBefore: hasLoggedInBefore(),
+    savedAt: sesi?.savedAt,
+  }) && !wasManuallyLoggedOut();
+}
+
+/**
  * Mengambil access token yang masih valid. Kalau sudah expired, minta token baru
  * secara silent (tanpa popup, karena user sudah pernah consent sebelumnya).
  */
 export async function getValidAccessToken() {
-  if (currentToken && Date.now() < currentToken.expires_at) {
+  if (isTokenValid(currentToken)) {
     return currentToken.access_token;
   }
   // Token expired -> refresh silent
   const client = await ensureTokenClient();
   return new Promise((resolve, reject) => {
     pendingAuth = {
-      resolve: (res) => resolve(res.token.access_token),
+      resolve: (res) => {
+        catatPenyegaranBerhasil();
+        resolve(res.token.access_token);
+      },
       reject: () => reject(new Error('Sesi login berakhir. Silakan login ulang.')),
     };
     client.requestAccessToken({ prompt: '' });

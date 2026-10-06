@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useState } from 'react';
-import { login as googleLogin, logout as googleLogout, getCurrentUser } from '../lib/googleAuth';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import {
+  login as googleLogin,
+  logout as googleLogout,
+  getCurrentUser,
+  isLoggedIn,
+  silentLogin,
+  bisaPulihkanSesiDiamDiam,
+} from '../lib/googleAuth';
 import { isForemanEmail } from '../config/foremen';
 import { isAllowedEmail } from '../config/access';
 
@@ -23,11 +30,38 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Sesi tersimpan tapi tokennya sudah basi -> coba segarkan DIAM-DIAM sebelum
+  // menampilkan apapun. Selama percobaan ini berjalan, jangan tampilkan layar
+  // login (lihat App.jsx: checkingSilent) supaya tidak berkedip.
+  //
+  // Yang PENTING: kalau penyegaran gagal, user TETAP dianggap sudah login
+  // (halaman tetap terbuka dengan sesi terakhir). Ini inti permintaan "login
+  // sekali" — sebelumnya token basi langsung membuang user ke layar login.
+  const [checkingSilent, setCheckingSilent] = useState(
+    () => !!getCurrentUser() && !isLoggedIn() && bisaPulihkanSesiDiamDiam()
+  );
+
+  useEffect(() => {
+    if (!checkingSilent) return;
+    let selesai = true;
+    (async () => {
+      try {
+        await silentLogin();
+      } catch {
+        /* gagal diam-diam itu wajar — user tetap pakai sesi terakhir */
+      } finally {
+        if (selesai) setCheckingSilent(false);
+      }
+    })();
+    return () => { selesai = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   async function handleLogin() {
     console.log('[CCM Fill] Starting login...');
     setLoading(true);
     setError(null);
-    
+
     // Timeout handler — pengaman kalau popup Google tidak pernah merespons
     // (mis. diblokir browser / user menutup popup). 60 detik cukup untuk
     // jaringan HP paling lemot sekalipun.
@@ -37,7 +71,7 @@ export function AuthProvider({ children }) {
         reject(new Error('Timeout menunggu Google'));
       }, LOGIN_TIMEOUT_MS);
     });
-    
+
     try {
       // Race between actual login AND timeout-with-fallback
       const result = await Promise.race([
@@ -47,13 +81,11 @@ export function AuthProvider({ children }) {
         }),
         timeoutPromise
       ]);
-      
+
       if (!result || !result.user) {
         throw new Error('Google login gagal - tidak ada user returned');
       }
-      
-      localStorage.setItem('cfill_has_logged_in_before', 'true');
-      
+
       if (!isAllowedEmail(result.user.email)) {
         console.error('[CCM Fill] Access denied:', result.user.email);
         setError(ACCESS_DENIED_MESSAGE);
@@ -61,7 +93,7 @@ export function AuthProvider({ children }) {
         clearTimeout(timeoutId);
         return;
       }
-      
+
       console.log('[CCM Fill] Setting user:', result.user.email);
       setUser(result.user);
       clearTimeout(timeoutId); // Clear timeout jika berhasil
@@ -85,7 +117,7 @@ export function AuthProvider({ children }) {
   const isForeman = isForemanEmail(user?.email);
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, checkingSilent: false, login: handleLogin, logout: handleLogout, isForeman }}>
+    <AuthContext.Provider value={{ user, loading, error, checkingSilent, login: handleLogin, logout: handleLogout, isForeman }}>
       {children}
     </AuthContext.Provider>
   );

@@ -459,6 +459,21 @@ a{color:var(--accent);}
 .btn-ghost .spinner, .btn-secondary .spinner{ border-color: rgba(37,109,92,.25); border-top-color: var(--accent); }
 @keyframes spin{to{transform:rotate(360deg);}}
 
+/* Tombol kecil (mis. "Kosongkan & mulai baru" pada banner draf). */
+.btn-small{padding:6px 12px;font-size:12px;line-height:1.25;}
+
+/* Banner draf: memberi tahu bahwa isian hari sebelumnya dipulihkan, supaya
+   teknisi tahu kenapa form sudah terisi saat dibuka lagi. Tombolnya di kanan;
+   di HP barisnya menumpuk supaya teks tidak terpotong. */
+.draft-banner{
+  display:flex;align-items:center;gap:10px;justify-content:space-between;
+  flex-wrap:wrap;
+  margin:0 0 16px;padding:10px 12px;border-radius:10px;
+  background:var(--border-soft);border-left:3px solid var(--accent);
+}
+.draft-banner-text{flex:1 1 220px;font-size:13px;line-height:1.45;color:var(--ink);}
+.draft-banner .btn-small{flex:0 0 auto;white-space:nowrap;}
+
 /* Numeric/data emphasis (dates, measurements, ids) */
 .mono{font-family:'IBM Plex Mono',monospace;}
 .app-loading-blank{min-height:100vh;background:var(--bg);}

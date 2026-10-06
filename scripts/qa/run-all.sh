@@ -75,8 +75,11 @@ npx vite preview --port 4173 --strictPort >/tmp/qa21-preview.log 2>&1 &
 PREVIEW_PID=$!
 sleep 6
 
-jalankan "14. Penanda periode & warna item perawatan (klik nyata)" \
+jalan "14. Penanda periode & warna item perawatan (klik nyata)" \
   node scripts/qa/21-periode-warna.mjs
+
+jalan "15. Login sekali & draf checksheet bisa dilanjutkan (klik nyata)" \
+  node scripts/qa/22-login-sekali-draf.mjs
 
 kill "$PREVIEW_PID" 2>/dev/null
 

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
 import { submitChecksheet, checkMonthAlreadyFilled, previewSlot } from '../lib/cfillService';
 import { useToast } from '../components/Toast';
+import { draftKey, loadDraft, saveDraft, clearDraft, pesanDraf, jumlahTerisi, restoreAnswers, petugasDariDraf } from '../lib/checksheetDraft';
 import BatteryTable from '../components/BatteryTable';
 import MeasurementInput, { serializeMeasurement } from '../components/MeasurementInput';
 import StatusMeasurementInput, { serializeStatusMeasurement } from '../components/StatusMeasurementInput';
@@ -45,6 +46,8 @@ export default function ChecksheetForm() {
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState(null); // { existingValues } kalau perlu tanya Perbaikan/Perawatan Baru
+  const [drafInfo, setDrafInfo] = useState(null); // pesan "isian sebelumnya dipulihkan"
+  const drafSudahDimuat = useRef(false);
 
   if (!category) {
     return <div className="muted">Kategori tidak ditemukan.</div>;
@@ -54,6 +57,55 @@ export default function ChecksheetForm() {
   const site = SITES.find((s) => s.buildingCategory === decodedBc && s.siteName === decodedSite);
   const slotRow = !isMatrix ? previewSlot(category, tanggal, site?.originalFileName) : null;
   const bulanIndex = new Date(tanggal).getMonth();
+
+  // --- Pemulihan draf: sekali saja saat form dibuka -------------------------
+  // Kunci draf memakai SITUS + KATEGORI + BULAN (bukan tanggal persis), jadi
+  // isian hari ke-1 tetap ketemu saat dilanjutkan hari ke-2 di bulan yang sama.
+  // Keduanya menulis ke slot baris yang sama (lihat computeSlotRow), sehingga
+  // hasilnya masuk ke SATU file/baris - bukan terbelah dua.
+  //
+  // Urutan penting: efek ini ditulis SEBELUM efek penyimpan di bawah, karena
+  // React menjalankan efek sesuai urutan penulisannya. Kalau dibalik, efek
+  // penyimpan akan jalan lebih dulu saat form baru dibuka dengan `answers`
+  // masih kosong — dan draf hari kemarin langsung terhapus sebelum sempat
+  // dibaca.
+  useEffect(() => {
+    if (drafSudahDimuat.current || isMatrix) return;
+    drafSudahDimuat.current = true;
+    const kunci = draftKey({
+      buildingCategory: decodedBc, siteName: decodedSite, categoryId: category.id, tanggal,
+    });
+    const draf = loadDraft(localStorage, kunci);
+    if (!draf) return;
+    // Dipulihkan lewat restoreAnswers() supaya tipe tiap item dihormati:
+    // item teks polos -> { __rawText }, item berpengukur -> id + id__raw.
+    setAnswers(restoreAnswers(draf, category.items));
+    setDrafInfo(pesanDraf(draf));
+    const p = petugasDariDraf(draf);
+    if (p) setPetugas(p);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMatrix]);
+
+  // --- Simpan draf otomatis ------------------------------------------------
+  // Ditulis setiap kali isian berubah. Ini yang membuat pekerjaan separuh jalan
+  // tidak hilang ketika teknisi menutup app (sinyal hilang, baterai habis,
+  // jam kerja usai) dan bisa dilanjutkan besok.
+  //
+  // Penjaga `localStorage.getItem(kunci) === null` penting: kalau draf untuk
+  // slot ini BELUM ADA, efek ini berjalan saat mount dan hanya akan menulis
+  // objek kosong — tidak ada gunanya, dan berisiko menghapus draf yang baru
+  // saja dipulihkan. Draf baru dibuat begitu teknisi benar-benar mengisi.
+  useEffect(() => {
+    if (!drafSudahDimuat.current || isMatrix) return;
+    const kunci = draftKey({
+      buildingCategory: decodedBc, siteName: decodedSite, categoryId: category.id, tanggal,
+    });
+    const sudahAdaDraf = localStorage.getItem(kunci) !== null;
+    const adaIsian = jumlahTerisi(answers) > 0 || !!petugas.trim();
+    if (!sudahAdaDraf && !adaIsian) return;
+    saveDraft(localStorage, kunci, { ...answers, __petugas: petugas.trim() || undefined });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answers, petugas, tanggal, isMatrix]);
 
   function setAnswer(itemId, value, noTglPrefix) {
     // Item dengan noTglPrefix (periodenya = grid dasar kategori, misal item
@@ -145,8 +197,8 @@ export default function ChecksheetForm() {
       const categoryItemMap = new Map(category.items.map(it => [it.id, it]));
       
       Object.entries(answers).forEach(([key, value]) => {
-        // Skip raw storage keys
-        if (key.endsWith('__raw')) return;
+        // Skip raw storage keys + kunci internal draf (mis. __petugas)
+        if (key.endsWith('__raw') || key.startsWith('__')) return;
         
         cleanAnswers[key] = value;
       });
@@ -179,6 +231,13 @@ export default function ChecksheetForm() {
         writeMode,
         existingValues
       });
+      // Isian sudah masuk sheet -> draf lokal tidak diperlukan lagi. Kalau
+      // dibiarkan, besoknya form akan "memulihkan" isian yang sebenarnya sudah
+      // tersimpan dan teknisi bisa mengira pekerjaannya belum masuk.
+      clearDraft(localStorage, draftKey({
+        buildingCategory: decodedBc, siteName: decodedSite, categoryId: category.id, tanggal,
+      }));
+      setDrafInfo(null);
       showToast(
         `Checksheet "${category.short_name}" tersimpan ke baris bulan ${BULAN[bulanIndex]} di "${res.fileName}" ✅`,
         false,
@@ -228,6 +287,25 @@ export default function ChecksheetForm() {
             <input className="input" placeholder="Nama petugas" value={petugas} onChange={(e) => setPetugas(e.target.value)} />
           </div>
         </div>
+
+        {drafInfo && (
+          <div className="draft-banner">
+            <div className="draft-banner-text">📝 {drafInfo}</div>
+            <button
+              type="button"
+              className="btn btn-ghost btn-small"
+              onClick={() => {
+                clearDraft(localStorage, draftKey({
+                  buildingCategory: decodedBc, siteName: decodedSite, categoryId: category.id, tanggal,
+                }));
+                setAnswers({});
+                setDrafInfo(null);
+              }}
+            >
+              Kosongkan & mulai baru
+            </button>
+          </div>
+        )}
 
         {!isMatrix && (
           <div className="muted" style={{ marginBottom: 16 }}>
