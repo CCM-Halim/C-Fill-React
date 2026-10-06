@@ -66,6 +66,20 @@ jalankan "12. UI produksi (Chrome headless)" \
 jalankan "13. Tombol Ulangi unggah Dokumentasi (klik nyata)" \
   bash scripts/qa/run-20.sh
 
+# QA 21 menguji APLIKASI HASIL BUILD, jadi butuh server lokal.
+echo ""
+echo "Menyalakan server pratinjau untuk QA 21…"
+pkill -f "vite preview" 2>/dev/null
+sleep 1
+npx vite preview --port 4173 --strictPort >/tmp/qa21-preview.log 2>&1 &
+PREVIEW_PID=$!
+sleep 6
+
+jalankan "14. Penanda periode & warna item perawatan (klik nyata)" \
+  node scripts/qa/21-periode-warna.mjs
+
+kill "$PREVIEW_PID" 2>/dev/null
+
 echo ""
 echo "══════════════════════════════════════════════════════════════════"
 echo "  UJI TULIS DI SANDBOX (salinan Drive, dihapus lagi)"

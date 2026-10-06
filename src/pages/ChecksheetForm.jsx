@@ -15,6 +15,7 @@ import UnitValueTable, { serializeUnitValueTable } from '../components/UnitValue
 import YesNoInput, { serializeYesNo } from '../components/YesNoInput';
 import { HeroHeader } from '../components/PhotoCard';
 import { getSiteBackground, getEquipmentBackground } from '../config/backgrounds';
+import { siapkanItem } from '../lib/itemPeriod';
 
 const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
@@ -235,9 +236,16 @@ export default function ChecksheetForm() {
           </div>
         )}
 
-        {category.items.map((it) => (
+        {category.items.map((it) => {
+          const tampil = siapkanItem(it);
+          return (
           <div key={it.id} className="item-block">
-            <div className="item-label">{it.label}</div>
+            {tampil.periode ? (
+              <div className={`item-periode periode-${tampil.periode.warna}`}>
+                Periode {tampil.periode.teks}
+              </div>
+            ) : null}
+            <div className="item-label">{tampil.teksItem}</div>
             {it.standar ? <div className="item-standar"><b>Standar:</b> {it.standar}</div> : null}
             {it.inputType === 'battery_table' ? (
               <BatteryTable
@@ -333,7 +341,8 @@ export default function ChecksheetForm() {
               </>
             )}
           </div>
-        ))}
+          );
+        })}
 
         {category.note ? (
           <div className="muted" style={{ marginBottom: 14 }}>ℹ️ {category.note}</div>

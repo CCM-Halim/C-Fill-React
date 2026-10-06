@@ -232,7 +232,31 @@ a{color:var(--accent);}
   border:1px solid var(--border);border-left:3px solid var(--accent-soft-strong);border-radius:10px;
   padding:14px 16px;margin-bottom:12px;background:var(--surface-alt);
 }
-.item-label{font-weight:600;font-size:13.5px;margin-bottom:4px;color:var(--ink);}
+.item-label{font-weight:600;font-size:13.5px;margin-bottom:4px;color:var(--ink);
+  /* Rata kiri-kanan (justify) supaya tepi kanannya lurus dan enak dibaca.
+     text-align-last:left penting - kalau tidak, baris terakhir ikut dipaksa
+     melebar dan jarak antar katanya jadi aneh.
+     hyphens:auto membantu memenggal kata panjang supaya baris tidak ditarik
+     terlalu jauh. Diukur di Chrome headless: mesin uji itu TIDAK punya kamus
+     pemenggalan (bahkan kata Inggris panjang tidak terpenggal), jadi hasil
+     sebenarnya di HP bisa lebih rapi daripada yang terukur di sini.
+     Ukuran celah antar kata: normal 3px; pada baris yang harus direntangkan
+     penuh bisa sampai ~23px karena kolom HP hanya ~265px. */
+  text-align:justify;text-align-last:left;
+  -webkit-hyphens:auto;hyphens:auto;}
+
+/* Penanda periode item perawatan.
+   Warna teks saja tidak cukup: hijau dan merah praktis sama terangnya
+   (1,14:1) sehingga sulit dibedakan yang buta warna. Jadi tiap periode
+   dapat teks berwarna + latar senada + garis tepi.
+   Kontras teks/latar sudah diperiksa lolos WCAG AA (semua > 4,5:1). */
+.item-periode{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.02em;
+  padding:2px 9px;border-radius:999px;margin-bottom:6px;border:1px solid transparent;
+  white-space:nowrap;}
+.periode-hijau {color:#12604A;background:#E4F1EA;border-color:#BEDDCE;} /* 1 bulan  — 6,46:1 */
+.periode-kuning{color:#7A5B00;background:#FBF2D6;border-color:#EBDC9E;} /* 3 bulan  — 5,65:1 */
+.periode-oranye{color:#A8440E;background:#FBE9DC;border-color:#F2CBAE;} /* 6 bulan  — 5,09:1 */
+.periode-merah {color:#9A2A1B;background:#FBE4DF;border-color:#EFBBB1;} /* 1 tahun  — 6,34:1 */
 .item-standar{font-size:12px;color:var(--ink-soft);margin-bottom:10px;background:var(--amber-soft);
   border-radius:6px;padding:6px 9px;display:inline-block;}
 .item-standar b{color:var(--amber);}
