@@ -14,6 +14,8 @@ import { logActivity } from './activityLog';
 import { getCurrentUser } from './googleAuth';
 import { summarizeJadwal } from './jadwalProgress';
 import { parseGangguanRows, summarizeGangguan } from './gangguanLog';
+import { tandaiSudahDiisi, pernahTerisi } from './entryExitMemory';
+import { cocokBulanIni } from './entryExitMatch';
 
 // Struktur sheet "Lembar Verifikasi Pekerjaan" (boilerplate, sama di semua 69
 // file site): baris 6 = Januari, step 1/bulan, kolom C = Tanggal, D = Nama
@@ -335,7 +337,7 @@ const ENTRY_EXIT_DATE_COL = 2; // kolom B = Tanggal, dipakai buat deteksi baris 
  * bulan berjalan + tahun berjalan sama-sama ada - tidak bergantung posisi.
  */
 export async function checkEntryExitFilledThisMonth(buildingCategory, siteName, date = new Date()) {
-  const empty = { filled: false, sheetUrl: null };
+  const empty = { filled: false, sheetUrl: null, dariIngatan: false, cekGagal: false };
   const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
   if (!site) return empty;
 
@@ -348,27 +350,47 @@ export async function checkEntryExitFilledThisMonth(buildingCategory, siteName, 
     const { spreadsheetId } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
     const tabName = await resolveTabName(spreadsheetId, ENTRY_EXIT_TAB_NAME);
 
-    const nextEmptyRow = await findNextEmptyRow(spreadsheetId, tabName, ENTRY_EXIT_START_ROW, ENTRY_EXIT_DATE_COL);
     const gid = await getSheetGid(spreadsheetId, tabName);
     const sheetUrl = getSpreadsheetUrl(spreadsheetId, gid);
 
-    if (nextEmptyRow <= ENTRY_EXIT_START_ROW) return { filled: false, sheetUrl };
+    // Baca SATU jendela tetap, jangan berhenti di baris kosong pertama.
+    //
+    // Sebelumnya batas bacanya adalah `findNextEmptyRow - 1`. Kalau baris
+    // data PERTAMA (B7) kebetulan kosong - mis. template site punya baris
+    // kosong di atas, atau datanya dimulai dari baris lain - batas itu jatuh
+    // di baris 7 sehingga TIDAK ADA baris yang diperiksa, dan fungsinya
+    // langsung menyimpulkan "belum diisi" padahal baris di bawahnya berisi.
+    // Sekarang dibaca 200 baris sekaligus: satu permintaan API, tanpa lubang.
+    const rows = await readEntryExitDates(
+      spreadsheetId, tabName, ENTRY_EXIT_START_ROW, ENTRY_EXIT_START_ROW + 199
+    );
+    const filled = rows.some((dateStr) => cocokBulanIni(dateStr, currentMonth, currentYear));
 
-    const rows = await readEntryExitDates(spreadsheetId, tabName, ENTRY_EXIT_START_ROW, nextEmptyRow - 1);
-    const filled = rows.some((dateStr) => {
-      const numbers = (dateStr || '').match(/\d+/g);
-      if (!numbers || numbers.length < 3) return false;
-      const hasYear = numbers.includes(String(currentYear));
-      const hasMonth = numbers.some((n) => parseInt(n, 10) === currentMonth && parseInt(n, 10) <= 12);
-      return hasYear && hasMonth;
-    });
-
-    return { filled, sheetUrl };
+    if (filled) {
+      // Simpan bukti ke ingatan lokal - dipakai sebagai cadangan kalau besok
+      // pemeriksaannya GAGAL (jaringan/kuota), supaya tidak salah bilang
+      // "belum diisi" ke teknisi yang sudah mengisi.
+      tandaiSudahDiisi(localStorage, buildingCategory, siteName, now, sheetUrl);
+    }
+    return { filled, sheetUrl, dariIngatan: false, cekGagal: false };
   } catch {
-    // Gagal cek (mis. site ini belum punya tab Entry/Exit) - fail-safe ke
-    // false, biar form Entry/Exit tetap dimunculkan, bukan malah mengunci
-    // akses teknisi ke checksheet.
-    return empty;
+    // Pemeriksaan GAGAL - dan ini pembeda yang penting.
+    //
+    // Sebelumnya blok ini mengembalikan "belum diisi" apa pun sebabnya. Itu
+    // keliru: "tidak bisa membaca Sheets" bukan berarti "belum pernah diisi".
+    // Akibatnya teknisi yang kemarin sudah mengisi tetap diminta mengisi
+    // ulang - dan pengisian ulang menambah BARIS BARU untuk bulan yang sama.
+    // Sekarang: kalau ingatan lokal punya bukti bulan ini sudah pernah
+    // terisi, pakai itu dan JANGAN tahan teknisi di form Entry/Exit.
+    const ingatan = pernahTerisi(localStorage, buildingCategory, siteName, now);
+    if (ingatan) {
+      return { filled: true, sheetUrl: ingatan.sheetUrl || null, dariIngatan: true, cekGagal: true };
+    }
+    // Belum ada bukti sama sekali -> tetap tampilkan form (fail-safe asli),
+    // supaya teknisi tidak terkunci dari checksheet. Tapi ditandai `cekGagal`
+    // supaya pesannya jujur ("tidak bisa memeriksa"), bukan menuduh
+    // "bulan ini belum diisi" padahal yang terjadi adalah pemeriksaan gagal.
+    return { ...empty, cekGagal: true };
   }
 }
 
@@ -404,6 +426,14 @@ export async function submitEntryExit({ buildingCategory, siteName, tanggal, wak
     buildingCategory, siteName, categoryName: 'Entry/Exit Registration', tanggal, petugas: nama,
     email: getCurrentUser()?.email, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid)
   });
+
+  // Catat di ingatan lokal bahwa bulan ini SUDAH terisi. Kalau besok
+  // pemeriksaannya gagal (jaringan HP hilang / kuota Sheets kena), teknisi
+  // tidak akan diminta mengisi ulang untuk bulan yang sama.
+  try {
+    tandaiSudahDiisi(localStorage, buildingCategory, siteName, new Date(tanggal || Date.now()),
+      getSpreadsheetUrl(spreadsheetId, gid));
+  } catch { /* ingatan lokal cuma cadangan - jangan gagalkan penyimpanan */ }
 
   return { success: true, row, sheetUrl: getSpreadsheetUrl(spreadsheetId, gid) };
 }

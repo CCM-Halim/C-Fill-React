@@ -25,13 +25,26 @@ export default function SiteCategoryList() {
 
   // null = sedang mengecek ke Sheets, true/false = hasil cek.
   const [entryFilled, setEntryFilled] = useState(null);
+  // true kalau pemeriksaan ke Sheets GAGAL (bukan "memang belum diisi").
+  // Dipakai supaya pesan ke teknisi jujur - lihat EntryExitForm.
+  const [cekGagal, setCekGagal] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     setEntryFilled(null);
+    setCekGagal(false);
     checkEntryExitFilledThisMonth(decodedBc, decodedSite)
-      .then((res) => { if (!cancelled) setEntryFilled(!!res.filled); })
-      .catch(() => { if (!cancelled) setEntryFilled(false); });
+      .then((res) => {
+        if (cancelled) return;
+        setEntryFilled(!!res.filled);
+        setCekGagal(!!res.cekGagal);
+      })
+      .catch(() => {
+        // Melempar error di sini artinya pemeriksaan gagal, bukan "belum
+        // diisi". Tetap tampilkan form (jangan kunci akses teknisi), tapi
+        // tandai supaya pesannya tidak menuduh.
+        if (!cancelled) { setEntryFilled(false); setCekGagal(true); }
+      });
     return () => { cancelled = true; };
   }, [decodedBc, decodedSite]);
 
@@ -60,7 +73,8 @@ export default function SiteCategoryList() {
         <EntryExitForm
           site={{ buildingCategory: decodedBc, siteName: decodedSite }}
           mandatory
-          onSuccess={() => setEntryFilled(true)}
+          cekGagal={cekGagal}
+          onSuccess={() => { setEntryFilled(true); setCekGagal(false); }}
         />
       </section>
     );

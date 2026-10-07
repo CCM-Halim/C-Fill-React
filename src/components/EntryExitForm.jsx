@@ -23,7 +23,7 @@ function nowTimeStr() {
  * dari URL, wajib diisi dulu sebelum lanjut ke item perawatan kalau bulan
  * ini belum ada catatan).
  */
-export default function EntryExitForm({ site, onSuccess, mandatory }) {
+export default function EntryExitForm({ site, onSuccess, mandatory, cekGagal = false }) {
   const showToast = useToast();
   const [tanggal, setTanggal] = useState(todayStr());
   const [waktuMasuk, setWaktuMasuk] = useState(nowTimeStr());
@@ -63,8 +63,19 @@ export default function EntryExitForm({ site, onSuccess, mandatory }) {
       <div className="card-title">Formulir Keluar-Masuk — {site.siteName}</div>
       {mandatory && (
         <div className="notice-box" style={{ marginBottom: 16 }}>
-          📋 Entry/Exit Registration bulan ini belum diisi untuk site ini — cukup diisi sekali per bulan,
-          lalu checksheet bisa diisi/direvisi berkali-kali tanpa diminta isi lagi.
+          {cekGagal ? (
+            <>
+              ⚠️ Catatan Entry/Exit bulan ini <strong>tidak bisa diperiksa</strong> sekarang (koneksi atau
+              akses ke Google Sheets sedang bermasalah). Kalau kemarin sudah mengisi, <strong>tidak perlu
+              mengisi lagi</strong> — coba muat ulang halaman ini. Pengisian ulang akan menambah baris baru
+              untuk bulan yang sama.
+            </>
+          ) : (
+            <>
+              📋 Entry/Exit Registration bulan ini belum diisi untuk site ini — cukup diisi sekali per bulan,
+              lalu checksheet bisa diisi/direvisi berkali-kali tanpa diminta isi lagi.
+            </>
+          )}
         </div>
       )}
 
