@@ -358,10 +358,17 @@ export async function findNextEmptyRow(spreadsheetId, tabName, startRow, checkCo
 /**
  * Baca kolom Tanggal (kolom B) dari baris tertentu s/d baris tertentu - dipakai
  * buat cek apakah "Entry and exit registration" sudah pernah diisi bulan ini.
+ *
+ * PENTING: dibaca sebagai nilai MENTAH (UNFORMATTED_VALUE), bukan teks
+ * tampilan. Kolom B di file site formatnya campur-aduk - ada yang M/D/YYYY,
+ * ada yang dd/mm/yyyy. Nilai tampilan "2/10/2026" bisa berarti 2 Oktober
+ * (dd/mm) ATAU 10 Februari (mm/dd), dan tidak ada cara membedakannya dari
+ * teksnya saja. Nilai mentahnya berupa angka serial tanggal yang tidak ambigu,
+ * jadi pembacaan ini menghilangkan salah-baca bulan sepenuhnya.
  */
 export async function readEntryExitDates(spreadsheetId, tabName, startRow, endRow) {
   if (endRow < startRow) return [];
-  const data = await sheetsFetch(`/${spreadsheetId}/values/${encodeURIComponent(`'${tabName}'!B${startRow}:B${endRow}`)}`);
+  const data = await sheetsFetch(`/${spreadsheetId}/values/${encodeURIComponent(`'${tabName}'!B${startRow}:B${endRow}`)}?valueRenderOption=UNFORMATTED_VALUE`);
   return (data.values || []).map((r) => r[0]);
 }
 

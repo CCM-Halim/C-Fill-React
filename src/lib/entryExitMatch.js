@@ -48,11 +48,39 @@ function bulanDariNama(teks) {
 }
 
 /**
- * Apakah string tanggal ini jatuh di bulan & tahun yang diminta?
- * Menerima: Date object dari Sheets API ("2026-10-06T..."), "06/10/2026",
- * "10/06/2026", "6 Oktober 2026", "2026-10-06", angka serial, dsb.
+ * Ubah angka serial tanggal Google Sheets/Excel jadi {tahun, bulan, hari}.
+ * Sheets menyimpan tanggal sebagai jumlah hari sejak 30 Des 1899.
+ */
+export function serialKeTanggal(serial) {
+  if (typeof serial !== 'number' || !isFinite(serial)) return null;
+  const ms = Math.round((serial - 25569) * 86400 * 1000);
+  const d = new Date(ms);
+  if (isNaN(d.getTime())) return null;
+  // Pakai UTC - waktu di dalam serial memang tanpa zona.
+  return { tahun: d.getUTCFullYear(), bulan: d.getUTCMonth() + 1, hari: d.getUTCDate() };
+}
+
+/**
+ * Apakah nilai tanggal ini jatuh di bulan & tahun yang diminta?
+ *
+ * Menerima (sesuai apa yang benar-benar dikembalikan Sheets API):
+ *   - ANGKA SERIAL (nilai mentah): 46300 -> 5 Okt 2026  <- paling andal
+ *   - Date object
+ *   - teks ISO "2026-10-06T..."
+ *   - teks "06/10/2026", "10/06/2026", "6 Oktober 2026"
+ *
+ * Angka serial diutamakan karena kolom B di file site formatnya campur-aduk
+ * (sebagian M/D/YYYY, sebagian dd/mm/yyyy). Teks "2/10/2026" ambigu - bisa
+ * 2 Oktober atau 10 Februari - dan itu sudah pernah bikin salah hitung.
+ * Serialnya tidak ambigu.
  */
 export function cocokBulanIni(dateStr, bulan, tahun) {
+  // Nilai MENTAH dari Sheets: angka serial tanggal.
+  if (typeof dateStr === 'number' && isFinite(dateStr)) {
+    const t = serialKeTanggal(dateStr);
+    return !!t && t.bulan === bulan && t.tahun === tahun;
+  }
+
   // Sheets kadang mengembalikan objek Date yang sudah di-string jadi ISO.
   if (dateStr instanceof Date) {
     return dateStr.getMonth() + 1 === bulan && dateStr.getFullYear() === tahun;
@@ -73,8 +101,6 @@ export function cocokBulanIni(dateStr, bulan, tahun) {
   const namaBulan = bulanDariNama(teks);
   if (namaBulan !== null) {
     const adaTahun = (teks.match(/\d{4}/g) || []).some((t) => parseInt(t, 10) === tahun);
-    // Tanpa tahun di teks, masih diterima selama bulannya cocok - Sheets
-    // kadang menampilkan "7 Okt" saja untuk sel yang formatnya bulan-tanggal.
     const adaTahun4Digit = /\d{4}/.test(teks);
     return namaBulan === bulan && (adaTahun || !adaTahun4Digit);
   }
@@ -82,20 +108,13 @@ export function cocokBulanIni(dateStr, bulan, tahun) {
   const angka = angkaTanggal(teks);
   if (!angka) return false;
 
-  // Bentuk DD/MM/YYYY atau MM/DD/YYYY (3 angka, ada tahun 4 digit di ujung).
-  // Ambil yang tahunnya cocok; lalu angka di posisi tengah dianggap bulan -
-  // ini yang benar untuk kedua format lokal tersebut.
+  // Bentuk DD/MM/YYYY atau MM/DD/YYYY. Urutan hari-bulan tidak bisa dipastikan
+  // dari teks saja (format selnya beda-beda per baris), jadi bulan diterima
+  // kalau ada di antara angka yang nilainya 1-12.
   if (angka.length >= 3) {
     const tahunCocok = angka.some((n) => n === tahun);
     if (!tahunCocok) return false;
-
-    // Kumpulkan kandidat bulan: angka selain tahun yang nilainya 1-12.
     const kandidat = angka.filter((n) => n !== tahun && n >= 1 && n <= 12);
-
-    // Kalau tahunnya ada di ujung (posisi 2), formatnya DD/MM/YYYY atau
-    // MM/DD/YYYY -> bulan ada di posisi tengah. Terlalu berisiko menebak mana
-    // yang tanggal, jadi cukup pastikan bulan berjalan ADA di antara kandidat.
-    // Ini tetap jauh lebih ketat daripada sekadar "ada angka 10".
     return kandidat.includes(bulan);
   }
 

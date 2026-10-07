@@ -12,7 +12,7 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { cocokBulanIni, angkaTanggal } from '../src/lib/entryExitMatch.js';
+import { cocokBulanIni, angkaTanggal, serialKeTanggal } from '../src/lib/entryExitMatch.js';
 import {
   memoryKey, tandaiSudahDiisi, pernahTerisi, ENTRY_EXIT_MEMORY_KEY, MAX_AGE_MS,
 } from '../src/lib/entryExitMemory.js';
@@ -178,4 +178,47 @@ test('pernahTerisi: storage yang menolak tulis tidak melempar error', () => {
     setItem: () => { throw new Error('QuotaExceededError'); },
   };
   assert.doesNotThrow(() => tandaiSudahDiisi(s, 'BC', 'Site', new Date(2026, 9, 6)));
+});
+
+// ---------------------------------------------------------------------------
+// Nilai MENTAH (angka serial) - ini yang sebenarnya dikembalikan Sheets API
+// setelah readEntryExitDates memakai valueRenderOption=UNFORMATTED_VALUE.
+// Serial tidak ambigu, sedangkan teks tanggal bisa (2/10/2026 = 2 Okt atau
+// 10 Feb, tergantung format selnya).
+// ---------------------------------------------------------------------------
+test('serialKeTanggal: serial yang benar-benar ada di file site', () => {
+  // Nilai nyata dari tab Entry/Exit K10+200 (dibaca 7 Okt 2026).
+  const kasus = [
+    [46034, '2026-01-12'],
+    [46063, '2026-02-10'],
+    [46300, '2026-10-05'],
+    [46329, '2026-11-03'],
+  ];
+  for (const [serial, harapan] of kasus) {
+    const t = serialKeTanggal(serial);
+    const teks = `${t.tahun}-${String(t.bulan).padStart(2, '0')}-${String(t.hari).padStart(2, '0')}`;
+    assert.equal(teks, harapan, `serial ${serial} harus jadi ${harapan}`);
+  }
+});
+
+test('serialKeTanggal: nilai tidak masuk akal ditolak', () => {
+  assert.equal(serialKeTanggal('bukan angka'), null);
+  assert.equal(serialKeTanggal(null), null);
+  assert.equal(serialKeTanggal(undefined), null);
+  assert.equal(serialKeTanggal(NaN), null);
+});
+
+test('cocokBulanIni: ANGKA SERIAL - kasus nyata K10+200', () => {
+  // Inilah akar masalahnya: B16 berisi 5 Oktober 2026 (serial 46300).
+  assert.equal(cocokBulanIni(46300, 10, 2026), true, 'serial 46300 = 5 Okt 2026');
+  // Dan B8 berisi 10 Februari 2026 (serial 46063) - tampilannya "2/10/2026",
+  // yang kalau dibaca sebagai teks mudah disalah-artikan jadi 2 Oktober.
+  assert.equal(cocokBulanIni(46063, 10, 2026), false, 'serial 46063 = 10 Feb, BUKAN Oktober');
+});
+
+test('cocokBulanIni: serial mengalahkan tafsir teks yang salah', () => {
+  // Angka serial 46063 kalau dibulatkan jadi teks "2/10/2026" akan dianggap
+  // cocok Oktober oleh pencocokan berbasis teks. Sebagai serial, tidak.
+  assert.equal(cocokBulanIni('2/10/2026', 10, 2026), true, 'teks memang ambigu');
+  assert.equal(cocokBulanIni(46063, 10, 2026), false, 'serial tidak ambigu - ini yang dipakai app');
 });

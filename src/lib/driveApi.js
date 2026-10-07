@@ -249,6 +249,50 @@ function saveCacheEntry(key, spreadsheetId) {
   }
 }
 
+/** Buang 1 entri cache (dipakai kalau file yang ditunjuk ternyata sudah hilang). */
+function hapusCacheEntry(key) {
+  try {
+    const cache = loadCache();
+    if (key in cache) {
+      delete cache[key];
+      localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+    }
+  } catch {
+    /* abaikan */
+  }
+}
+
+/**
+ * Pastikan file yang ditunjuk cache masih benar-benar ADA dan bisa dibuka.
+ *
+ * KENAPA INI PENTING (kasus nyata K10+200, 7 Okt 2026):
+ * Cache di localStorage menyimpan id spreadsheet per site supaya tidak perlu
+ * mencari ulang ke Drive tiap kali. Tapi kalau file itu kemudian dipindah,
+ * dibuang ke Trash, atau aksesnya dicabut, cache tetap menunjuk ke sana.
+ * Pemanggil berikutnya langsung memakai id mati itu -> Google mengembalikan
+ * 404 -> fungsi pemanggil menangkap error dan menyimpulkan "belum diisi".
+ *
+ * Akibatnya: site yang cache-nya basi akan SELALU diminta mengisi Entry/Exit
+ * ulang, berkali-kali, walau isinya sudah ada. Cache jadi tidak bisa
+ * menyembuhkan diri sendiri karena isinya tidak pernah diverifikasi.
+ *
+ * Sekarang: dicek dulu (~1 permintaan API ringan), dan kalau file-nya sudah
+ * tidak ada, entri cache dibuang lalu dicari ulang seperti biasa.
+ */
+async function cacheMasihHidup(spreadsheetId) {
+  try {
+    const res = await fetch(
+      `https://www.googleapis.com/drive/v3/files/${spreadsheetId}?fields=id,trashed&supportsAllDrives=true`,
+      { headers: await authHeaders() }
+    );
+    return res.ok;
+  } catch {
+    // Kegagalan jaringan BUKAN bukti file hilang - jangan buang cache karena
+    // ini, nanti malah memicu pencarian ulang yang tidak perlu.
+    return true;
+  }
+}
+
 /**
  * Ringkas daftar salinan Google Sheets dengan nama sama supaya bisa
  * DITAMPILKAN ke user (id + tanggal), bukan cuma disebut jumlahnya. Tanpa
@@ -288,7 +332,15 @@ export async function getOrConvertSiteSpreadsheet(folderId, originalFileName) {
   const cacheKey = folderId + '|' + originalFileName;
   const cache = loadCache();
   if (cache[cacheKey]) {
-    return { spreadsheetId: cache[cacheKey], duplicateWarning: null, duplicates: null, usedName: null };
+    // Cache dipakai HANYA kalau file yang ditunjuk masih hidup. Kalau sudah
+    // dibuang/dipindah, entri basi itu dibuang dan pencarian diulang - kalau
+    // tidak, site ini akan selamanya dianggap "belum punya file" (dan terus
+    // diminta mengisi Entry/Exit ulang) sampai teknisi membersihkan cache
+    // sendiri lewat DevTools, yang jelas tidak realistis.
+    if (await cacheMasihHidup(cache[cacheKey])) {
+      return { spreadsheetId: cache[cacheKey], duplicateWarning: null, duplicates: null, usedName: null };
+    }
+    hapusCacheEntry(cacheKey);
   }
 
   // Kalau ada panggilan lain (tab yang sama) yang sedang menyiapkan spreadsheet
