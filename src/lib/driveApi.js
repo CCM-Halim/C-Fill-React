@@ -137,7 +137,55 @@ export async function findAllSheetsForName(folderId, originalFileName) {
     }
   }
   // Paling lama dibuat di urutan pertama - konsisten dipakai terus
-  return merged.sort((a, b) => new Date(a.createdTime) - new Date(b.createdTime));
+  merged.sort((a, b) => new Date(a.createdTime) - new Date(b.createdTime));
+
+  // -----------------------------------------------------------------------
+  // CADANGAN (perbaikan 8 Okt 2026 — K59+662 kembar lagi padahal 19 Sep sudah
+  // ada filenya). Kalau pencarian `name = '...'` di atas mengembalikan KOSONG,
+  // jangan langsung percaya: daftar ulang SELURUH spreadsheet di folder itu
+  // (tanpa filter nama, tanpa orderBy) lalu cocokkan namanya di sisi klien.
+  // Ini bentuk query yang sama sekali berbeda, jadi kegagalan halus pada
+  // query nama (index Drive, penamaan, orderBy) tidak ikut menjatuhkannya.
+  // Tanpa cadangan ini, app menyimpulkan "belum pernah dibuat" lalu meng-
+  // KONVERSI ULANG -> file kembar yang riwayatnya (mis. 18/09) hilang.
+  // -----------------------------------------------------------------------
+  if (merged.length === 0) {
+    const semua = await listAllSpreadsheetsInFolder(folderId);
+    const target = new Set(names.map(normalizeUntukCocok));
+    for (const f of semua) {
+      if (target.has(normalizeUntukCocok(f.name)) && !seen.has(f.id)) {
+        seen.add(f.id);
+        merged.push(f);
+      }
+    }
+    merged.sort((a, b) => new Date(a.createdTime) - new Date(b.createdTime));
+  }
+
+  return merged;
+}
+
+/** Nama dinormalkan untuk perbandingan: buang ".xlsx", buang semua spasi, lowercase. */
+function normalizeUntukCocok(s) {
+  return String(s || '')
+    .replace(/\.xlsx$/i, '')
+    .replace(/\s+/g, '')
+    .toLowerCase();
+}
+
+/**
+ * Daftar SEMUA Google Sheets di dalam sebuah folder, tanpa filter nama.
+ * Dipakai sebagai cadangan pencarian kalau query `name = '...'` mengembalikan
+ * kosong padahal filenya ada.
+ */
+async function listAllSpreadsheetsInFolder(folderId) {
+  const SHEETS_MIME = 'application/vnd.google-apps.spreadsheet';
+  const q = encodeURIComponent(
+    `'${folderId}' in parents and mimeType = '${SHEETS_MIME}' and trashed = false`
+  );
+  const list = await driveFetch(
+    `/files?q=${q}&fields=files(id,name,mimeType,createdTime,modifiedTime)&corpora=allDrives`
+  );
+  return list.files || [];
 }
 
 /**
@@ -170,6 +218,28 @@ export async function trashFile(fileId) {
  * disimpan sebagai file baru bertipe Google Sheets, di folder yang sama, dengan nama
  * yang sama persis (supaya gampang dicari lagi lain kali tanpa perlu convert ulang).
  */
+/**
+ * Waktu dibuat sebuah file dalam milidetik.
+ *
+ * WAJIB mengembalikan angka yang SAH. Kalau createdTime kosong/NaN, semua
+ * perbandingan `new Date(f.createdTime).getTime() < createdAt` bernilai false
+ * - dan file kembar TIDAK PERNAH dibuang. Itu yang terjadi pada 8 Okt 2026:
+ * K59+662 punya 2 file lagi setelah perbaikan 6 Okt, karena `/copy` dipanggil
+ * tanpa meminta createdTime sehingga createdAt = NaN.
+ */
+async function waktuDibuatMs(file) {
+  const t = new Date((file && file.createdTime) || 0).getTime();
+  if (Number.isFinite(t) && t > 0) return t;
+  try {
+    const meta = await driveFetch(`/files/${file.id}?fields=id,createdTime`);
+    const t2 = new Date((meta && meta.createdTime) || 0).getTime();
+    if (Number.isFinite(t2) && t2 > 0) return t2;
+  } catch {
+    // jatuh ke nilai cadangan di bawah
+  }
+  return Date.now();
+}
+
 export async function convertXlsxToSheets(xlsxFileId, folderId, targetName) {
   const token = await getValidAccessToken();
 
@@ -182,7 +252,7 @@ export async function convertXlsxToSheets(xlsxFileId, folderId, targetName) {
   let lastError;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     const res = await fetch(
-      `${DRIVE_BASE}/files/${xlsxFileId}/copy?fields=id,name,mimeType&${DRIVE_SUPPORT_PARAMS}`,
+      `${DRIVE_BASE}/files/${xlsxFileId}/copy?fields=id,name,mimeType,createdTime&${DRIVE_SUPPORT_PARAMS}`,
       {
         method: 'POST',
         headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
@@ -473,7 +543,7 @@ async function resolveSiteSpreadsheet(folderId, originalFileName, cacheKey) {
       if (terlihat && wait >= 2) break;
     }
 
-    const createdAt = new Date(converted.createdTime).getTime();
+    const createdAt = await waktuDibuatMs(converted);
     const olderThanMine = verify
       .filter((f) => f.id !== converted.id)
       .filter((f) => new Date(f.createdTime).getTime() < createdAt);
@@ -516,6 +586,36 @@ async function resolveSiteSpreadsheet(folderId, originalFileName, cacheKey) {
         usedName: lebihTua[0].name,
         duplicates: null,
         duplicateWarning: 'Ada perangkat lain yang lebih dulu membuat file ini. Salinan kosong yang baru dibuat otomatis dibuang; yang dipakai adalah file yang lebih dulu ada.'
+      };
+    }
+
+    // ---------------------------------------------------------------------
+    // PENYAPU TERAKHIR (perbaikan 8 Okt 2026 — K59+662 kembar lagi).
+    //
+    // Dua pengecekan di atas hanya jalan kalau `createdAt` valid. Kalau
+    // createdAt keliru/NaN, keduanya diam-diam lolos dan file kembar tetap
+    // lahir. Jadi sebelum memakai file sendiri, CARI ULANG sekali lagi dan
+    // pilih yang PALING LAMA secara langsung — tidak bergantung pada
+    // createdAt punya kita sama sekali. Kalau yang paling lama ternyata bukan
+    // file kita, file kita yang dibuang.
+    // ---------------------------------------------------------------------
+    await sleep(1200);
+    const sapu = await findAllSheetsForName(folderId, originalFileName);
+    const milikOrangLain = sapu.filter((f) => f.id !== converted.id);
+    if (milikOrangLain.length > 0) {
+      const tertua = milikOrangLain[0]; // findAllSheetsForName sudah urut tertua
+      try {
+        await trashFile(converted.id);
+      } catch {
+        /* abaikan — data tetap masuk ke file yang benar */
+      }
+      saveCacheEntry(cacheKey, tertua.id);
+      return {
+        spreadsheetId: tertua.id,
+        usedName: tertua.name,
+        duplicates: null,
+        duplicateWarning:
+          'Sudah ada file untuk site ini; salinan kosong yang baru dibuat otomatis dibuang dan yang dipakai adalah file yang lebih dulu ada.'
       };
     }
 
