@@ -1,0 +1,1211 @@
+[
+ {
+  "tipe": "lama",
+  "file": "K76 + 000 Repeater Inlet Tunnel 3",
+  "sid": "1dMPX-0j111468jAddpZRBMcTBU3vqSXF1VWJ5syN_GE",
+  "tab": "Baterai HFSPS (1M,3M)",
+  "baris_arsip": {
+   "29": {
+    "slot": 0,
+    "ada_tgl": true,
+    "sel": 2
+   }
+  },
+  "merges": [
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 19,
+    "endColumnIndex": 20
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 19,
+    "endColumnIndex": 20
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 19,
+    "endColumnIndex": 20
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 19,
+    "endColumnIndex": 20
+   },
+   {
+    "startRowIndex": 22,
+    "endRowIndex": 28,
+    "startColumnIndex": 6,
+    "endColumnIndex": 18
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 34,
+    "startColumnIndex": 6,
+    "endColumnIndex": 18
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 34,
+    "startColumnIndex": 18,
+    "endColumnIndex": 19
+   },
+   {
+    "startRowIndex": 34,
+    "endRowIndex": 35,
+    "startColumnIndex": 0,
+    "endColumnIndex": 20
+   },
+   {
+    "startRowIndex": 22,
+    "endRowIndex": 28,
+    "startColumnIndex": 18,
+    "endColumnIndex": 19
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 19,
+    "endColumnIndex": 20
+   },
+   {
+    "startRowIndex": 22,
+    "endRowIndex": 28,
+    "startColumnIndex": 5,
+    "endColumnIndex": 6
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 34,
+    "startColumnIndex": 5,
+    "endColumnIndex": 6
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   }
+  ]
+ },
+ {
+  "tipe": "repeater",
+  "file": "K76 + 000 Repeater Inlet Tunnel 3",
+  "sid": "1dMPX-0j111468jAddpZRBMcTBU3vqSXF1VWJ5syN_GE",
+  "tab": "Baterai UPS MR (1M,3M)",
+  "baris_arsip": {
+   "27": {
+    "slot": 4,
+    "ada_tgl": false,
+    "sel": 4
+   },
+   "29": {
+    "slot": 0,
+    "ada_tgl": true,
+    "sel": 2
+   },
+   "31": {
+    "slot": 12,
+    "ada_tgl": false,
+    "sel": 12
+   },
+   "33": {
+    "slot": 4,
+    "ada_tgl": false,
+    "sel": 4
+   }
+  },
+  "merges": [
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 6,
+    "endColumnIndex": 7
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 7,
+    "endColumnIndex": 8
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 8,
+    "endColumnIndex": 9
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 9,
+    "endColumnIndex": 10
+   },
+   {
+    "startRowIndex": 22,
+    "endRowIndex": 28,
+    "startColumnIndex": 5,
+    "endColumnIndex": 6
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 11,
+    "endColumnIndex": 12
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 12,
+    "endColumnIndex": 13
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 13,
+    "endColumnIndex": 14
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 14,
+    "endColumnIndex": 15
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 15,
+    "endColumnIndex": 16
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 16,
+    "endColumnIndex": 17
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 17,
+    "endColumnIndex": 18
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 18,
+    "endColumnIndex": 19
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 6,
+    "endColumnIndex": 7
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 7,
+    "endColumnIndex": 8
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 8,
+    "endColumnIndex": 9
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 9,
+    "endColumnIndex": 10
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 10,
+    "endColumnIndex": 11
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 34,
+    "startColumnIndex": 5,
+    "endColumnIndex": 6
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 10,
+    "endColumnIndex": 18
+   },
+   {
+    "startRowIndex": 34,
+    "endRowIndex": 35,
+    "startColumnIndex": 0,
+    "endColumnIndex": 19
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 6,
+    "endColumnIndex": 7
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 7,
+    "endColumnIndex": 8
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 8,
+    "endColumnIndex": 9
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 9,
+    "endColumnIndex": 10
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 18,
+    "endColumnIndex": 19
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 6,
+    "endColumnIndex": 7
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 7,
+    "endColumnIndex": 8
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 8,
+    "endColumnIndex": 9
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 9,
+    "endColumnIndex": 10
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 10,
+    "endColumnIndex": 11
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 17,
+    "endColumnIndex": 18
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 10,
+    "endColumnIndex": 18
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 18,
+    "endColumnIndex": 19
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 6,
+    "endColumnIndex": 18
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 18,
+    "endColumnIndex": 19
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 11,
+    "endColumnIndex": 12
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 12,
+    "endColumnIndex": 13
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 13,
+    "endColumnIndex": 14
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 14,
+    "endColumnIndex": 15
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 15,
+    "endColumnIndex": 16
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 16,
+    "endColumnIndex": 17
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 18,
+    "endColumnIndex": 19
+   }
+  ]
+ },
+ {
+  "tipe": "normal",
+  "file": "K14+276 Signal Relay Station 1 (HA-KA 3 _ BTS 3)",
+  "sid": "1OeIXSFhLyvXk2RTbjdniTpw-uo50TvHc_bL1ricfVUo",
+  "tab": "Baterai HFSPS Grup 1 (1M,3M)",
+  "baris_arsip": {
+   "27": {
+    "slot": 12,
+    "ada_tgl": false,
+    "sel": 12
+   },
+   "29": {
+    "slot": 0,
+    "ada_tgl": true,
+    "sel": 2
+   },
+   "31": {
+    "slot": 12,
+    "ada_tgl": false,
+    "sel": 12
+   },
+   "33": {
+    "slot": 12,
+    "ada_tgl": false,
+    "sel": 12
+   }
+  },
+  "merges": [
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 6,
+    "endColumnIndex": 7
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 7,
+    "endColumnIndex": 8
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 8,
+    "endColumnIndex": 9
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 15,
+    "endColumnIndex": 16
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 6,
+    "endColumnIndex": 18
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 19,
+    "endColumnIndex": 20
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 9,
+    "endColumnIndex": 10
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 10,
+    "endColumnIndex": 11
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 11,
+    "endColumnIndex": 12
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 12,
+    "endColumnIndex": 13
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 13,
+    "endColumnIndex": 14
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 14,
+    "endColumnIndex": 15
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 19,
+    "endColumnIndex": 20
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 11,
+    "endColumnIndex": 12
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 12,
+    "endColumnIndex": 13
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 13,
+    "endColumnIndex": 14
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 14,
+    "endColumnIndex": 15
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 11,
+    "endColumnIndex": 12
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 12,
+    "endColumnIndex": 13
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 13,
+    "endColumnIndex": 14
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 14,
+    "endColumnIndex": 15
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 15,
+    "endColumnIndex": 16
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 16,
+    "endColumnIndex": 17
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 17,
+    "endColumnIndex": 18
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 16,
+    "endColumnIndex": 17
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 15,
+    "endColumnIndex": 16
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 16,
+    "endColumnIndex": 17
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 15,
+    "endColumnIndex": 16
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 16,
+    "endColumnIndex": 17
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 17,
+    "endColumnIndex": 18
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 17,
+    "endColumnIndex": 18
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 19,
+    "endColumnIndex": 20
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 19,
+    "endColumnIndex": 20
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 34,
+    "startColumnIndex": 18,
+    "endColumnIndex": 19
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 17,
+    "endColumnIndex": 18
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 19,
+    "endColumnIndex": 20
+   },
+   {
+    "startRowIndex": 22,
+    "endRowIndex": 28,
+    "startColumnIndex": 18,
+    "endColumnIndex": 19
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 34,
+    "startColumnIndex": 5,
+    "endColumnIndex": 6
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 22,
+    "endRowIndex": 28,
+    "startColumnIndex": 5,
+    "endColumnIndex": 6
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 24,
+    "endRowIndex": 26,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 3,
+    "endColumnIndex": 4
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 4,
+    "endColumnIndex": 5
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 6,
+    "endColumnIndex": 7
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 7,
+    "endColumnIndex": 8
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 8,
+    "endColumnIndex": 9
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 9,
+    "endColumnIndex": 10
+   },
+   {
+    "startRowIndex": 26,
+    "endRowIndex": 28,
+    "startColumnIndex": 10,
+    "endColumnIndex": 11
+   },
+   {
+    "startRowIndex": 28,
+    "endRowIndex": 30,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 6,
+    "endColumnIndex": 7
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 7,
+    "endColumnIndex": 8
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 8,
+    "endColumnIndex": 9
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 9,
+    "endColumnIndex": 10
+   },
+   {
+    "startRowIndex": 30,
+    "endRowIndex": 32,
+    "startColumnIndex": 10,
+    "endColumnIndex": 11
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 10,
+    "endColumnIndex": 11
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 11,
+    "endColumnIndex": 12
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 12,
+    "endColumnIndex": 13
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 13,
+    "endColumnIndex": 14
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 14,
+    "endColumnIndex": 15
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 0,
+    "endColumnIndex": 1
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 1,
+    "endColumnIndex": 2
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 6,
+    "endColumnIndex": 7
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 7,
+    "endColumnIndex": 8
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 8,
+    "endColumnIndex": 9
+   },
+   {
+    "startRowIndex": 32,
+    "endRowIndex": 34,
+    "startColumnIndex": 9,
+    "endColumnIndex": 10
+   },
+   {
+    "startRowIndex": 34,
+    "endRowIndex": 35,
+    "startColumnIndex": 0,
+    "endColumnIndex": 20
+   }
+  ]
+ }
+]

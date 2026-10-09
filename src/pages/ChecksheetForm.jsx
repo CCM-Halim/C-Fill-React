@@ -38,6 +38,11 @@ function formatDateDisplay(dateStr) {
  * Kapasitas tabel baterai di template = jumlah baris data x lebar kolom.
  * Contoh K31+367: baris 31 & 33 x 12 kolom (G..R) = 24 baterai. G33 adalah
  * lanjutan G31, bukan bulan lain. Dipakai sebagai batas jumlah isian di UI.
+ *
+ * Ini batas ATAS dari config. Batas NYATA per file bisa lebih kecil kalau ada
+ * kolom yang ditelan sel gabungan (lokasi Repeater: r33 cuma G..J) - itu dibaca
+ * saat submit lewat bacaMergesTab(), dan kalau tidak muat app menolak menulis
+ * daripada membuang nilai diam-diam.
  */
 function kapasitasBaterai(slotMap, itemId, tanggal) {
   const ic = slotMap?.itemColumns?.find((c) => c.id === itemId);

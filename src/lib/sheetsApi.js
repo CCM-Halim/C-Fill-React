@@ -171,6 +171,136 @@ function formatDateForSheet(dateStr) {
   return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
 }
 
+// ---------------------------------------------------------------------------
+// Kapasitas baterai NYATA - dibaca dari merge tiap file
+// ---------------------------------------------------------------------------
+
+/**
+ * Kolom mana saja yang benar-benar punya SEL SENDIRI di sebuah baris.
+ *
+ * Sel yang tertelan merge lebar BUKAN sel baterai - nilainya HILANG tanpa error
+ * apa pun, dan kalau ditulis ke sel pertama merge, angkanya tampil melebar
+ * menutupi area lain (salah tempat, bukan cuma salah kolom). Contoh nyata
+ * (Repeater Tunnel): di r33 hanya G,H,I,J yang per-kolom sementara K33:R34 satu
+ * sel lebar 8 kolom. Menulis 12 nilai ke G33:R33 menyisakan 5 - Sheets API tetap
+ * membalas sukses "updatedCells=12". Karena itu kapasitas dihitung dari merge.
+ *
+ * Aturan: merge selebar >1 kolom = BUKAN slot baterai, termasuk sel pertamanya.
+ * Merge tegak 1 kolom (G31:G32) tetap slot yang sah.
+ *
+ * @param merges  daftar merge dari Sheets API (indeks 0-based)
+ * @param baris   nomor baris 1-based
+ * @param colStart kolom awal 1-based (mis. 7 = G)
+ * @param colWidth lebar area data (mis. 12 = G..R)
+ * @returns array kolom 1-based yang masih bisa ditulis
+ */
+export function kolomTerbukaDiBaris(merges, baris, colStart, colWidth = 1) {
+  const baris0 = baris - 1;
+  const c0 = colStart - 1;        // 0-based
+  const c1 = c0 + colWidth;       // eksklusif (0-based)
+  const tertutup = new Set();
+
+  for (const m of merges || []) {
+    const { startRowIndex, endRowIndex, startColumnIndex, endColumnIndex } = m;
+    if (!(startRowIndex <= baris0 && baris0 < endRowIndex)) continue;
+    if (startColumnIndex < c0 || endColumnIndex > c1) continue;  // di luar area baterai
+    if (endColumnIndex - startColumnIndex <= 1) continue;        // merge tegak 1 kolom = sah
+    // Merge lebar: seluruh rentangnya bukan area baterai.
+    for (let c = startColumnIndex; c < endColumnIndex; c++) tertutup.add(c);
+  }
+
+  const cols = [];
+  for (let c = c0; c < c1; c++) if (!tertutup.has(c)) cols.push(c + 1);
+  return cols;
+}
+
+/**
+ * Slot baterai NYATA dari merge: baris mana yang bisa ditulis, kolom apa saja.
+ * Mengembalikan { rows: [{row, cols}], capacity }.
+ */
+export function batterySlots(merges, layout, itemCol) {
+  const rows = [];
+  for (const r of layout.dataRows || []) {
+    const cols = kolomTerbukaDiBaris(merges, r, itemCol.colStart, layout.colWidth);
+    if (cols.length > 0) rows.push({ row: r, cols });
+  }
+  return { rows, capacity: rows.reduce((n, x) => n + x.cols.length, 0) };
+}
+
+/**
+ * Petakan nilai baterai ke slot nyata -> daftar rentang KONTIGU siap tulis.
+ * Kolom yang bolong (ketelan merge lebar) dilewati, jadi tidak ada nilai
+ * yang dibuang ke sel tak terlihat.
+ */
+export function rencanaTulisBaterai(values, slots) {
+  const keluar = [];
+  let i = 0;
+
+  for (const { row, cols } of slots.rows || []) {
+    let j = 0;
+    while (j < cols.length && i < values.length) {
+      const mulai = j;
+      while (j + 1 < cols.length && cols[j + 1] === cols[j] + 1) j++;
+      const lebar = j - mulai + 1;
+      const ambil = Math.min(lebar, values.length - i);
+      keluar.push({ row, colStart: cols[mulai], values: values.slice(i, i + ambil) });
+      i += ambil;
+      j++;
+    }
+    if (i >= values.length) break;
+  }
+
+  return { rencana: keluar, terpakai: i, sisa: values.length - i };
+}
+
+/** Baca daftar merge satu tab. Nama tab dicocokkan persis/normal. */
+export async function bacaMergesTab(spreadsheetId, tabName) {
+  const meta = await sheetsFetch(
+    `/${spreadsheetId}?fields=sheets(properties(title),merges)&includeGridData=false`
+  );
+  const norm = (s) => String(s || '').replace(/\s+/g, ' ').trim().toLowerCase();
+  const target = norm(tabName);
+  const sh = (meta.sheets || []).find((s) => norm(s.properties?.title) === target);
+  return sh?.merges || [];
+}
+
+// Cache per-spreadsheet supaya satu submission tidak memanggil API berkali-kali
+// (satu file bisa punya beberapa tab baterai).
+const cacheMerges = new Map();
+const umurCacheMerges = new Map();
+const UMUR_CACHE_MS = 5 * 60 * 1000;
+
+/**
+ * Slot baterai untuk KEPERLUAN TULIS.
+ *   null            -> merge TIDAK TERBACA (API gagal) -> pemanggil pakai jalur lama
+ *   { capacity: 0 } -> merge TERBACA, tapi r31/r33 memang bukan baris data baterai
+ *                      (layout lama) -> ini jawaban nyata, BUKAN alasan untuk
+ *                      menulis buta.
+ */
+async function slotBateraiUntukTulis(spreadsheetId, tabName, slotMap, itemCol, tanggal, layout) {
+  const kunci = `${spreadsheetId}|${tabName}`;
+  let merges = cacheMerges.get(kunci);
+  const umur = umurCacheMerges.get(kunci) || 0;
+
+  if (!merges || Date.now() - umur > UMUR_CACHE_MS) {
+    try {
+      merges = await bacaMergesTab(spreadsheetId, tabName);
+      cacheMerges.set(kunci, merges);
+      umurCacheMerges.set(kunci, Date.now());
+    } catch {
+      return null;
+    }
+  }
+
+  return batterySlots(merges, layout, itemCol);
+}
+
+/** Bersihkan cache merge - dipakai setelah submit supaya struktur terbaru dibaca. */
+export function bersihkanCacheMerges() {
+  cacheMerges.clear();
+  umurCacheMerges.clear();
+}
+
 /**
  * Terapkan mode tulis: 'overwrite' -> pakai nilai baru apa adanya (default).
  * 'append' -> kalau sel target SUDAH ada isi sebelumnya, isi baru ditulis di
@@ -269,9 +399,9 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
     });
   }
 
-  slotMap.itemColumns.forEach((itemCol) => {
+  for (const itemCol of slotMap.itemColumns) {
     const answer = answers[itemCol.id];
-    if (answer === undefined || answer === null) return;
+    if (answer === undefined || answer === null) continue;
 
     const isBatteryTable = Array.isArray(answer);
     // Item yang periodenya lebih jarang dari grid dasar (mis. 3-bulanan di grid
@@ -280,8 +410,9 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
     const itemRow = computeItemRow(slotMap, itemCol, tanggal, isBatteryTable);
 
     if (isBatteryTable) {
-      // Tabel baterai: 12 baterai per baris (selebar kolom data item), sisanya
-      // pindah ke baris data berikutnya - lihat batteryLayout.
+      // Tabel baterai: tulis HANYA ke sel yang benar-benar ada. Merge lebar
+      // menelan kolom (mis. K33:R34 di lokasi Repeater) - nilai yang ditulis ke
+      // situ HILANG tanpa error. Karena itu petakan ke slot nyata dari merge.
       const values = answer.map((v) => (typeof v === 'string' ? v : JSON.stringify(v)));
       const layout = batteryLayout(slotMap, itemCol, tanggal);
       if (values.length > layout.capacity) {
@@ -290,13 +421,43 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
           `Kurangi jumlah baterai atau perbesar area data di file Drive-nya.`
         );
       }
-      for (let i = 0; i < values.length; i += layout.colWidth) {
-        const chunk = values.slice(i, i + layout.colWidth);
-        const r = layout.dataRows[Math.floor(i / layout.colWidth)];
-        data.push({
-          range: `'${tabName}'!${colLetter(itemCol.colStart)}${r}:${colLetter(itemCol.colStart + chunk.length - 1)}${r}`,
-          values: [chunk]
-        });
+
+      const slots = await slotBateraiUntukTulis(spreadsheetId, tabName, slotMap, itemCol, tanggal, layout);
+
+      if (slots) {
+        const { rencana, sisa } = rencanaTulisBaterai(values, slots);
+        if (sisa > 0) {
+          const sebab = slots.capacity === 0
+            ? `Baris ${layout.dataRows.join(' & ')} di sheet ini BUKAN baris data baterai ` +
+              `(layout template-nya beda - area baterai ada di baris lain).`
+            : `Kapasitasnya cuma ${slots.capacity} sel karena kolom ditelan sel gabungan.`;
+          throw new Error(
+            `Baterai ${values.length} unit tidak muat di sheet ini. ${sebab} ` +
+            `${sisa} nilai tidak punya tempat - tidak ada yang ditulis supaya data tidak salah tempat. ` +
+            `Perbaiki merge di file Drive-nya, atau pakai template yang benar.`
+          );
+        }
+        for (const r of rencana) {
+          data.push({
+            range: `'${tabName}'!${colLetter(r.colStart)}${r.row}:` +
+                   `${colLetter(r.colStart + r.values.length - 1)}${r.row}`,
+            values: [r.values]
+          });
+        }
+      } else {
+        // Merge tak terbaca -> pakai baris layout apa adanya, potong sebatas
+        // kapasitas supaya tidak meluber ke kolom Petugas.
+        let sisaNilai = values;
+        for (const r of layout.dataRows) {
+          if (sisaNilai.length === 0) break;
+          const chunk = sisaNilai.slice(0, layout.colWidth);
+          sisaNilai = sisaNilai.slice(layout.colWidth);
+          data.push({
+            range: `'${tabName}'!${colLetter(itemCol.colStart)}${r}:` +
+                   `${colLetter(itemCol.colStart + chunk.length - 1)}${r}`,
+            values: [chunk]
+          });
+        }
       }
 
       // Ringkasan periode ("Tgl: X  Catatan: Normal/Ada temuan") di baris anchor.
@@ -325,7 +486,7 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
         values: [[applyWriteMode(newValue, writeMode, existingValues[itemCol.id])]]
       });
     }
-  });
+  }
 
   await sheetsFetch(`/${spreadsheetId}/values:batchUpdate`, {
     method: 'POST',
