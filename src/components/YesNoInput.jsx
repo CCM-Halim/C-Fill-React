@@ -73,7 +73,14 @@ export function negasiStandar(standar) {
   ];
   let hasil = t;
   for (const [pola, ganti] of rules) hasil = hasil.replace(pola, ganti);
-  hasil = hasil.replace(/\s+/g, ' ').replace(/\s+,/g, ',').replace(/,(?=\S)/g, ', ').trim();
+  // Rapikan spasi & koma. PENTING: jangan menambah spasi sesudah koma yang
+  // memisahkan DIGIT - "1,5" itu angka desimal (format Indonesia), bukan
+  // daftar. Tanpa penjagaan ini "1,5 kali arus" berubah jadi "1, 5 kali arus".
+  hasil = hasil
+    .replace(/\s+/g, ' ')
+    .replace(/\s+,/g, ',')
+    .replace(/(?<!\d),(?=\S)/g, ', ')
+    .trim();
 
   // Tidak ada satu pun aturan yang cocok -> jangan sampai teksnya sama persis
   // dengan jawaban "Ya".
