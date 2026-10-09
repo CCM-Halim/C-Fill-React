@@ -162,7 +162,14 @@ export function batteryLayout(slotMap, itemCol, dateStr) {
   const dataRows = [];
   for (let r = anchor + 2; r + 1 <= blockEnd; r += 2) dataRows.push(r);
   if (dataRows.length === 0) dataRows.push(anchor + 2);
-  return { summaryRow: anchor, dataRows, colWidth, capacity: dataRows.length * colWidth };
+
+  // Kapasitas per baris data TIDAK selalu selebar kolom. Di template UPS MR /
+  // UPS RPT (1M,3M) baris data kedua (r33) cuma punya 4 kolom - sisanya
+  // (K33:R34) satu sel lebar untuk area lain. Jadi r31 = 12, r33 = 4 -> 16,
+  // bukan 2 x 12 = 24. Angka nyata ini ditulis di config (slotCapacity) supaya
+  // batas UI dan penulis tidak berbeda pendapat.
+  const kapasitas = itemCol.slotCapacity || dataRows.length * colWidth;
+  return { summaryRow: anchor, dataRows, colWidth, capacity: kapasitas };
 }
 
 function formatDateForSheet(dateStr) {
@@ -261,7 +268,10 @@ export async function bacaMergesTab(spreadsheetId, tabName) {
   const norm = (s) => String(s || '').replace(/\s+/g, ' ').trim().toLowerCase();
   const target = norm(tabName);
   const sh = (meta.sheets || []).find((s) => norm(s.properties?.title) === target);
-  return sh?.merges || [];
+  // Tab tidak ketemu di respons = jawaban tidak lengkap, bukan "0 slot".
+  // Dibedakan supaya pemanggil bisa jatuh ke kapasitas config, bukan menolak tulis.
+  if (!sh) throw new Error(`Tab "${tabName}" tidak ada di respons Sheets API.`);
+  return sh.merges || [];
 }
 
 // Cache per-spreadsheet supaya satu submission tidak memanggil API berkali-kali
@@ -415,14 +425,24 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
       // situ HILANG tanpa error. Karena itu petakan ke slot nyata dari merge.
       const values = answer.map((v) => (typeof v === 'string' ? v : JSON.stringify(v)));
       const layout = batteryLayout(slotMap, itemCol, tanggal);
-      if (values.length > layout.capacity) {
+
+      // Kapasitas NYATA dari merge file ini dulu - itu yang menentukan. Batas
+      // dari config cuma dipakai kalau merge tak terbaca (jaringan gagal).
+      const slots = await slotBateraiUntukTulis(spreadsheetId, tabName, slotMap, itemCol, tanggal, layout);
+      const kapasitasNyata = slots ? slots.capacity : layout.capacity;
+
+      if (values.length > kapasitasNyata) {
+        const sebab = kapasitasNyata === 0
+          ? `Baris ${layout.dataRows.join(' & ')} di sheet ini BUKAN baris data baterai ` +
+            `(layout template-nya beda - area baterai ada di baris lain).`
+          : `Kapasitasnya cuma ${kapasitasNyata} sel` +
+            (slots && slots.capacity < layout.dataRows.length * layout.colWidth
+              ? ` karena sebagian kolom ditelan sel gabungan.` : `.`);
         throw new Error(
-          `Jumlah baterai (${values.length}) melebihi kapasitas template di sheet ini (${layout.capacity}). ` +
-          `Kurangi jumlah baterai atau perbesar area data di file Drive-nya.`
+          `Jumlah baterai (${values.length}) melebihi kapasitas template di sheet ini (${kapasitasNyata}). ` +
+          `${sebab} Kurangi jumlah baterai atau perbesar area data di file Drive-nya.`
         );
       }
-
-      const slots = await slotBateraiUntukTulis(spreadsheetId, tabName, slotMap, itemCol, tanggal, layout);
 
       if (slots) {
         const { rencana, sisa } = rencanaTulisBaterai(values, slots);

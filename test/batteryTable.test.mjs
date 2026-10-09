@@ -92,8 +92,14 @@ test('baterai: 24 isian TIDAK menulis 24 kolom - dibatasi colWidth', async () =>
 
 test('baterai: rentang tulis tidak pernah melewati kolom R (batas template asli)', async () => {
   for (const catId of KATEGORI_BATERAI) {
-    // Muat sampai kapasitas template (24 = 12 kolom x 2 baris) -> tetap di dalam G..R.
-    for (const jumlah of [6, 12, 24]) {
+    const m = await mod();
+    const cat = CATEGORIES.find((c) => c.id === catId);
+    const item = cat.items.find((x) => x.inputType === 'battery_table');
+    const ic = cat.slotMap.itemColumns.find((x) => x.id === item.id);
+    const kapasitas = m.batteryLayout(cat.slotMap, ic, '2026-10-08').capacity;
+
+    // Muat sampai kapasitas template -> tetap di dalam G..R.
+    for (const jumlah of [6, 12, kapasitas].filter((n, i, a) => a.indexOf(n) === i)) {
       const { tertangkap } = await tulis(catId, jumlah);
       const entri = entriBaterai(tertangkap.body);
       const akhir = entri.range.split('!')[1].split(':')[1].replace(/\d+$/, '');
@@ -104,16 +110,22 @@ test('baterai: rentang tulis tidak pernah melewati kolom R (batas template asli)
     }
     // Di atas kapasitas -> DITOLAK dgn pesan jelas, bukan ditulis sebagian ke luar area.
     await assert.rejects(
-      () => tulis(catId, 40),
+      () => tulis(catId, kapasitas + 16),
       /melebihi kapasitas template/,
-      `${catId}: 40 baterai harus ditolak, bukan ditulis sebagian`
+      `${catId}: ${kapasitas + 16} baterai harus ditolak, bukan ditulis sebagian`
     );
   }
 });
 
 test('baterai: tidak menimpa kolom Balanced charging (S) & Petugas pemeriksa (T)', async () => {
   for (const catId of KATEGORI_BATERAI) {
-    const { cat, tertangkap } = await tulis(catId, 24);
+    const m = await mod();
+    const cat = CATEGORIES.find((c) => c.id === catId);
+    const item = cat.items.find((x) => x.inputType === 'battery_table');
+    const ic = cat.slotMap.itemColumns.find((x) => x.id === item.id);
+    const kapasitas = m.batteryLayout(cat.slotMap, ic, '2026-10-08').capacity;
+
+    const { tertangkap } = await tulis(catId, kapasitas);
     const entri = entriBaterai(tertangkap.body);
     const akhir = colKeAngka(entri.range.split('!')[1].split(':')[1].replace(/\d+$/, ''));
     const mulai = awalBaterai(cat);
@@ -168,19 +180,36 @@ test('baterai: hanya 6 kategori baterai, semuanya colWidth 12 di kolom G', () =>
   }
 });
 
-test('baterai: default isian di config sama dengan kapasitas template (12 kolom x 2 baris = 24)', async () => {
+test('baterai: default isian di config sama dengan kapasitas template NYATA', async () => {
   const m = await mod();
+  // Kapasitas diukur dari file .xlsx asli (1064 file), bukan disamakan rata:
+  //   HFSPS Grup 1/2 (1M,3M) -> r31=12, r33=12 -> 24
+  //   UPS MR / UPS MR Grup 1 / UPS RPT (1M,3M) -> r31=12, r33=4 -> 16
+  // Di template UPS, K33:R34 satu sel lebar untuk area lain, jadi r33 cuma 4 kolom.
+  const HARUS = { cat06: 24, cat08: 24, cat10: 24, cat12: 16, cat14: 16, cat16: 16 };
   for (const c of CATEGORIES) {
     const item = c.items?.find((i) => i.inputType === 'battery_table');
     if (!item) continue;
     const ic = c.slotMap.itemColumns.find((x) => x.id === item.id);
-    // Kapasitas = baris data (G31 + G33) x lebar kolom (G..R).
     const kapasitas = m.batteryLayout(c.slotMap, ic, '2026-10-08').capacity;
-    assert.equal(kapasitas, 24, `${c.id}: kapasitas template harus 24 (2 baris x 12 kolom)`);
+    const harap = HARUS[c.id];
+    assert.equal(kapasitas, harap, `${c.id}: kapasitas template harus ${harap}, dapat ${kapasitas}`);
     assert.equal(
       item.defaultBatteryCount, kapasitas,
       `${c.id}: default ${item.defaultBatteryCount} harus sama dengan kapasitas ${kapasitas}`
     );
+  }
+});
+
+test('baterai: kategori UPS (16 slot) tidak lagi mengaku punya 24', async () => {
+  const m = await mod();
+  for (const id of ['cat12', 'cat14', 'cat16']) {
+    const c = CATEGORIES.find((x) => x.id === id);
+    const item = c.items.find((i) => i.inputType === 'battery_table');
+    const ic = c.slotMap.itemColumns.find((x) => x.id === item.id);
+    const layout = m.batteryLayout(c.slotMap, ic, '2026-10-08');
+    assert.equal(layout.capacity, 16, `${id}: kapasitas harus 16 (r31=12 + r33=4)`);
+    assert.equal(layout.colWidth, 12, `${id}: lebar kolom tetap 12 - r33 memang cuma 4 kolom terpakai`);
   }
 });
 

@@ -175,7 +175,9 @@ test('integrasi: 12 nilai di r33 hanya 4 slot -> DILAPORKAN, tidak hilang diam-d
 
   const { galat, tertangkap } = await tulisMerge('cat06', 12, merges);
   assert.ok(galat, 'harus melempar galat, bukan menulis sebagian');
-  assert.match(galat.message, /ketelan sel gabungan|tidak punya tempat/);
+  // Kapasitas nyata (dari merge) dicek lebih dulu, jadi pesannya menyebut angka
+  // slot yang benar-benar tersedia - bukan janji dari config.
+  assert.match(galat.message, /melebihi kapasitas template|tidak punya tempat/);
   assert.equal(tertangkap, null, 'tidak boleh ada penulisan parsial ke sheet');
 });
 
