@@ -237,10 +237,35 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
     if (isBatteryTable) {
       // Jawaban berbentuk array (mis. tabel baterai V/R per unit) -> 1 nilai per kolom,
       // ditulis di baris bulan yang persis (bukan anchor kuartal, lihat computeItemRow).
+      //
+      // PENTING (perbaikan 9 Okt 2026): jumlah kolom yang ditulis DIBATASI oleh
+      // lebar kolom item di template asli (itemCol.colWidth), BUKAN sebanyak isian
+      // teknisi. Template baterai asli hanya punya 12 kolom baterai (G..R) - sudah
+      // dicek ke 259 tab baterai di seluruh file, semuanya berakhir di kolom R.
+      // Sebelumnya rentang tulis mengikuti values.length, jadi kalau teknisi mengisi
+      // 24 baterai (default lama aplikasi) rentangnya ikut jadi 24 kolom (G..AD) dan
+      // MELUBER menimpa kolom di kanannya: Balanced charging (S), Petugas pemeriksa
+      // (T), lalu keluar sampai U, V, W, ... - itu sebabnya data tegangan/resistansi
+      // muncul di kolom U ke atas, bukan di kolom baterai.
+      // CATATAN TAMBAHAN (9 Okt 2026): sebagian baris bulan di template punya
+      // SEL GABUNGAN yang menutupi seluruh lebar G..R dan mencakup 2 baris (mis.
+      // G29:R30, G23:R24). Nilai yang ditulis ke sel tertutup merge akan HILANG
+      // tanpa error apa pun. Merge itu TIDAK dibongkar di sini (mengubah merge
+      // template berisiko mengubah tampilan file teknisi) - sudah dilaporkan
+      // terpisah untuk diputuskan.
       const values = answer.map((v) => (typeof v === 'string' ? v : JSON.stringify(v)));
+      const maxCols = itemCol.colWidth || 1;
+      if (values.length > maxCols) {
+        console.warn(
+          `[C-Fill] Tabel baterai ${itemCol.id}: ${values.length} baterai diisi, ` +
+          `tapi template hanya punya ${maxCols} kolom - sisa ${values.length - maxCols} dipotong ` +
+          'supaya tidak menimpa kolom Balanced charging / Petugas pemeriksa.'
+        );
+      }
+      const valuesTerpakai = values.slice(0, maxCols);
       data.push({
-        range: `'${tabName}'!${colLetter(itemCol.colStart)}${itemRow}:${colLetter(itemCol.colStart + values.length - 1)}${itemRow}`,
-        values: [values]
+        range: `'${tabName}'!${colLetter(itemCol.colStart)}${itemRow}:${colLetter(itemCol.colStart + valuesTerpakai.length - 1)}${itemRow}`,
+        values: [valuesTerpakai]
       });
 
       // Selain data per-baterai, tulis juga RINGKASAN kuartalan ("Tgl: X Catatan:
