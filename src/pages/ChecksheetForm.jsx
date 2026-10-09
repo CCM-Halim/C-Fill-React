@@ -324,8 +324,7 @@ export default function ChecksheetForm() {
             {it.standar ? <div className="item-standar"><b>Standar:</b> {it.standar}</div> : null}
             {it.inputType === 'battery_table' ? (
               <BatteryTable
-                defaultCount={it.defaultBatteryCount || 12}
-                maxCount={category.slotMap?.itemColumns?.find((ic) => ic.id === it.id)?.colWidth || 12}
+                defaultCount={it.defaultBatteryCount || 24}
                 value={answers[it.id + '__raw']}
                 onChange={(rows) => setBatteryAnswer(it.id, rows)}
               />
