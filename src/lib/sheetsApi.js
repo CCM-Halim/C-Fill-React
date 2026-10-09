@@ -123,6 +123,48 @@ function computeItemRow(slotMap, itemCol, dateStr, isBatteryTable) {
   return slotMap.slotStartRow + slotMap.slotStep * blockSizeInSlots * blockIndex;
 }
 
+/**
+ * Letak data tabel baterai di dalam 1 blok periode (mis. blok 3-bulanan = 6 baris):
+ *
+ *   baris anchor      -> ringkasan  "Tgl: .. / Catatan: Normal|Ada temuan"
+ *   anchor + 2        -> baterai ke-1  s/d ke-12   (1 baris = colWidth kolom)
+ *   anchor + 4        -> baterai ke-13 s/d ke-24
+ *   anchor + 6 ...    -> dst, selama masih di dalam blok
+ *
+ * Pola ini sama dengan file lapangan (mis. K31+367: ringkasan baris 29, data
+ * baterai baris 31 dan 33). Dulu data baterai ditulis di baris anchor (menimpa
+ * tempat ringkasan) dan, kalau lebih dari 12 baterai, MELUBER ke kolom di kanan
+ * kolom data (termasuk kolom Petugas) karena tidak pernah pindah baris.
+ *
+ * Kalau item tidak lebih jarang dari grid dasar (tidak ada blok), data ditulis
+ * di baris slot biasa seperti sebelumnya.
+ */
+export function batteryLayout(slotMap, itemCol, dateStr) {
+  const baseMonths = baseGridMonths(slotMap);
+  const itemMonths = itemCol.periodMonths || baseMonths;
+  const colWidth = itemCol.colWidth || 1;
+
+  if (itemMonths <= baseMonths) {
+    return { summaryRow: null, dataRows: [computeSlotRow(slotMap, dateStr)], colWidth, capacity: colWidth };
+  }
+
+  const anchor = computeItemRow(slotMap, itemCol, dateStr, false);
+  const month = new Date(dateStr).getMonth();
+  let blockEnd; // baris terakhir blok ini
+  if (itemCol.explicitAnchors && itemCol.explicitAnchors.length > 0) {
+    const idx = Math.min(Math.floor(month / itemMonths), itemCol.explicitAnchors.length - 1);
+    const next = itemCol.explicitAnchors[idx + 1];
+    blockEnd = next !== undefined ? next - 1 : anchor + slotMap.slotStep * Math.round(itemMonths / baseMonths) - 1;
+  } else {
+    blockEnd = anchor + slotMap.slotStep * Math.round(itemMonths / baseMonths) - 1;
+  }
+
+  const dataRows = [];
+  for (let r = anchor + 2; r + 1 <= blockEnd; r += 2) dataRows.push(r);
+  if (dataRows.length === 0) dataRows.push(anchor + 2);
+  return { summaryRow: anchor, dataRows, colWidth, capacity: dataRows.length * colWidth };
+}
+
 function formatDateForSheet(dateStr) {
   const d = new Date(dateStr);
   const pad = (n) => String(n).padStart(2, '0');
@@ -178,9 +220,12 @@ function classifyBatteryFindings(answerArray, standard) {
  * riwayat baru di sel yang sama, bukan bikin baris fisik baru - itu bisa
  * ngerusak susunan baris kategori lain yang berbagi baris yang sama).
  */
-export async function getRowCellValues(spreadsheetId, tabName, row, itemColumns) {
+export async function getRowCellValues(spreadsheetId, tabName, slotMap, tanggal, itemColumns) {
   if (!itemColumns.length) return {};
-  const ranges = itemColumns.map((ic) => `'${tabName}'!${colLetter(ic.colStart)}${row}`);
+  // Tiap item dibaca di baris yang SAMA dengan tempat ia ditulis (computeItemRow:
+  // item 3/6/12-bulanan di anchor blok, bukan baris bulan). Untuk tabel baterai
+  // sel yang dibaca = sel ringkasan di baris anchor.
+  const ranges = itemColumns.map((ic) => `'${tabName}'!${colLetter(ic.colStart)}${computeItemRow(slotMap, ic, tanggal, false)}`);
   const query = ranges.map((r) => `ranges=${encodeURIComponent(r)}`).join('&');
   const data = await sheetsFetch(`/${spreadsheetId}/values:batchGet?${query}`);
   const result = {};
@@ -235,58 +280,33 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
     const itemRow = computeItemRow(slotMap, itemCol, tanggal, isBatteryTable);
 
     if (isBatteryTable) {
-      // Jawaban berbentuk array (mis. tabel baterai V/R per unit) -> 1 nilai per kolom,
-      // ditulis di baris bulan yang persis (bukan anchor kuartal, lihat computeItemRow).
-      //
-      // PENTING (perbaikan 9 Okt 2026): jumlah kolom yang ditulis DIBATASI oleh
-      // lebar kolom item di template asli (itemCol.colWidth), BUKAN sebanyak isian
-      // teknisi. Template baterai asli hanya punya 12 kolom baterai (G..R) - sudah
-      // dicek ke 259 tab baterai di seluruh file, semuanya berakhir di kolom R.
-      // Sebelumnya rentang tulis mengikuti values.length, jadi kalau teknisi mengisi
-      // 24 baterai (default lama aplikasi) rentangnya ikut jadi 24 kolom (G..AD) dan
-      // MELUBER menimpa kolom di kanannya: Balanced charging (S), Petugas pemeriksa
-      // (T), lalu keluar sampai U, V, W, ... - itu sebabnya data tegangan/resistansi
-      // muncul di kolom U ke atas, bukan di kolom baterai.
-      // CATATAN TAMBAHAN (9 Okt 2026): sebagian baris bulan di template punya
-      // SEL GABUNGAN yang menutupi seluruh lebar G..R dan mencakup 2 baris (mis.
-      // G29:R30, G23:R24). Nilai yang ditulis ke sel tertutup merge akan HILANG
-      // tanpa error apa pun. Merge itu TIDAK dibongkar di sini (mengubah merge
-      // template berisiko mengubah tampilan file teknisi) - sudah dilaporkan
-      // terpisah untuk diputuskan.
+      // Tabel baterai: 12 baterai per baris (selebar kolom data item), sisanya
+      // pindah ke baris data berikutnya - lihat batteryLayout.
       const values = answer.map((v) => (typeof v === 'string' ? v : JSON.stringify(v)));
-      const maxCols = itemCol.colWidth || 1;
-      if (values.length > maxCols) {
-        console.warn(
-          `[C-Fill] Tabel baterai ${itemCol.id}: ${values.length} baterai diisi, ` +
-          `tapi template hanya punya ${maxCols} kolom - sisa ${values.length - maxCols} dipotong ` +
-          'supaya tidak menimpa kolom Balanced charging / Petugas pemeriksa.'
+      const layout = batteryLayout(slotMap, itemCol, tanggal);
+      if (values.length > layout.capacity) {
+        throw new Error(
+          `Jumlah baterai (${values.length}) melebihi kapasitas template di sheet ini (${layout.capacity}). ` +
+          `Kurangi jumlah baterai atau perbesar area data di file Drive-nya.`
         );
       }
-      const valuesTerpakai = values.slice(0, maxCols);
-      data.push({
-        range: `'${tabName}'!${colLetter(itemCol.colStart)}${itemRow}:${colLetter(itemCol.colStart + valuesTerpakai.length - 1)}${itemRow}`,
-        values: [valuesTerpakai]
-      });
+      for (let i = 0; i < values.length; i += layout.colWidth) {
+        const chunk = values.slice(i, i + layout.colWidth);
+        const r = layout.dataRows[Math.floor(i / layout.colWidth)];
+        data.push({
+          range: `'${tabName}'!${colLetter(itemCol.colStart)}${r}:${colLetter(itemCol.colStart + chunk.length - 1)}${r}`,
+          values: [chunk]
+        });
+      }
 
-      // Selain data per-baterai, tulis juga RINGKASAN kuartalan ("Tgl: X Catatan:
-      // Normal/Ada temuan") ke baris ANCHOR kuartal (baris yang sama dgn item
-      // coarser lain di kategori ini) - kolom G di template asli punya sel
-      // gabungan lebar di baris itu khusus utk ringkasan begini. "Ada temuan"
-      // otomatis kalau ada baterai yang R-nya lewat batas standar kategori ini.
-      if (itemCol.periodMonths && itemCol.periodMonths > baseGridMonths(slotMap)) {
-        const summaryRow = computeItemRow(slotMap, itemCol, tanggal, false);
-        // Kalau bulan yang diisi kebetulan PAS bulan pertama kuartal, baris
-        // ringkasan = baris data individual (sama-sama di baris anchor) -
-        // jangan ditimpa dengan teks ringkasan, biarkan data per-baterainya.
-        if (summaryRow !== itemRow) {
-          const status = classifyBatteryFindings(answer, itemCol.batteryStandard);
-          if (status) {
-            data.push({
-              range: `'${tabName}'!${colLetter(itemCol.colStart)}${summaryRow}`,
-              values: [[`Tgl: ${formattedDate}\nCatatan:\n${status}`]]
-            });
-          }
-        }
+      // Ringkasan periode ("Tgl: X  Catatan: Normal/Ada temuan") di baris anchor.
+      // "Ada temuan" otomatis kalau ada baterai yang R-nya lewat batas standar.
+      if (layout.summaryRow) {
+        const status = classifyBatteryFindings(answer, itemCol.batteryStandard) || '';
+        data.push({
+          range: `'${tabName}'!${colLetter(itemCol.colStart)}${layout.summaryRow}`,
+          values: [[`Tgl: ${formattedDate}\nCatatan:\n${status}`]]
+        });
       }
     } else if (typeof answer === 'object' && answer.__rawText !== undefined) {
       // Item dengan format sendiri (mis. "Lokasi Uji Fungsi: ... Catatan: ...")

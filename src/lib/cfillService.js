@@ -126,7 +126,6 @@ export async function checkMonthAlreadyFilled({ buildingCategory, siteName, cate
   const spreadsheetId = await getSiteSpreadsheetId(bcFolderId, site.originalFileName);
   const override = SLOT_MAP_OVERRIDES[site.originalFileName]?.[categoryId];
   const slotMap = override || category.slotMap;
-  const row = computeSlotRow(slotMap, tanggal);
 
   // File Sheets belum pernah dibuat (= belum pernah diisi) -> tidak ada nilai
   // existing, dan TIDAK perlu dikonversi cuma untuk memeriksa.
@@ -135,7 +134,7 @@ export async function checkMonthAlreadyFilled({ buildingCategory, siteName, cate
   let existingValues = {};
   try {
     const tabName = await resolveTabName(spreadsheetId, tabKandidat(category));
-    existingValues = await getRowCellValues(spreadsheetId, tabName, row, slotMap.itemColumns);
+    existingValues = await getRowCellValues(spreadsheetId, tabName, slotMap, tanggal, slotMap.itemColumns);
   } catch {
     // Tab belum ada di file yang sudah dikonversi -> anggap belum ada isian.
     // Cek ini bersifat informasi untuk dialog "sudah pernah diisi?" - gagal di

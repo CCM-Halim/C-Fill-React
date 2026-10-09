@@ -212,12 +212,9 @@ export default function ChecksheetForm() {
           // Serialize using helper function
           const serializedText = serializeYesNo(rawValue, item);
           
-          // Format with date prefix as normal text items
-          const formattedText = item.noTglPrefix 
-            ? serializedText 
-            : `Tgl: ${tanggal}\nCatatan:\n${serializedText}`;
-          
-          cleanAnswers[item.id] = formattedText;
+          // Prefix "Tgl: ..." ditambahkan oleh writeMonthlySlot; item noTglPrefix
+          // dikirim sebagai { __rawText } supaya ditulis polos (tanpa dobel prefix).
+          cleanAnswers[item.id] = item.noTglPrefix ? { __rawText: serializedText } : serializedText;
         }
       });
 

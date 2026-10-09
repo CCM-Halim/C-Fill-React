@@ -92,7 +92,8 @@ test('baterai: 24 isian TIDAK menulis 24 kolom - dibatasi colWidth', async () =>
 
 test('baterai: rentang tulis tidak pernah melewati kolom R (batas template asli)', async () => {
   for (const catId of KATEGORI_BATERAI) {
-    for (const jumlah of [6, 12, 24, 40]) {
+    // Muat sampai kapasitas template (24 = 12 kolom x 2 baris) -> tetap di dalam G..R.
+    for (const jumlah of [6, 12, 24]) {
       const { tertangkap } = await tulis(catId, jumlah);
       const entri = entriBaterai(tertangkap.body);
       const akhir = entri.range.split('!')[1].split(':')[1].replace(/\d+$/, '');
@@ -101,6 +102,12 @@ test('baterai: rentang tulis tidak pernah melewati kolom R (batas template asli)
         `${catId} dgn ${jumlah} isian menulis s/d kolom ${akhir} - melewati R (18)`
       );
     }
+    // Di atas kapasitas -> DITOLAK dgn pesan jelas, bukan ditulis sebagian ke luar area.
+    await assert.rejects(
+      () => tulis(catId, 40),
+      /melebihi kapasitas template/,
+      `${catId}: 40 baterai harus ditolak, bukan ditulis sebagian`
+    );
   }
 });
 
@@ -177,3 +184,133 @@ function awalBaterai(cat) {
   const item = cat.items.find((i) => i.inputType === 'battery_table');
   return cat.slotMap.itemColumns.find((x) => x.id === item.id).colStart;
 }
+
+// ---------------------------------------------------------------------------
+// Tata letak baris: ringkasan di anchor, data baterai di baris bawahnya
+// ---------------------------------------------------------------------------
+
+test('baterai: 24 isian ditulis di 2 baris DATA, bukan menimpa baris ringkasan', async () => {
+  const { tertangkap } = await tulis('cat06', 24);
+  const entri = tertangkap.body.data.filter((d) => /![A-Z]+\d+:[A-Z]+\d+$/.test(d.range));
+
+  assert.equal(entri.length, 2, '24 baterai = 2 entri baris (12 + 12)');
+
+  const baris = entri.map((e) => Number(e.range.match(/(\d+):/)[1]));
+  const bulanRow = 29; // 2026-10-08 -> slot Oktober
+
+  for (const r of baris) {
+    assert.ok(r > bulanRow, `baris data (${r}) harus DI BAWAH baris ringkasan (${bulanRow})`);
+    assert.equal(r % 2, 1, `baris data ${r} harus ganjil (baris data, bukan baris sisipan)`);
+  }
+  assert.deepEqual(baris, [31, 33], 'Oktober -> data baterai di baris 31 & 33');
+  assert.equal(entri[0].values[0].length, 12);
+  assert.equal(entri[1].values[0].length, 12);
+});
+
+test('baterai: ringkasan periode ditulis di baris anchor, bukan tempat data', async () => {
+  const { tertangkap } = await tulis('cat06', 12);
+  const ringkasan = tertangkap.body.data.find(
+    (d) => !/![A-Z]+\d+:[A-Z]+\d+$/.test(d.range) && /Catatan/.test(String(d.values[0][0]))
+  );
+
+  assert.ok(ringkasan, 'harus ada entri ringkasan "Tgl: .. / Catatan: .."');
+  assert.match(ringkasan.range, /!G29$/, 'ringkasan Oktober harus di G29 (baris anchor)');
+
+  const data = tertangkap.body.data.filter((d) => /![A-Z]+\d+:[A-Z]+\d+$/.test(d.range));
+  assert.equal(data.length, 1, '12 baterai = 1 baris data');
+  assert.match(data[0].range, /!G31:R31$/, 'data 12 baterai di baris 31');
+
+  // Baris ringkasan TIDAK BOLEH jadi tempat data baterai.
+  for (const d of data) {
+    assert.ok(!/!G29/.test(d.range), 'data baterai tidak boleh di baris 29 (baris ringkasan)');
+  }
+});
+
+test('baterai: 12 isian di tiap kuartal selalu pakai baris data blok-nya', async () => {
+  const peta = {
+    '2026-03-10': [13, 15],
+    '2026-06-10': [19, 21],
+    '2026-09-10': [25, 27],
+    '2026-12-10': [31, 33],
+  };
+  for (const [tgl, harap] of Object.entries(peta)) {
+    const { tertangkap } = await tulis('cat06', 24, tgl);
+    const baris = tertangkap.body.data
+      .filter((d) => /![A-Z]+\d+:[A-Z]+\d+$/.test(d.range))
+      .map((e) => Number(e.range.match(/(\d+):/)[1]));
+    assert.deepEqual(baris, harap, `${tgl} harus menulis di baris ${harap.join(' & ')}`);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Kalimat jawaban "Tidak" (YesNoInput)
+// ---------------------------------------------------------------------------
+
+/**
+ * Ambil HANYA badan fungsi dari src/components/YesNoInput.jsx.
+ * File itu .jsx, jadi Node tidak bisa mem-parse seluruhnya tanpa transformasi.
+ * negasiStandar/serializeYesNo sendiri JS murni -> ekstrak lalu jalankan.
+ */
+function potongFungsi(src, nama) {
+  const start = src.indexOf(`function ${nama}(`);
+  if (start < 0) throw new Error(`fungsi ${nama} tidak ditemukan di YesNoInput.jsx`);
+  let depth = 0;
+  for (let j = src.indexOf('{', start); j < src.length; j++) {
+    if (src[j] === '{') depth++;
+    else if (src[j] === '}') {
+      depth--;
+      if (depth === 0) return src.slice(start, j + 1);
+    }
+  }
+  throw new Error(`kurung ${nama} tidak seimbang`);
+}
+
+async function modulYesNo() {
+  const src = fs.readFileSync(new URL('../src/components/YesNoInput.jsx', import.meta.url), 'utf8');
+  const kode = `${potongFungsi(src, 'negasiStandar')}\n`
+    + `${potongFungsi(src, 'serializeYesNo')}\n`
+    + 'export { negasiStandar, serializeYesNo };';
+  return import('data:text/javascript;base64,' + Buffer.from(kode).toString('base64'));
+}
+
+test('jawaban Tidak: kalimat negatif dibuat per-aturan, bukan sekadar "belum" di depan', async () => {
+  const { negasiStandar, serializeYesNo } = await modulYesNo();
+
+  const kasus = [
+    ['Sudah dibersihkan', 'Belum dibersihkan'],
+    ['Tidak ada kerusakan', 'Ada kerusakan'],
+    ['Hasil pemeriksaan baik', 'Hasil pemeriksaan tidak baik'],
+    ['Tidak boleh melebihi 80%', 'Melebihi 80%'],
+    ['Terisi penuh', 'Tidak terisi penuh'],
+  ];
+  for (const [standar, harap] of kasus) {
+    assert.equal(
+      negasiStandar(standar), harap,
+      `standar "${standar}" -> harus "${harap}"`
+    );
+  }
+
+  // Jawaban "Ya" tetap apa adanya; "Tidak" memakai versi negatif.
+  const cfg = { standar: 'Sudah dibersihkan' };
+  assert.equal(serializeYesNo('YA', cfg), 'Sudah dibersihkan');
+  assert.equal(serializeYesNo('TIDAK', cfg), 'Belum dibersihkan');
+  // Jawaban kosong / item tanpa standar -> string kosong, bukan teks sampah.
+  assert.equal(serializeYesNo('', cfg), '');
+  assert.equal(serializeYesNo('TIDAK', {}), '');
+});
+
+test('jawaban Tidak: hasilnya tidak pernah sama persis dengan jawaban Ya', async () => {
+  const { negasiStandar } = await modulYesNo();
+
+  const daftar = CATEGORIES.flatMap((c) => (c.items || []).map((i) => i.standar)).filter(Boolean);
+  assert.ok(daftar.length > 0, 'harus ada kalimat standar di config untuk diuji');
+
+  for (const s of daftar) {
+    const n = negasiStandar(s);
+    if (!n) continue;
+    assert.notEqual(
+      n.trim().toLowerCase(), String(s).trim().toLowerCase(),
+      `negasi "${s}" menghasilkan teks yang sama persis`
+    );
+  }
+});
