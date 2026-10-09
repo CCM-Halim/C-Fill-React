@@ -655,7 +655,7 @@ export const CATEGORIES = [
         "label": "Pengujian tegangan floating charge dan resistansi internal seluruh unit sel dari battery bank / grup baterai (3 bulan)",
         "standar": "Tegangan Baterai 2V：2.23V-2.27V; Tegangan Baterai 12V:13.38-13.63V",
         "inputType": "battery_table",
-        "defaultBatteryCount": 12,
+        "defaultBatteryCount": 24,
         "hasTglCatatan": true,
         "periodMonths": 3,
         "batteryStandard": {
@@ -954,7 +954,7 @@ export const CATEGORIES = [
         "label": "Pengujian tegangan floating charge dan resistansi internal seluruh unit sel dari battery bank / grup baterai (3 bulan)",
         "standar": "Tegangan Baterai 2V：2.23V-2.27V; Tegangan Baterai 12V:13.38-13.63V",
         "inputType": "battery_table",
-        "defaultBatteryCount": 12,
+        "defaultBatteryCount": 24,
         "hasTglCatatan": false,
         "periodMonths": 3,
         "batteryStandard": {
@@ -1253,7 +1253,7 @@ export const CATEGORIES = [
         "label": "Pengujian tegangan floating charge dan resistansi internal seluruh unit sel dari battery bank / grup baterai (3 bulan)",
         "standar": "Tegangan Baterai 2V：2.23V-2.27V; Tegangan Baterai 12V:13.38-13.63V",
         "inputType": "battery_table",
-        "defaultBatteryCount": 12,
+        "defaultBatteryCount": 24,
         "hasTglCatatan": false,
         "periodMonths": 3,
         "batteryStandard": {
@@ -1552,7 +1552,7 @@ export const CATEGORIES = [
         "label": "Pengujian tegangan floating charge dan resistansi internal seluruh unit sel dari battery bank / grup baterai (3 bulan)",
         "standar": "Tegangan Baterai 12V:13.38V-13.63V",
         "inputType": "battery_table",
-        "defaultBatteryCount": 12,
+        "defaultBatteryCount": 24,
         "hasTglCatatan": false,
         "periodMonths": 3,
         "batteryStandard": {
@@ -1762,7 +1762,7 @@ export const CATEGORIES = [
         "label": "Pengujian tegangan floating charge dan resistansi internal seluruh unit sel dari battery bank / grup baterai (3 bulan)",
         "standar": "Tegangan Baterai 12V:13.38V-13.63V",
         "inputType": "battery_table",
-        "defaultBatteryCount": 12,
+        "defaultBatteryCount": 24,
         "hasTglCatatan": false,
         "periodMonths": 3,
         "batteryStandard": {
@@ -1972,7 +1972,7 @@ export const CATEGORIES = [
         "label": "Pengujian tegangan floating charge dan resistansi internal seluruh unit sel dari battery bank / grup baterai (3 bulan)",
         "standar": "Tegangan Baterai 12V:13.38-13.63V",
         "inputType": "battery_table",
-        "defaultBatteryCount": 12,
+        "defaultBatteryCount": 24,
         "hasTglCatatan": true,
         "periodMonths": 3,
         "batteryStandard": {

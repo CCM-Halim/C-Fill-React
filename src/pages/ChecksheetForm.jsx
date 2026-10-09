@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
 import { submitChecksheet, checkMonthAlreadyFilled, previewSlot } from '../lib/cfillService';
+import { batteryLayout } from '../lib/sheetsApi';
 import { useToast } from '../components/Toast';
 import { draftKey, loadDraft, saveDraft, clearDraft, pesanDraf, jumlahTerisi, restoreAnswers, petugasDariDraf } from '../lib/checksheetDraft';
 import BatteryTable from '../components/BatteryTable';
@@ -31,6 +32,21 @@ function formatDateDisplay(dateStr) {
   const d = new Date(dateStr);
   const pad = (n) => String(n).padStart(2, '0');
   return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+}
+
+/**
+ * Kapasitas tabel baterai di template = jumlah baris data x lebar kolom.
+ * Contoh K31+367: baris 31 & 33 x 12 kolom (G..R) = 24 baterai. G33 adalah
+ * lanjutan G31, bukan bulan lain. Dipakai sebagai batas jumlah isian di UI.
+ */
+function kapasitasBaterai(slotMap, itemId, tanggal) {
+  const ic = slotMap?.itemColumns?.find((c) => c.id === itemId);
+  if (!ic) return 24;
+  try {
+    return batteryLayout(slotMap, ic, tanggal).capacity;
+  } catch {
+    return ic.colWidth || 24;
+  }
 }
 
 export default function ChecksheetForm() {
@@ -324,8 +340,8 @@ export default function ChecksheetForm() {
             {it.standar ? <div className="item-standar"><b>Standar:</b> {it.standar}</div> : null}
             {it.inputType === 'battery_table' ? (
               <BatteryTable
-                defaultCount={it.defaultBatteryCount || 12}
-                maxCount={category.slotMap?.itemColumns?.find((ic) => ic.id === it.id)?.colWidth || 12}
+                defaultCount={it.defaultBatteryCount || 24}
+                maxCount={kapasitasBaterai(category.slotMap, it.id, tanggal)}
                 value={answers[it.id + '__raw']}
                 onChange={(rows) => setBatteryAnswer(it.id, rows)}
               />

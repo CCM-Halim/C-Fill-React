@@ -168,15 +168,30 @@ test('baterai: hanya 6 kategori baterai, semuanya colWidth 12 di kolom G', () =>
   }
 });
 
-test('baterai: default isian di config tidak melebihi lebar kolom template', () => {
+test('baterai: default isian di config sama dengan kapasitas template (12 kolom x 2 baris = 24)', async () => {
+  const m = await mod();
   for (const c of CATEGORIES) {
     const item = c.items?.find((i) => i.inputType === 'battery_table');
     if (!item) continue;
     const ic = c.slotMap.itemColumns.find((x) => x.id === item.id);
-    assert.ok(
-      (item.defaultBatteryCount || 0) <= ic.colWidth,
-      `${c.id}: default ${item.defaultBatteryCount} baterai > lebar kolom ${ic.colWidth}`
+    // Kapasitas = baris data (G31 + G33) x lebar kolom (G..R).
+    const kapasitas = m.batteryLayout(c.slotMap, ic, '2026-10-08').capacity;
+    assert.equal(kapasitas, 24, `${c.id}: kapasitas template harus 24 (2 baris x 12 kolom)`);
+    assert.equal(
+      item.defaultBatteryCount, kapasitas,
+      `${c.id}: default ${item.defaultBatteryCount} harus sama dengan kapasitas ${kapasitas}`
     );
+  }
+});
+
+test('baterai: G33 adalah lanjutan G31 — 24 isian ditulis ke baris 31 dan 33', async () => {
+  const { tertangkap } = await tulis('cat06', 24);
+  const entri = tertangkap.body.data.filter((d) => /![A-Z]+\d+:[A-Z]+\d+$/.test(d.range));
+  assert.equal(entri.length, 2, '24 baterai = 2 entri baris');
+  const baris = entri.map((e) => Number(e.range.match(/(\d+):/)[1])).sort((a, b) => a - b);
+  assert.deepEqual(baris, [31, 33], 'harus ditulis ke baris 31 lalu 33 (lanjutan)');
+  for (const e of entri) {
+    assert.equal(e.values[0].length, 12, 'tiap baris memuat 12 baterai');
   }
 });
 

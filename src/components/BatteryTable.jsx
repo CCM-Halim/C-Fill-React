@@ -13,7 +13,7 @@ import React, { useState, useEffect, useRef } from 'react';
  * puluhan kotak di tabel ini) bisa bikin nilai yang baru diketik KETIMPA/HILANG
  * kalau re-render dari parent belum sempat kejadian di antara 2 keystroke.
  */
-export default function BatteryTable({ value, onChange, defaultCount = 12, maxCount = 12 }) {
+export default function BatteryTable({ value, onChange, defaultCount = 24, maxCount = 24 }) {
   const [count, setCount] = useState((value && value.length) || defaultCount);
   const [rows, setRows] = useState(() => {
     if (value && value.length) return value;
@@ -42,9 +42,8 @@ export default function BatteryTable({ value, onChange, defaultCount = 12, maxCo
   }
 
   function handleCountChange(newCount) {
-    // Batas atas = lebar kolom baterai di template asli (colWidth). Template cuma
-    // punya 12 kolom (G..R); mengetik lebih banyak hanya akan dibuang saat simpan,
-    // jadi lebih baik ditahan di sini daripada teknisi merasa sudah mengisi 24.
+    // Batas atas = kapasitas template: 12 kolom (G..R) x 2 baris data (G31 + G33).
+    // Muat sampai 24 baterai; lebih dari itu benar-benar dibuang saat simpan.
     newCount = Math.max(1, Math.min(maxCount, newCount));
     setCount(newCount);
     setRows((prev) => {
