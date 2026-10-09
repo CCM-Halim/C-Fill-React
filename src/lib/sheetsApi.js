@@ -312,6 +312,26 @@ export function bersihkanCacheMerges() {
 }
 
 /**
+ * Baris ringkasan ("Tgl: ... / Catatan: ...") hanya boleh ditulis kalau baris
+ * itu memang sel gabungan lebar. Kalau baris anchor justru punya slot per-kolom
+ * (G, H, I, ... masing-masing sel sendiri), berarti di file itu baris tersebut
+ * adalah BARIS DATA - dan menulis ringkasan ke situ akan MENIMPA nilai baterai
+ * yang sudah diisi teknisi.
+ *
+ * Kejadian nyata: K41+607 Karawang Signal (202) dan K0+316 Halim Signal (101).
+ * Blok baterainya bergeser turun satu blok, jadi r29 jadi baris data (terisi
+ * data 8 Agustus 2026), bukan ringkasan.
+ *
+ * @returns nomor baris ringkasan yang aman, atau null kalau tak ada.
+ */
+export function barisRingkasanAman(merges, layout, itemCol) {
+  if (!layout.summaryRow) return null;
+  const kolomAnchor = kolomTerbukaDiBaris(merges, layout.summaryRow, itemCol.colStart, layout.colWidth);
+  if (kolomAnchor.length === 0) return layout.summaryRow;   // memang sel gabungan lebar
+  return null;                                              // itu baris data - jangan timpa
+}
+
+/**
  * Terapkan mode tulis: 'overwrite' -> pakai nilai baru apa adanya (default).
  * 'append' -> kalau sel target SUDAH ada isi sebelumnya, isi baru ditulis di
  * ATAS, isi lama dipindah ke bawah sebagai riwayat (dipisah garis pembatas) -
@@ -457,6 +477,17 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
             `Perbaiki merge di file Drive-nya, atau pakai template yang benar.`
           );
         }
+        // Baris ringkasan justru terisi slot per-kolom = blok baterai file ini
+        // bergeser. Tolak semua supaya tidak ada yang ditulis setengah jalan.
+        if (layout.summaryRow && !barisRingkasanAman(
+              cacheMerges.get(`${spreadsheetId}|${tabName}`) || [], layout, itemCol)) {
+          throw new Error(
+            `Susunan baris di sheet ini berbeda dari template: baris ${layout.summaryRow} seharusnya ` +
+            `ringkasan, tapi di file ini justru berisi data baterai per-kolom. ` +
+            `Tidak ada yang ditulis supaya data lama tidak tertimpa. ` +
+            `Rapikan file Drive-nya dulu (geser blok baterai ke baris ${layout.dataRows.join(' & ')}).`
+          );
+        }
         for (const r of rencana) {
           data.push({
             range: `'${tabName}'!${colLetter(r.colStart)}${r.row}:` +
@@ -482,12 +513,19 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
 
       // Ringkasan periode ("Tgl: X  Catatan: Normal/Ada temuan") di baris anchor.
       // "Ada temuan" otomatis kalau ada baterai yang R-nya lewat batas standar.
+      // HANYA ditulis kalau baris itu memang sel gabungan lebar - kalau justru
+      // punya slot per-kolom, itu baris DATA dan ringkasan akan menimpa isinya.
       if (layout.summaryRow) {
-        const status = classifyBatteryFindings(answer, itemCol.batteryStandard) || '';
-        data.push({
-          range: `'${tabName}'!${colLetter(itemCol.colStart)}${layout.summaryRow}`,
-          values: [[`Tgl: ${formattedDate}\nCatatan:\n${status}`]]
-        });
+        const aman = slots
+          ? barisRingkasanAman(cacheMerges.get(`${spreadsheetId}|${tabName}`) || [], layout, itemCol)
+          : layout.summaryRow;
+        if (aman) {
+          const status = classifyBatteryFindings(answer, itemCol.batteryStandard) || '';
+          data.push({
+            range: `'${tabName}'!${colLetter(itemCol.colStart)}${aman}`,
+            values: [[`Tgl: ${formattedDate}\nCatatan:\n${status}`]]
+          });
+        }
       }
     } else if (typeof answer === 'object' && answer.__rawText !== undefined) {
       // Item dengan format sendiri (mis. "Lokasi Uji Fungsi: ... Catatan: ...")

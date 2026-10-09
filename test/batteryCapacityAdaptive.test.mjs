@@ -205,6 +205,9 @@ test('integrasi: 12 nilai di layout normal -> hanya r31', async () => {
   for (let i = 0; i < 12; i++) {
     merges.push({ startRowIndex: 30, endRowIndex: 31, startColumnIndex: 6 + i, endColumnIndex: 7 + i });
   }
+  // r29 = ringkasan (satu sel lebar). Tanpa ini, r29 terbaca sebagai baris data
+  // dan penulisan ditolak - itu memang perilaku yang benar (lihat tes blok geser).
+  merges.push({ startRowIndex: 28, endRowIndex: 30, startColumnIndex: 6, endColumnIndex: 18 });
   const { tertangkap, galat } = await tulisMerge('cat06', 12, merges);
   assert.equal(galat, null);
   const entri = entriBaterai(tertangkap.body);
