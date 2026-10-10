@@ -234,6 +234,94 @@ export function batterySlots(merges, layout, itemCol) {
   return { rows, capacity: rows.reduce((n, x) => n + x.cols.length, 0) };
 }
 
+// ---------------------------------------------------------------------------
+// Blok periode NYATA dari merge - dipakai kalau config tidak cocok dengan file
+// ---------------------------------------------------------------------------
+
+/**
+ * Baris yang jadi KEPALA blok periode: satu sel gabungan LEBAR yang mulai tepat
+ * di kolom data dan menutupi seluruh area baterai (G..R).
+ *
+ * Rentang rata (mis. "Tegangan Baterai 12V:13.38V-13.63V") tidak punya sel
+ * seperti ini, jadi tidak ikut terbaca.
+ */
+export function headerPeriodeBaterai(merges, itemCol) {
+  const c0 = itemCol.colStart - 1;
+  const c1 = c0 + (itemCol.colWidth || 1);
+  const out = [];
+  for (const m of merges || []) {
+    if (m.startColumnIndex !== c0) continue;   // harus mulai tepat di kolom data
+    if (m.endColumnIndex < c1) continue;       // harus menutupi seluruh area
+    out.push(m.startRowIndex + 1);
+  }
+  return [...new Set(out)].sort((a, b) => a - b);
+}
+
+/**
+ * Semua BLOK PERIODE nyata di sebuah tab, urut dari atas.
+ *
+ * Satu blok = satu kepala periode + baris-baris datanya. Dua jenis blok yang
+ * muncul di merge tapi BUKAN periode dibuang di sini:
+ *   - blok legenda / rentang tegangan (baris datanya sudah ketelan sel gabungan
+ *     lebar, jadi tidak punya slot sama sekali -> rows kosong)
+ *   - ekor tab yang barisnya tidak punya slot
+ * Jadi blok yang tersisa benar-benar blok yang bisa diisi baterai.
+ *
+ * URUTAN = nomor periode: blok[0] = Jan-Mar, blok[1] = Apr-Jun, dst. Ini sudah
+ * diperiksa terhadap 841 blok di 87 file asli - urutannya konsisten.
+ *
+ * @returns array { summaryRow, barisAkhir, dataRows, rows, capacity }
+ */
+export function blokPeriodeBaterai(merges, itemCol) {
+  const kepala = headerPeriodeBaterai(merges, itemCol);
+  const blok = [];
+
+  // Tinggi blok diambil dari jarak antar kepala. Blok TERAKHIR tidak punya
+  // kepala penutup, jadi tanpa ini barisnya "menyerap" baris di bawahnya
+  // (mis. K41+607 kebaca 4 baris data padahal 3). Pakai tinggi blok sebelumnya.
+  const tinggi = [];
+  for (let i = 0; i + 1 < kepala.length; i++) tinggi.push(kepala[i + 1] - kepala[i]);
+  const tinggiTerakhir = tinggi.length > 0 ? tinggi[tinggi.length - 1] : 8;
+
+  for (let i = 0; i < kepala.length; i++) {
+    const kepalaAkhir = i + 1 < kepala.length
+      ? kepala[i + 1] - 1
+      : kepala[i] + tinggiTerakhir - 1;
+    const rows = [];
+    for (let r = kepala[i] + 2; r <= kepalaAkhir; r += 2) {
+      const cols = kolomTerbukaDiBaris(merges, r, itemCol.colStart, itemCol.colWidth || 1);
+      if (cols.length > 0) rows.push({ row: r, cols });
+    }
+    if (rows.length === 0) continue;          // bukan blok periode (legenda/ekor)
+    blok.push({
+      summaryRow: kepala[i],
+      barisAkhir: kepalaAkhir,
+      dataRows: rows.map((x) => x.row),
+      rows,
+      capacity: rows.reduce((n, x) => n + x.cols.length, 0),
+    });
+  }
+  return blok;
+}
+
+/**
+ * Blok periode yang sesuai untuk sebuah tanggal, dibaca dari merge NYATA.
+ *
+ * Dipakai HANYA kalau baris data versi config ternyata kosong padahal ada
+ * periode lain yang sudah terisi - tanda susunan file itu berbeda dari
+ * template. Kalau layout config sudah pas, jalur ini tidak disentuh sama sekali.
+ *
+ * @returns {object|null} blok { summaryRow, dataRows, rows, capacity }, atau
+ *                        null kalau tab ini tidak punya blok untuk periode itu
+ */
+export function blokBateraiUntukTanggal(merges, itemCol, tanggal) {
+  const blok = blokPeriodeBaterai(merges, itemCol);
+  if (blok.length === 0) return null;
+  const bulan = new Date(tanggal).getMonth();
+  const periode = Math.floor(bulan / (itemCol.periodMonths || 3));
+  return blok[periode] || null;
+}
+
 /**
  * Petakan nilai baterai ke slot nyata -> daftar rentang KONTIGU siap tulis.
  * Kolom yang bolong (ketelan merge lebar) dilewati, jadi tidak ada nilai
@@ -474,11 +562,46 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
       // menelan kolom (mis. K33:R34 di lokasi Repeater) - nilai yang ditulis ke
       // situ HILANG tanpa error. Karena itu petakan ke slot nyata dari merge.
       const values = answer.map((v) => (typeof v === 'string' ? v : JSON.stringify(v)));
-      const layout = batteryLayout(slotMap, itemCol, tanggal);
+      let layout = batteryLayout(slotMap, itemCol, tanggal);
 
       // Kapasitas NYATA dari merge file ini dulu - itu yang menentukan. Batas
       // dari config cuma dipakai kalau merge tak terbaca (jaringan gagal).
-      const slots = await slotBateraiUntukTulis(spreadsheetId, tabName, slotMap, itemCol, tanggal, layout);
+      let slots = await slotBateraiUntukTulis(spreadsheetId, tabName, slotMap, itemCol, tanggal, layout);
+      const mergesTab = cacheMerges.get(`${spreadsheetId}|${tabName}`) || [];
+
+      // Penanda paling andal bahwa susunan file BERBEDA dari template: baris
+      // ringkasan versi config TIDAK mendarat di kepala blok mana pun. Di file
+      // normal, ringkasan config selalu tepat di baris kepala periode.
+      //
+      // Di K41+607 ringkasan config r29 padahal kepala periode r11/r19/r27/r35;
+      // di K0+316 r29 padahal r11/r18/r25/r32; di K27+985 r23 padahal
+      // r11/r21/r31/r41. Di situ config menunjuk anggota blok yang salah - bisa
+      // baris DATA periode lain, jadi menulis ringkasan ke situ menimpa isian
+      // teknisi. Kalau begitu, pakai blok periode NYATA dari merge.
+      const kepalaAda = headerPeriodeBaterai(mergesTab, itemCol);
+      const semuaBlok = kepalaAda.length > 0 ? blokPeriodeBaterai(mergesTab, itemCol) : [];
+      // Butuh minimal 2 blok: tinggi blok terakhir dipelajari dari blok
+      // sebelumnya. Kalau cuma satu blok yang terbaca, susunannya tidak bisa
+      // dipastikan - pakai jalur lama saja, jangan menebak.
+      if (slots && semuaBlok.length >= 2 && !kepalaAda.includes(layout.summaryRow)) {
+        // blok[periode] sudah diperiksa konsisten terhadap 841 blok di 87 file
+        // asli: blok ke-N selalu periode ke-N (Jan-Mar, Apr-Jun, Jul-Sep, Okt-Des).
+        const blok = blokBateraiUntukTanggal(mergesTab, itemCol, tanggal);
+        if (!blok) {
+          throw new Error(
+            `Susunan tabel baterai di sheet ini berbeda dari template dan blok untuk ` +
+            `periode ini tidak bisa dipastikan. Tidak ada yang ditulis supaya data lama ` +
+            `tidak tertimpa. Periksa file Drive lokasi ini.`
+          );
+        }
+        layout = {
+          summaryRow: blok.summaryRow,
+          dataRows: blok.dataRows,
+          colWidth: itemCol.colWidth || 1,
+          capacity: blok.capacity,
+        };
+        slots = { rows: blok.rows, capacity: blok.capacity };
+      }
       const kapasitasNyata = slots ? slots.capacity : layout.capacity;
 
       if (values.length > kapasitasNyata) {

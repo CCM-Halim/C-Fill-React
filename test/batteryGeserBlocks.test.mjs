@@ -120,75 +120,92 @@ test('blok geser: file normal -> ringkasan AMAN ditulis di r29', async () => {
   );
 });
 
-test('blok geser: K41+607 & K0+316 -> DITOLAK, data lama tidak tertimpa', async () => {
+test('blok geser: K41+607 & K0+316 -> BISA ditulis, mendarat di blok periodenya', async () => {
   const m0 = await mod();
   const layout = m0.batteryLayout(cat.slotMap, IC, '2026-10-08');
-  // "bergeser" = r29 justru punya slot per-kolom, jadi baris itu BARIS DATA.
+  // "bergeser" = baris ringkasan versi config tidak mendarat di kepala blok
+  // mana pun, jadi baris itu bukan ringkasan melainkan anggota blok periode lain.
   const geser = DATA.filter(
-    (f) => m0.kolomTerbukaDiBaris(f.merges, layout.summaryRow, IC.colStart, IC.colWidth).length > 0
+    (f) => !m0.headerPeriodeBaterai(f.merges, IC).includes(layout.summaryRow)
   );
   assert.equal(geser.length, 2, `harus tepat 2 file bergeser (K41+607 & K0+316), dapat ${geser.length}`);
+
   for (const f of geser) {
     const sid = idDari(f);
-    const { galat, tertangkap } = await coba(sid, f.merges);
-    console.log(`      ${f.label}: ${galat ? 'DITOLAK' : 'DITERIMA'}`);
-    assert.ok(galat, `${f.label}: harus ditolak karena r29 berisi data asli`);
-    // Bisa ditolak di cek kapasitas ATAU di cek baris ringkasan - dua-duanya
-    // aman; yang penting nol penulisan.
-    assert.match(galat.message, /sudah ada isian teknisi|berbeda dari template|melebihi kapasitas/);
-    assert.equal(tertangkap, null, `${f.label}: tidak boleh ada penulisan sama sekali`);
+    const { galat, tertangkap, m } = await coba(sid, f.merges);
+    console.log(`      ${f.label}: ${galat ? 'DITOLAK' : `DITULIS ke ${(tertangkap.body.data || []).map((d) => d.range.split('!')[1]).join(', ')}`}`);
+    assert.equal(galat, null, `${f.label} harus bisa ditulis: ${galat && galat.message}`);
+
+    // Tujuan tulis harus bagian dari blok periode Okt-Des (blok ke-4), BUKAN
+    // baris ringkasan config. Di situasi ini baris ringkasan config justru baris
+    // data periode lain.
+    const barisTulis = (tertangkap.body.data || [])
+      .filter((d) => /![A-Z]+\d+:[A-Z]+\d+$/.test(d.range))
+      .map((d) => Number(d.range.match(/!([A-Z]+)(\d+):/)[2]));
+    const blok = m.blokPeriodeBaterai(f.merges, IC);
+    assert.equal(blok.length, 4, 'tab ini harus punya 4 blok periode');
+    // 16 nilai tidak selalu memenuhi seluruh blok, jadi yang diperiksa: tulisannya
+    // jatuh di baris-baris blok ke-4, berurutan dari baris pertama.
+    assert.deepEqual(barisTulis, blok[3].dataRows.slice(0, barisTulis.length),
+      `${f.label}: Okt-Des (blok ke-4) harus jadi tujuan tulis`);
+    assert.ok(!barisTulis.includes(layout.summaryRow),
+      `${f.label}: baris ringkasan config (r${layout.summaryRow}) tidak boleh jadi tujuan`);
   }
 });
 
-test('blok geser: K0+316 walau diisi 12 (pas kapasitas) tetap DITOLAK', async () => {
+test('blok geser: K0+316 datanya mendarat di r34 & r36, bukan r29/r32', async () => {
   const f = DATA.find((x) => /K0\+316/.test(x.label));
   if (!f) return;
-  // 12 nilai muat di kapasitas nyatanya (12), jadi cek kapasitas lolos -
-  // penolakan harus datang dari cek baris ringkasan (r29 berisi 12 nilai asli).
-  const { galat, tertangkap } = await coba(idDari(f), f.merges, 12);
-  console.log(`      12 nilai -> ${galat ? 'DITOLAK' : 'DITERIMA'} ${galat ? `(${galat.message.slice(0, 70)}...)` : ''}`);
-  assert.ok(galat, 'K0+316 harus tetap ditolak walau jumlahnya pas');
-  assert.match(galat.message, /berbeda dari template/);
-  assert.equal(tertangkap, null, 'tidak boleh ada penulisan');
+  const { galat, tertangkap } = await coba(idDari(f), f.merges);
+  assert.equal(galat, null, `K0+316 harus bisa ditulis: ${galat && galat.message}`);
+  const tujuan = (tertangkap.body.data || []).map((d) => d.range.split('!')[1]);
+  console.log(`      K0+316 -> ${tujuan.join(', ')}`);
+  assert.ok(tujuan.some((t) => /^G34:/.test(t)), `harus menulis ke r34, dapat ${tujuan.join(', ')}`);
+  assert.ok(tujuan.every((t) => !/^G(29|32):/.test(t)),
+    `r29/r32 baris periode lain - tidak boleh jadi tujuan: ${tujuan.join(', ')}`);
 });
 
-test('blok geser: r29 BERISI -> ditolak; r29 KOSONG -> diterima (K27+985 tidak ikut terkunci)', async () => {
+test('blok geser: r29 berisi data periode LAIN tetap aman - tujuan tulis pindah ke blok nyata', async () => {
   const m0 = await mod();
   const layout = m0.batteryLayout(cat.slotMap, IC, '2026-10-08');
-  // K27+985 nyata: blok bergeser TAPI r29 kosong. Pakai merge file bergeser
-  // + isi r29 kosong -> harus DITERIMA (itulah penghalusan guard-nya).
-  const geser = DATA.find((x) => m0.kolomTerbukaDiBaris(
-    x.merges, layout.summaryRow, IC.colStart, IC.colWidth).length > 0);
+  const geser = DATA.find((x) => !m0.headerPeriodeBaterai(x.merges, IC).includes(layout.summaryRow));
   assert.ok(geser, 'butuh satu file bergeser untuk uji ini');
   const sid = idDari(geser);
 
-  const berisi = await coba(sid, geser.merges, 12,
-    ['V:13,545V  R:5,5mΩ', 'V:13,492V  R:5,4mΩ']);
-  console.log(`      r29 BERISI  -> ${berisi.galat ? 'DITOLAK' : 'DITERIMA'}`);
-  assert.ok(berisi.galat, 'r29 berisi data asli harus ditolak');
-  assert.match(berisi.galat.message, /sudah ada isian teknisi/,
-    `tolakan harus karena isi r29, bukan sebab lain: ${berisi.galat && berisi.galat.message}`);
-  assert.equal(berisi.tertangkap, null, 'tidak boleh menulis');
+  // r29 di file ini berisi 12 nilai asli teknisi (periode Jul-Sep). Penulisan
+  // periode Okt-Des TIDAK boleh menyentuhnya sama sekali.
+  const berisi = await coba(sid, geser.merges, 16, ['V:13,545V  R:5,5mΩ', 'V:13,492V  R:5,4mΩ']);
+  console.log(`      r29 berisi -> ${berisi.galat ? 'DITOLAK' : 'DITULIS ke ' +
+    (berisi.tertangkap.body.data || []).map((d) => d.range.split('!')[1]).join(', ')}`);
+  assert.equal(berisi.galat, null, `harus tetap bisa menulis: ${berisi.galat && berisi.galat.message}`);
+  const tujuanBerisi = (berisi.tertangkap.body.data || []).map((d) => d.range.split('!')[1]);
+  assert.ok(!tujuanBerisi.some((t) => /^G29:/.test(t)),
+    `r29 berisi data asli - tidak boleh jadi tujuan: ${tujuanBerisi.join(', ')}`);
 
-  const kosong = await coba(sid, geser.merges, 12, []);
-  console.log(`      r29 KOSONG  -> ${kosong.galat ? 'DITOLAK' : 'DITERIMA'}` +
-    `${kosong.galat ? ` (${kosong.galat.message.slice(0, 50)}…)` : ''}`);
+  // Kalau r29 kosong (kasus K27+985), perilakunya harus sama: tetap ke blok nyata.
+  const kosong = await coba(sid, geser.merges, 16, []);
+  console.log(`      r29 kosong -> ${kosong.galat ? 'DITOLAK' : 'DITULIS ke ' +
+    (kosong.tertangkap.body.data || []).map((d) => d.range.split('!')[1]).join(', ')}`);
   assert.equal(kosong.galat, null,
     `r29 kosong tidak boleh diblokir (itu kasus K27+985): ${kosong.galat && kosong.galat.message}`);
   assert.ok(kosong.tertangkap, 'harus ada penulisan');
 });
 
-test('blok geser: gagal baca isi r29 -> DITOLAK (jangan tebak-tebakan)', async () => {
+test('blok geser: r29 tak terbaca -> tetap ke blok nyata, tidak menebak', async () => {
   const m0 = await mod();
   const layout = m0.batteryLayout(cat.slotMap, IC, '2026-10-08');
-  const geser = DATA.find((x) => m0.kolomTerbukaDiBaris(
-    x.merges, layout.summaryRow, IC.colStart, IC.colWidth).length > 0);
+  const geser = DATA.find((x) => !m0.headerPeriodeBaterai(x.merges, IC).includes(layout.summaryRow));
   if (!geser) return;
-  // bacaBaris balikin null saat API gagal -> harus diperlakukan "jangan menulis".
-  const { galat, tertangkap } = await coba(idDari(geser), geser.merges, 12, null);
-  console.log(`      baca gagal  -> ${galat ? 'DITOLAK' : 'DITERIMA'}`);
-  assert.ok(galat, 'kalau isi r29 tidak bisa dipastikan, jangan menulis');
-  assert.equal(tertangkap, null, 'tidak boleh menulis');
+  // bacaBaris balikin [] saat API gagal -> keputusan blok TIDAK bergantung pada
+  // isi r29 lagi (blok ditentukan dari merge), jadi hasilnya harus tetap benar.
+  const { galat, tertangkap } = await coba(idDari(geser), geser.merges, 16, null);
+  console.log(`      baca gagal -> ${galat ? 'DITOLAK' : 'DITULIS'}`);
+  assert.equal(galat, null, `tidak boleh gagal: ${galat && galat.message}`);
+  const tujuan = (tertangkap.body.data || []).map((d) => d.range.split('!')[1]);
+  assert.ok(tujuan.some((t) => /^G37:/.test(t) || /^G34:/.test(t)),
+    `harus ke blok periode Okt-Des: ${tujuan.join(', ')}`);
+  assert.ok(!tujuan.some((t) => /^G29:/.test(t)),
+    `tidak boleh menulis ke r29: ${tujuan.join(', ')}`);
 });
 
 test('blok geser: K41+475 (r29 ringkasan, r33 selebar 12) tetap bisa ditulis', async () => {
