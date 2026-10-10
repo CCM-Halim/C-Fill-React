@@ -5985,8 +5985,8 @@ export const CATEGORIES = [
   },
   {
     "id": "cat45",
-    "sheetName": "Telephone IP (3,6M)",
-    "sheetAliases": ["Telephone IP", "Telephone IP (3M)"],
+    "sheetName": "Telephone IP (3M,6M)",
+    "sheetAliases": ["Telephone IP (3,6M)", "Telephone IP (3M)", "Telephone IP"],
     "title": "Lembar Pemeriksaan dan Perawatan Peralatan Telephone dan Softswitch AG (3 Bulanan, 6 Bulanan)",
     "short_name": "Telephone dan Softswitch IP",
     "items": [
