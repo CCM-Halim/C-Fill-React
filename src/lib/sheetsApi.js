@@ -319,16 +319,46 @@ export function bersihkanCacheMerges() {
  * yang sudah diisi teknisi.
  *
  * Kejadian nyata: K41+607 Karawang Signal (202) dan K0+316 Halim Signal (101).
- * Blok baterainya bergeser turun satu blok, jadi r29 jadi baris data (terisi
- * data 8 Agustus 2026), bukan ringkasan.
+ * Blok baterainya bergeser turun satu blok, jadi r29 jadi baris data.
  *
- * @returns nomor baris ringkasan yang aman, atau null kalau tak ada.
+ * TAPI "self."-nya tidak cukup jadi alasan untuk memblokir: di K27+985 SRS 2
+ * blok baterainya juga bergeser, tapi r29 (self.) justru KOSONG - tidak ada
+ * yang bisa hilang, dan teknisi tetap perlu bisa mengisi. Karena itu blokir
+ * hanya kalau baris itu benar-benar berisi data.
+ *
+ * @returns {number|null} baris ringkasan yang aman, atau null kalau tak boleh ditulis.
  */
-export function barisRingkasanAman(merges, layout, itemCol) {
+export function barisRingkasanAman(merges, layout, itemCol, nilaiBaris = null) {
   if (!layout.summaryRow) return null;
   const kolomAnchor = kolomTerbukaDiBaris(merges, layout.summaryRow, itemCol.colStart, layout.colWidth);
   if (kolomAnchor.length === 0) return layout.summaryRow;   // memang sel gabungan lebar
-  return null;                                              // itu baris data - jangan timpa
+
+  // Baris itu berslot per-kolom -> baris DATA. Aman HANYA kalau benar-benar kosong.
+  if (!nilaiBaris) return null;                              // tak tahu isinya: jangan tebak
+  if (!Array.isArray(nilaiBaris)) return null;
+  // nilaiBaris dibaca mulai dari colStart, jadi indeks 0 = kolom pertama.
+  const adaIsi = nilaiBaris.slice(0, layout.colWidth)
+    .some((v) => String(v ?? '').trim() !== '');
+  return adaIsi ? null : layout.summaryRow;
+}
+
+/**
+ * Baca baris tertentu satu kali (dipakai untuk memutuskan boleh-tidaknya
+ * menulis ringkasan). Balikin null kalau gagal baca - pemanggil harus
+ * memperlakukannya sebagai "tidak boleh menulis", bukan "kosong".
+ */
+async function bacaBaris(spreadsheetId, tabName, row, colStart, colWidth) {
+  try {
+    const range = `'${tabName}'!${colLetter(colStart)}${row}:${colLetter(colStart + colWidth - 1)}${row}`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/` +
+      `${encodeURIComponent(range)}?valueRenderOption=UNFORMATTED_VALUE`;
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${await getValidAccessToken()}` } });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return (data.values && data.values[0]) || [];
+  } catch (e) {
+    return null;
+  }
 }
 
 /**
@@ -478,15 +508,24 @@ export async function writeMonthlySlot(spreadsheetId, tabName, slotMap, { tangga
           );
         }
         // Baris ringkasan justru terisi slot per-kolom = blok baterai file ini
-        // bergeser. Tolak semua supaya tidak ada yang ditulis setengah jalan.
-        if (layout.summaryRow && !barisRingkasanAman(
-              cacheMerges.get(`${spreadsheetId}|${tabName}`) || [], layout, itemCol)) {
-          throw new Error(
-            `Susunan baris di sheet ini berbeda dari template: baris ${layout.summaryRow} seharusnya ` +
-            `ringkasan, tapi di file ini justru berisi data baterai per-kolom. ` +
-            `Tidak ada yang ditulis supaya data lama tidak tertimpa. ` +
-            `Rapikan file Drive-nya dulu (geser blok baterai ke baris ${layout.dataRows.join(' & ')}).`
-          );
+        // bergeser. Tolak HANYA kalau baris itu memang berisi data - kalau
+        // kosong, tidak ada yang bisa hilang dan teknisi tetap harus bisa isi.
+        if (layout.summaryRow) {
+          const mergesTab = cacheMerges.get(`${spreadsheetId}|${tabName}`) || [];
+          const kolomAnchor = kolomTerbukaDiBaris(mergesTab, layout.summaryRow, itemCol.colStart, layout.colWidth);
+          if (kolomAnchor.length > 0) {
+            const isiBaris = await bacaBaris(spreadsheetId, tabName, layout.summaryRow,
+                                             itemCol.colStart, layout.colWidth);
+            if (!barisRingkasanAman(mergesTab, layout, itemCol, isiBaris)) {
+              throw new Error(
+                `Susunan baris di sheet ini berbeda dari template: baris ${layout.summaryRow} seharusnya ` +
+                `ringkasan, tapi di file ini justru berisi data baterai per-kolom` +
+                `${Array.isArray(isiBaris) ? ' (sudah ada isian teknisi)' : ''}. ` +
+                `Tidak ada yang ditulis supaya data lama tidak tertimpa. ` +
+                `Rapikan file Drive-nya dulu (geser blok baterai ke baris ${layout.dataRows.join(' & ')}).`
+              );
+            }
+          }
         }
         for (const r of rencana) {
           data.push({
