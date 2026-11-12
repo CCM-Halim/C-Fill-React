@@ -69,7 +69,11 @@ export function negasiStandar(standar) {
     [/\bdi area hijau\b/gi, 'tidak di area hijau'],
     [/\bsudah\b/gi, 'belum'],
     [/\b(\w+) dengan baik\b/gi, (m, kata) => (/^(tidak|belum)$/i.test(kata) ? m : `tidak ${kata.toLowerCase()} dengan baik`)],
-    [/(?<!belum |tidak |dengan )\b(baik|bagus|normal|sesuai|kuat|rapi|bersih|benar|jelas|akurat|sensitif|utuh|kokoh)\b/gi, (m, kata) => `tidak ${kata.toLowerCase()}`],
+    // Tanpa regex lookbehind ((?<!...)): Safari/iOS < 16.4 tidak mengenalinya dan
+    // SELURUH aplikasi gagal dimuat (halaman putih). Pengecekan kata sebelumnya
+    // dilakukan manual lewat offset.
+    [/\b(baik|bagus|normal|sesuai|kuat|rapi|bersih|benar|jelas|akurat|sensitif|utuh|kokoh)\b/gi,
+      (m, kata, offset, str) => (/(belum|tidak|dengan) $/i.test(str.slice(0, offset)) ? m : `tidak ${kata.toLowerCase()}`)],
   ];
   let hasil = t;
   for (const [pola, ganti] of rules) hasil = hasil.replace(pola, ganti);
@@ -79,7 +83,7 @@ export function negasiStandar(standar) {
   hasil = hasil
     .replace(/\s+/g, ' ')
     .replace(/\s+,/g, ',')
-    .replace(/(?<!\d),(?=\S)/g, ', ')
+    .replace(/(\d?),(?=\S)/g, (m, d) => (d ? m : ', '))
     .trim();
 
   // Tidak ada satu pun aturan yang cocok -> jangan sampai teksnya sama persis
