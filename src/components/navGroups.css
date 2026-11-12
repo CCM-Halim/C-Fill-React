@@ -1,0 +1,48 @@
+/* Menu bertingkat (Perawatan, Window Time):
+ *   - layar lebar : accordion di sidebar (drop-down)
+ *   - layar HP    : kotak pilihan yang muncul ke atas dari bottom nav (drop-up)
+ * Dipisah dari styles.css supaya styles.css tidak perlu diubah. */
+
+/* ---------- Sidebar (komputer / tablet lebar) ---------- */
+.nav-group-btn{
+  width:100%; background:none; border:none; font:inherit; text-align:left; cursor:pointer;
+}
+.nav-group-btn .chev{ margin-left:auto; transition:transform .18s ease; opacity:.7; }
+.nav-group-btn[aria-expanded="true"] .chev{ transform:rotate(180deg); }
+.nav-group-btn.has-active{ color:var(--accent-strong); font-weight:600; }
+.nav-sub{
+  display:flex; flex-direction:column; gap:2px;
+  margin:2px 0 6px 18px; padding-left:6px; border-left:2px solid var(--border);
+}
+.nav-item.nav-sub-item{ font-size:13.5px; padding-top:8px; padding-bottom:8px; }
+
+/* ---------- Bottom nav (HP) ---------- */
+.bn-group{ position:relative; flex:1; display:flex; }
+.bn-group > .bottom-nav-item{
+  flex:1; position:relative; background:none; border:none; font-family:inherit; cursor:pointer;
+}
+.bottom-nav-item .bn-label{ white-space:nowrap; }
+/* Panah kecil di pojok kanan atas ikon: penanda "ini menu yang bisa dibuka". */
+.bottom-nav-item .bn-chev{
+  position:absolute; top:5px; left:calc(50% + 12px); width:11px !important; height:11px !important;
+  opacity:.75; transition:transform .18s ease;
+}
+.bottom-nav-item[aria-expanded="true"] .bn-chev{ transform:rotate(180deg); }
+.bottom-nav-item.open{ background:var(--accent-soft); color:var(--accent-strong); }
+.bottom-nav-item.open svg{ color:var(--accent-strong); }
+
+.bn-scrim{
+  position:fixed; inset:0; z-index:19; background:rgba(32,38,42,0.28);
+}
+.bn-sheet{
+  position:absolute; bottom:calc(100% + 12px); left:50%; transform:translateX(-50%);
+  min-width:176px; background:var(--surface); border:1px solid var(--border);
+  border-radius:14px; box-shadow:0 8px 28px rgba(32,38,42,0.22); padding:6px; z-index:21;
+}
+.bn-sheet-item{
+  display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:10px;
+  text-decoration:none; color:var(--ink); font-size:14px; font-weight:600; white-space:nowrap;
+}
+.bn-sheet-item svg{ width:19px; height:19px; flex-shrink:0; opacity:.85; }
+.bn-sheet-item.active{ background:var(--accent-soft); color:var(--accent-strong); }
+.bn-sheet-item.active svg{ color:var(--accent-strong); opacity:1; }
