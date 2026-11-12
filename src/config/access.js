@@ -19,6 +19,7 @@ import { FOREMAN_EMAILS } from './foremen';
 // Tambahkan email teknisi di sini bila perlu.
 export const EXTRA_ALLOWED_EMAILS = [
   'ccmhalimonsite@gmail.com',
+'dedysusanto223@gmail.com',
 ];
 
 // Gabungan final daftar yang diizinkan (dinormalisasi ke huruf kecil).
