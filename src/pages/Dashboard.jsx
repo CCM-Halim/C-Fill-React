@@ -4,6 +4,7 @@ import { useAuth } from '../components/AuthContext';
 import { getJadwalKunjunganBulanIni, getAllLogGangguan } from '../lib/cfillService';
 import ProgressKerjaCard from '../components/ProgressKerjaCard';
 import TemuanGangguanCard from '../components/TemuanGangguanCard';
+import TrenTemuanCard from '../components/TrenTemuanCard';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -49,6 +50,8 @@ export default function Dashboard() {
       {jadwal && jadwal.available && (
         <ProgressKerjaCard jadwal={jadwal} onOpenPeriod={setPeriodModal} />
       )}
+
+      <TrenTemuanCard log={log} />
 
       <TemuanGangguanCard
         log={log}
