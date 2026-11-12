@@ -302,3 +302,59 @@ export function sortGangguan(items) {
 }
 
 export { BULAN_ID };
+
+const BULAN_SINGKAT = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+/**
+ * Tren temuan per bulan untuk grafik Dashboard.
+ *
+ * Semua kejadian dihitung (baru maupun lama, open maupun close), dikelompokkan
+ * menurut bulan di kolom Tanggal (acuan yang sama dengan filter bulan).
+ *
+ *  - closed / open / unknown : jumlah kejadian di bulan itu per status (batang)
+ *  - total                   : closed + open + unknown di bulan itu
+ *  - kumulatif               : total SEMUA kejadian sampai akhir bulan itu,
+ *                              termasuk bulan/tahun sebelumnya (garis)
+ *  - openKumulatif           : berapa kejadian dari bulan itu dan sebelumnya
+ *                              yang statusnya masih open sekarang
+ *
+ * `tahun` = angka tahun -> 12 bulan Jan-Des tahun itu. 'all' -> dari bulan
+ * pertama sampai bulan terakhir yang ada datanya. Baris tanpa tanggal tidak bisa
+ * ditempatkan di bulan mana pun -> dihitung di `tanpaTanggal`, tidak dibuang diam-diam.
+ */
+export function hitungTrenBulanan(items, { tahun = 'all', tab = 'all' } = {}) {
+  const pakai = (items || []).filter((it) => tab === 'all' || it.tab === tab);
+  const berTanggal = pakai.filter((it) => it.tanggal);
+  const tanpaTanggal = pakai.length - berTanggal.length;
+  if (berTanggal.length === 0) return { bulan: [], tanpaTanggal, total: pakai.length };
+
+  const idx = (y, m) => y * 12 + (m - 1);
+  const semuaIdx = berTanggal.map((it) => idx(it.tanggal.year, it.tanggal.month));
+  let dari; let sampai;
+  if (tahun === 'all') { dari = Math.min(...semuaIdx); sampai = Math.max(...semuaIdx); }
+  else { dari = idx(Number(tahun), 1); sampai = idx(Number(tahun), 12); }
+
+  const bulan = [];
+  for (let i = dari; i <= sampai; i += 1) {
+    const year = Math.floor(i / 12); const month = (i % 12) + 1;
+    bulan.push({
+      key: `${year}-${String(month).padStart(2, '0')}`, year, month,
+      label: `${BULAN_SINGKAT[month - 1]}${tahun === 'all' ? ` ${String(year).slice(2)}` : ''}`,
+      open: 0, closed: 0, unknown: 0, total: 0, kumulatif: 0, openKumulatif: 0,
+    });
+  }
+  let sebelum = 0; let openSebelum = 0;
+  for (const it of berTanggal) {
+    const i = idx(it.tanggal.year, it.tanggal.month);
+    if (i < dari) { sebelum += 1; if (it.status === STATUS.OPEN) openSebelum += 1; continue; }
+    if (i > sampai) continue;
+    const b = bulan[i - dari];
+    b.total += 1;
+    if (it.status === STATUS.OPEN) b.open += 1;
+    else if (it.status === STATUS.CLOSED) b.closed += 1;
+    else b.unknown += 1;
+  }
+  let kum = sebelum; let kumOpen = openSebelum;
+  for (const b of bulan) { kum += b.total; kumOpen += b.open; b.kumulatif = kum; b.openKumulatif = kumOpen; }
+  return { bulan, tanpaTanggal, total: pakai.length };
+}
