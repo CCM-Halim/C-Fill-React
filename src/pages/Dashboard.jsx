@@ -5,6 +5,8 @@ import { getJadwalKunjunganBulanIni, getAllLogGangguan } from '../lib/cfillServi
 import ProgressKerjaCard from '../components/ProgressKerjaCard';
 import TemuanGangguanCard from '../components/TemuanGangguanCard';
 import TrenTemuanCard from '../components/TrenTemuanCard';
+import KelolaDashboardModal from '../components/KelolaDashboardModal';
+import { isAdminEmail } from '../config/access';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -16,11 +18,19 @@ export default function Dashboard() {
   const [logLoading, setLogLoading] = useState(true);
   const [logError, setLogError] = useState(null);
 
+  const [kelolaOpen, setKelolaOpen] = useState(false);
+  const isAdmin = isAdminEmail(user?.email);
+
   const [periodModal, setPeriodModal] = useState(null); // { label, status, items }
   const [gangguanModal, setGangguanModal] = useState(null); // detail 1 kejadian
 
-  useEffect(() => {
+  const muatJadwal = () => {
+    setJadwal(null); setJadwalError(null);
     getJadwalKunjunganBulanIni().then(setJadwal).catch((e) => setJadwalError(e.message));
+  };
+
+  useEffect(() => {
+    muatJadwal();
 
     // Semua tab Log Gangguan dibaca sekali, lalu difilter di sisi client -
     // supaya ganti-ganti filter tidak bolak-balik request ke Sheets.
@@ -33,8 +43,17 @@ export default function Dashboard() {
   return (
     <section>
       <div className="card" style={{ marginBottom: 16 }}>
-        <div className="card-title">Halo, {user?.name?.split(' ')[0] || 'Teknisi'} 👋</div>
-        <div className="muted">{user?.email}</div>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
+          <div style={{ minWidth: 0 }}>
+            <div className="card-title">Halo, {user?.name?.split(' ')[0] || 'Teknisi'} 👋</div>
+            <div className="muted" style={{ overflowWrap: 'anywhere' }}>{user?.email}</div>
+          </div>
+          {isAdmin && (
+            <button className="btn btn-secondary btn-small" style={{ flex: '0 0 auto', whiteSpace: 'nowrap' }} onClick={() => setKelolaOpen(true)}>
+              ⚙️ Kelola Dashboard
+            </button>
+          )}
+        </div>
       </div>
 
       {jadwal === null && !jadwalError && (
@@ -68,6 +87,8 @@ export default function Dashboard() {
           <button className="btn btn-secondary" onClick={() => navigate('/dokumentasi')}>Upload Dokumentasi</button>
         </div>
       </div>
+
+      {kelolaOpen && <KelolaDashboardModal onClose={() => setKelolaOpen(false)} onSaved={muatJadwal} />}
 
       {periodModal && (
         <div className="modal-overlay" onClick={() => setPeriodModal(null)}>
