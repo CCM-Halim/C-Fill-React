@@ -72,6 +72,11 @@ export default function ProgressKerjaCard({ jadwal, onOpenPeriod }) {
   return (
     <div className="card" style={{ marginBottom: 16 }}>
       <div className="card-title">Progress Kerja {jadwal.bulan} {jadwal.tahun}</div>
+      {jadwal.catatanFallback && (
+        <div className="notice-box" style={{ fontSize: 12, margin: '4px 0 10px' }}>
+          🕘 {jadwal.catatanFallback}
+        </div>
+      )}
       <div className="muted" style={{ marginBottom: 6 }}>
         Dari: {jadwal.fileName} · {jadwal.finishedCount} selesai, {jadwal.notYetCount} belum dari {jadwal.total} pekerjaan terjadwal
       </div>
