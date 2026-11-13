@@ -42,6 +42,9 @@ const SCOPES = [
   'https://www.googleapis.com/auth/userinfo.profile'
 ].join(' ');
 
+const SILENT_TIMEOUT_MS = 8000;      // batas tunggu pembaruan token diam-diam
+const REFRESH_TIMEOUT_MS = 20000;    // batas tunggu pembaruan token saat menyimpan
+
 let tokenClient = null;
 let currentToken = null; // { access_token, expires_at }
 let currentUser = null;  // { email, name, picture }
@@ -137,6 +140,15 @@ async function ensureTokenClient() {
     tokenClient = window.google.accounts.oauth2.initTokenClient({
       client_id: CLIENT_ID,
       scope: SCOPES,
+      // Popup gagal dibuka / ditutup / diblokir (Safari memblokir popup yang tidak
+      // berasal dari ketukan user, termasuk pembaruan token diam-diam). Tanpa
+      // error_callback ini GIS TIDAK memanggil callback sama sekali -> promise
+      // menggantung selamanya -> layar putih.
+      error_callback: (err) => {
+        const pending = pendingAuth;
+        pendingAuth = null;
+        if (pending) pending.reject((err && (err.type || err.message)) || 'popup_error');
+      },
       callback: (resp) => {
         const pending = pendingAuth;
         pendingAuth = null;
@@ -217,13 +229,33 @@ async function fetchUserInfo() {
  */
 export function silentLogin() {
   return new Promise((resolve) => {
+    let selesai = false;
+    const akhiri = (hasil) => {
+      if (selesai) return;
+      selesai = true;
+      clearTimeout(timer);
+      resolve(hasil);
+    };
+    // Pengaman: Safari/iOS bisa membuat permintaan token diam-diam menggantung
+    // tanpa pernah memanggil callback. Tanpa batas waktu, aplikasi menampilkan
+    // layar putih selamanya. Lewat batas -> anggap gagal (null), app lanjut.
+    const timer = setTimeout(() => {
+      pendingAuth = null;
+      akhiri(null);
+    }, SILENT_TIMEOUT_MS);
     ensureTokenClient().then((client) => {
+      if (selesai) return;
       pendingAuth = {
-        resolve: (res) => resolve(res),
-        reject: () => resolve(null), // silent: gagal = null, bukan error
+        resolve: (res) => akhiri(res),
+        reject: () => akhiri(null), // silent: gagal = null, bukan error
       };
-      client.requestAccessToken({ prompt: '' });
-    }).catch(() => resolve(null));
+      try {
+        client.requestAccessToken({ prompt: '' });
+      } catch {
+        pendingAuth = null;
+        akhiri(null);
+      }
+    }).catch(() => akhiri(null));
   });
 }
 
@@ -314,13 +346,37 @@ export async function getValidAccessToken() {
   // Token expired -> refresh silent
   const client = await ensureTokenClient();
   return new Promise((resolve, reject) => {
+    let selesai = false;
+    const timer = setTimeout(() => {
+      if (selesai) return;
+      selesai = true;
+      pendingAuth = null;
+      reject(new Error('Sesi login berakhir. Keluar lalu login ulang.'));
+    }, REFRESH_TIMEOUT_MS);
     pendingAuth = {
       resolve: (res) => {
+        if (selesai) return;
+        selesai = true;
+        clearTimeout(timer);
         catatPenyegaranBerhasil();
         resolve(res.token.access_token);
       },
-      reject: () => reject(new Error('Sesi login berakhir. Silakan login ulang.')),
+      reject: () => {
+        if (selesai) return;
+        selesai = true;
+        clearTimeout(timer);
+        reject(new Error('Sesi login berakhir. Keluar lalu login ulang.'));
+      },
     };
-    client.requestAccessToken({ prompt: '' });
+    try {
+      client.requestAccessToken({ prompt: '' });
+    } catch {
+      if (!selesai) {
+        selesai = true;
+        clearTimeout(timer);
+        pendingAuth = null;
+        reject(new Error('Sesi login berakhir. Keluar lalu login ulang.'));
+      }
+    }
   });
 }
