@@ -7,7 +7,7 @@ import {
   silentLogin,
   bisaPulihkanSesiDiamDiam,
 } from '../lib/googleAuth';
-import { isForemanEmail } from '../config/foremen';
+import { isForemanEmail, getForemanRole } from '../config/foremen';
 import { isAllowedEmail } from '../config/access';
 
 const AuthContext = createContext(null);
@@ -119,9 +119,10 @@ export function AuthProvider({ children }) {
   }
 
   const isForeman = isForemanEmail(user?.email);
+  const foremanRole = getForemanRole(user?.email);
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, checkingSilent, login: handleLogin, logout: handleLogout, isForeman }}>
+    <AuthContext.Provider value={{ user, loading, error, checkingSilent, login: handleLogin, logout: handleLogout, isForeman, foremanRole }}>
       {children}
     </AuthContext.Provider>
   );

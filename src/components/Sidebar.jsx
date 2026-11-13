@@ -48,7 +48,7 @@ const cocok = (path, to) => path === to || path.startsWith(to + '/');
 const grupAktif = (grup, path) => grup.children.some((c) => cocok(path, c.to));
 
 export default function Sidebar() {
-  const { user, logout, isForeman } = useAuth();
+  const { user, logout, isForeman, foremanRole } = useAuth();
   const { pathname } = useLocation();
   const initial = (user?.name || user?.email || '?').trim().charAt(0).toUpperCase();
   const menu = isForeman ? [...MENU, FOREMAN_NAV_ITEM] : MENU;
@@ -135,7 +135,7 @@ export default function Sidebar() {
             <span className="user-avatar">{initial}</span>
             <span className="user-email">{user?.email}</span>
           </div>
-          {isForeman ? <div className="badge" style={{ marginBottom: 4 }}>Foreman</div> : null}
+          {isForeman ? <div className="badge" style={{ marginBottom: 4 }}>{foremanRole || 'Foreman'}</div> : null}
           <button className="btn btn-ghost btn-block" onClick={logout}><IconLogout /> Keluar</button>
           <div className="brand-copyright">{COPYRIGHT_LINE}</div>
         </div>
