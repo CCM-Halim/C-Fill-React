@@ -720,7 +720,7 @@ export async function uploadFileToFolder(folderId, file, description) {
 export async function listFilesInFolder(folderId) {
   const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
   const list = await driveFetch(
-    `/files?q=${q}&fields=files(id,name,webViewLink,modifiedTime,size)&orderBy=modifiedTime desc&corpora=allDrives`
+    `/files?q=${q}&fields=files(id,name,mimeType,webViewLink,modifiedTime,size)&orderBy=modifiedTime desc&corpora=allDrives`
   );
   return list.files || [];
 }
