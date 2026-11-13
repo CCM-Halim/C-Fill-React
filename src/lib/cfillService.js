@@ -9,6 +9,7 @@ import { getOrCreateSubfolder, uploadFileToFolder, listFilesInFolder, getOrConve
 import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
 import { INSTRUMENT_SLOT_MAP, resolveInstrumentName } from '../config/instruments';
+import { BULAN_ID as BULAN_JADWAL, pilihFolderTahun, kandidatPersis, kandidatTerbaru, pilihFileJadwal } from './jadwalFolder';
 import { SLOT_MAP_OVERRIDES } from '../config/slotMapOverrides';
 import { logActivity } from './activityLog';
 import { getCurrentUser } from './googleAuth';
@@ -53,6 +54,11 @@ async function getSiteSpreadsheetId(bcFolderId, originalFileName) {
  */
 function tabKandidat(category) {
   return [category.sheetName, ...(category.sheetAliases || [])];
+}
+
+function parseTahunFile(nama) {
+  const m = String(nama || '').match(/(?:^|[^0-9])((?:19|20)\d{2})(?:[^0-9]|$)/);
+  return m ? Number(m[1]) : null;
 }
 
 const BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -536,20 +542,68 @@ export async function submitVerification({ buildingCategory, siteName, monthInde
  */
 
 const JADWAL_CONFIG_FILE_ID = import.meta.env.VITE_JADWAL_CONFIG_FILE_ID;
+const JADWAL_CONFIG_FILE_NAME = 'cfill-jadwal-config.json';
+let jadwalConfigIdCache = null;
+
+/**
+ * Cari ID file config override jadwal. Urutan: (1) env VITE_JADWAL_CONFIG_FILE_ID
+ * kalau diisi, (2) file "cfill-jadwal-config.json" di folder Jadwal Kunjungan.
+ * Dengan `buat=true` (hanya dipakai saat admin menyimpan), file dibuat otomatis
+ * kalau belum ada - jadi tidak perlu setup manual lagi.
+ */
+async function resolveJadwalConfigId({ buat = false } = {}) {
+  if (JADWAL_CONFIG_FILE_ID) return JADWAL_CONFIG_FILE_ID;
+  if (jadwalConfigIdCache) return jadwalConfigIdCache;
+  if (!JADWAL_KUNJUNGAN_FOLDER_ID) return null;
+  const files = await listFilesInFolder(JADWAL_KUNJUNGAN_FOLDER_ID);
+  const ada = files.find((f) => f.name === JADWAL_CONFIG_FILE_NAME);
+  if (ada) { jadwalConfigIdCache = ada.id; return ada.id; }
+  if (!buat) return null;
+  const blob = new Blob(['{}'], { type: 'application/json' });
+  const file = new File([blob], JADWAL_CONFIG_FILE_NAME, { type: 'application/json' });
+  const dibuat = await uploadFileToFolder(JADWAL_KUNJUNGAN_FOLDER_ID, file, 'Config link jadwal bulanan C-Fill (diatur admin lewat Dashboard)');
+  jadwalConfigIdCache = dibuat.id;
+  return dibuat.id;
+}
 
 /**
  * Baca config override link jadwal bulanan (diatur admin lewat Dashboard) -
  * format isinya JSON `{ "2026-9": "<driveFileId>" }`. Return {} kalau file
- * config belum diatur atau isinya masih kosong.
+ * config belum ada atau isinya masih kosong.
  */
 async function getJadwalConfig() {
-  if (!JADWAL_CONFIG_FILE_ID) return {};
   try {
-    const raw = await readFileContentAsText(JADWAL_CONFIG_FILE_ID);
-    return JSON.parse(raw || '{}');
+    const id = await resolveJadwalConfigId();
+    if (!id) return {};
+    const raw = await readFileContentAsText(id);
+    const parsed = JSON.parse(raw || '{}');
+    return parsed && typeof parsed === 'object' ? parsed : {};
   } catch {
     return {};
   }
+}
+
+/** Daftar override yang tersimpan: [{ tahun, bulanIndex, fileId }], terbaru dulu. */
+export async function listJadwalKunjunganOverrides() {
+  const config = await getJadwalConfig();
+  return Object.entries(config)
+    .map(([key, fileId]) => {
+      const [t, b] = key.split('-').map(Number);
+      return { tahun: t, bulanIndex: b - 1, fileId };
+    })
+    .filter((o) => Number.isFinite(o.tahun) && o.bulanIndex >= 0 && o.bulanIndex < 12)
+    .sort((x, y) => (y.tahun - x.tahun) || (y.bulanIndex - x.bulanIndex));
+}
+
+async function tulisJadwalConfig(config) {
+  const id = await resolveJadwalConfigId({ buat: true });
+  if (!id) {
+    throw new Error(
+      'Tempat menyimpan config belum bisa ditentukan. Isi VITE_JADWAL_KUNJUNGAN_FOLDER_ID ' +
+      '(atau VITE_JADWAL_CONFIG_FILE_ID) di Environment Variables Vercel.'
+    );
+  }
+  await writeFileContentAsText(id, JSON.stringify(config, null, 1));
 }
 
 /**
@@ -557,28 +611,38 @@ async function getJadwalConfig() {
  * disimpan sebagai OVERRIDE, jadi nggak perlu lagi taruh file ke folder
  * dengan struktur nama yang pas persis. Sekali di-set, getJadwalKunjunganBulanIni
  * pakai file ini LANGSUNG (skip pencarian folder bulanan sama sekali).
+ * Link dicek dulu (harus Google Sheets yang bisa dibuka & punya tab jadwal)
+ * supaya link salah tidak merusak Dashboard.
  */
 export async function setJadwalKunjunganOverride(bulanIndex, tahun, driveLinkOrId) {
-  if (!JADWAL_CONFIG_FILE_ID) {
-    throw new Error(
-      'VITE_JADWAL_CONFIG_FILE_ID belum diatur. Buat 1 file teks kosong (isi awal: {}) di Google Drive, ' +
-      'catat ID-nya (dari URL), lalu tambahkan sebagai Environment Variable ini.'
-    );
-  }
   const fileId = extractDriveFileId(driveLinkOrId);
   if (!fileId) throw new Error('Link/ID Google Sheets tidak valid.');
 
+  try {
+    await resolveTabName(fileId, ['Jadwal Kunjungan MR', 'Jadwal Kunjungan MR New', 'jadwal kunjungan MR New']);
+  } catch (e) {
+    throw new Error('Link tidak bisa dipakai: ' + e.message);
+  }
+
   const config = await getJadwalConfig();
-  const key = `${tahun}-${bulanIndex + 1}`;
-  config[key] = fileId;
-  await writeFileContentAsText(JADWAL_CONFIG_FILE_ID, JSON.stringify(config, null, 1));
+  config[`${tahun}-${bulanIndex + 1}`] = fileId;
+  await tulisJadwalConfig(config);
+  return { success: true };
+}
+
+/** Hapus override 1 bulan - Dashboard kembali mencari file di folder bulanan. */
+export async function removeJadwalKunjunganOverride(bulanIndex, tahun) {
+  const config = await getJadwalConfig();
+  delete config[`${tahun}-${bulanIndex + 1}`];
+  await tulisJadwalConfig(config);
   return { success: true };
 }
 
 export async function getJadwalKunjunganBulanIni() {
   const now = new Date();
-  const namaBulan = BULAN_ID[now.getMonth()];
-  const tahun = now.getFullYear();
+  let namaBulan = BULAN_ID[now.getMonth()];
+  let tahun = now.getFullYear();
+  let catatanFallback = null;
 
   // 1. Cek dulu apakah admin sudah nempel link override buat bulan ini - kalau
   // ada, pakai LANGSUNG, skip pencarian folder sama sekali (lebih cepat & pasti).
@@ -593,33 +657,45 @@ export async function getJadwalKunjunganBulanIni() {
       return { available: false, reason: 'VITE_JADWAL_KUNJUNGAN_FOLDER_ID belum diatur di .env, dan admin belum tempel link manual buat bulan ini.' };
     }
 
-    // Struktur folder: [Root] / [Bulan, mis. "9. September"] / [file jadwal] -
-    // ada 1 lapis folder bulan dulu SEBELUM file-nya, jadi cari folder bulan ini
-    // dulu, baru cari file di dalamnya (bukan cari file langsung di folder root).
-    // Folder bulan di Drive TIDAK seragam: root memakai "9. September" (tanpa
-    // nol di depan) sedangkan folder Dokumentasi Kegiatan memakai
-    // "09. September". Pencocokan karena itu mengabaikan AWALAN NOMOR-nya dan
-    // mencari nama bulan sebagai kata utuh, supaya kedua bentuk itu ketemu.
-    const entries = await listFilesInFolder(JADWAL_KUNJUNGAN_FOLDER_ID);
-    const bulanLower = namaBulan.toLowerCase();
-    const cocokBulan = (nama) => {
-      const n = String(nama || '').toLowerCase();
-      const tanpaNomor = n.replace(/^\s*\d+\s*[.\-)]?\s*/, '');
-      return tanpaNomor.startsWith(bulanLower) || n.includes(bulanLower);
+    // Struktur: [Root] / [Bulan, mis. "9. September"] / [file jadwal]. Berlaku
+    // untuk tahun berapa pun; kalau ada lapisan folder tahun ("2027") atau
+    // tahun tertulis di nama folder, itu ikut dikenali (lihat lib/jadwalFolder.js).
+    // Prioritas: (2) folder bulan berjalan, (3) folder bulan terakhir yang ada.
+    const isFolder = (f) => !f.mimeType || f.mimeType === 'application/vnd.google-apps.folder';
+    let entries = (await listFilesInFolder(JADWAL_KUNJUNGAN_FOLDER_ID)).filter(isFolder);
+    const folderTahun = pilihFolderTahun(entries, tahun);
+    if (folderTahun) entries = (await listFilesInFolder(folderTahun.id)).filter(isFolder);
+
+    const bulanIdx = now.getMonth();
+    const cobaFolder = async (k) => {
+      const files = await listFilesInFolder(k.folder.id);
+      return pilihFileJadwal(files, k.tahunHint ?? tahun);
     };
-    const monthFolder = entries.find((f) => cocokBulan(f.name));
-    if (!monthFolder) {
-      const ada = entries.map((f) => `"${f.name}"`).join(', ') || '(folder kosong)';
-      return { available: false, reason: `Folder bulan "${namaBulan}" belum ditemukan di folder Jadwal Kunjungan, dan admin belum tempel link manual. Folder yang ada di sana: ${ada}. Pastikan salah satunya memuat nama bulan "${namaBulan}", atau minta admin tempel link lewat Dashboard.` };
+
+    // (2) folder bulan berjalan
+    for (const k of kandidatPersis(entries, bulanIdx, tahun)) {
+      const f = await cobaFolder(k) || await cobaFolder({ ...k, tahunHint: tahun });
+      if (f) { target = f; break; }
     }
 
-    const filesInMonth = await listFilesInFolder(monthFolder.id);
-    // Cocokkan file yang namanya mengandung tahun berjalan (toleran variasi kecil
-    // penulisan) - kalau nggak ketemu tapi cuma ada 1 file di folder itu, pakai itu saja.
-    target = filesInMonth.find((f) => f.name.includes(String(tahun)));
-    if (!target && filesInMonth.length === 1) target = filesInMonth[0];
+    // (3) fallback: folder bulan terakhir yang sudah ada
     if (!target) {
-      return { available: false, reason: `File jadwal untuk ${namaBulan} ${tahun} belum ditemukan di folder, dan admin belum tempel link manual lewat Dashboard.` };
+      for (const k of kandidatTerbaru(entries, bulanIdx, tahun).slice(0, 4)) {
+        const f = await cobaFolder(k);
+        if (f) {
+          target = f;
+          const th = parseTahunFile(f.name) ?? k.tahunHint;
+          namaBulan = BULAN_JADWAL[k.bulan];
+          tahun = th;
+          catatanFallback = `Menampilkan jadwal ${namaBulan} ${th} — folder ${BULAN_ID[bulanIdx]} ${now.getFullYear()} belum dibuat di Drive. Otomatis pindah ke bulan baru begitu folder & filenya ada.`;
+          break;
+        }
+      }
+    }
+
+    if (!target) {
+      const ada = entries.map((f) => `"${f.name}"`).join(', ') || '(folder kosong)';
+      return { available: false, reason: `Belum ada folder bulanan berisi file jadwal di folder Jadwal Kunjungan (untuk ${BULAN_ID[bulanIdx]} ${now.getFullYear()} maupun bulan sebelumnya). Isi folder: ${ada}. Nama folder harus memuat nama bulan (mis. "11. November"), atau minta admin tempel link lewat Dashboard.` };
     }
   }
 
@@ -652,6 +728,7 @@ export async function getJadwalKunjunganBulanIni() {
     bulan: namaBulan,
     tahun,
     fileName: target.name,
+    catatanFallback,
     sheetUrl: `https://docs.google.com/spreadsheets/d/${target.id}/edit`,
     ...summary,
   };
