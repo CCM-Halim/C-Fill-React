@@ -44,16 +44,20 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (!checkingSilent) return;
     let selesai = true;
+    // Pengaman terakhir: apapun yang terjadi di silentLogin, layar kosong tidak
+    // boleh bertahan lebih dari beberapa detik (dulu: layar putih selamanya di Safari).
+    const pengaman = setTimeout(() => { if (selesai) setCheckingSilent(false); }, 10000);
     (async () => {
       try {
         await silentLogin();
       } catch {
         /* gagal diam-diam itu wajar — user tetap pakai sesi terakhir */
       } finally {
+        clearTimeout(pengaman);
         if (selesai) setCheckingSilent(false);
       }
     })();
-    return () => { selesai = false; };
+    return () => { selesai = false; clearTimeout(pengaman); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
