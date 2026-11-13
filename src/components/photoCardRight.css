@@ -1,0 +1,18 @@
+/* Varian kartu foto: foto di KANAN, memudar halus ke kiri (menyatu dengan latar kartu).
+ * Pakai mask (bukan lapisan putih di atas foto) supaya gradasinya mulus di mode terang/gelap.
+ * Dipisah dari styles.css supaya styles.css tidak perlu diubah. */
+.photo-card.pc-right{ height:auto; min-height:104px; }
+.photo-card.pc-right .pc-photo{
+  left:auto; right:0; width:62%; background-position:50% 22%;
+  -webkit-mask-image:linear-gradient(90deg, transparent 0%, rgba(0,0,0,.55) 30%, #000 62%);
+          mask-image:linear-gradient(90deg, transparent 0%, rgba(0,0,0,.55) 30%, #000 62%);
+}
+.photo-card.pc-right .pc-label{
+  margin:0 auto 0 0; text-align:left; width:56%; padding:14px 8px 14px 0;
+}
+
+/* Tombol admin "Kelola Kartu" di atas kartu */
+.pc-admin{ position:absolute; top:8px; right:8px; z-index:5; display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; max-width:90%; }
+.pc-admin-btn{ background:rgba(255,255,255,.94); color:#1d3b33; border:1px solid rgba(0,0,0,.15); border-radius:999px; padding:5px 11px; font-size:12px; font-weight:700; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.18); }
+.pc-admin-btn:disabled{ opacity:.7; cursor:default; }
+.pc-admin-err{ flex-basis:100%; background:#fff3f2; color:#B4302F; border-radius:8px; padding:4px 8px; font-size:11px; text-align:left; }
