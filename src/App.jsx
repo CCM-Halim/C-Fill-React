@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './components/AuthContext';
 import { ToastProvider } from './components/Toast';
 import LoginScreen from './components/LoginScreen';
+import { KartuFotoProvider } from './components/KartuFotoContext';
 import Sidebar from './components/Sidebar';
 import BackButton from './components/BackButton';
 import Dashboard from './pages/Dashboard';
@@ -32,6 +33,7 @@ function AppShell() {
   }
 
   return (
+    <KartuFotoProvider>
     <div className="app-shell">
       <Sidebar />
       <main className="main">
@@ -58,6 +60,7 @@ function AppShell() {
         </Routes>
       </main>
     </div>
+    </KartuFotoProvider>
   );
 }
 
