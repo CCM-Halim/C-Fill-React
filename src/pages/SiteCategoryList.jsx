@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import { getCategoriesForSite, checkEntryExitFilledThisMonth } from '../lib/cfillService';
 import EntryExitForm from '../components/EntryExitForm';
 import { HeroHeader, PhotoCard } from '../components/PhotoCard';
+import KelolaKartuButton from '../components/KelolaKartuButton';
+import { useFotoKartuUrl } from '../components/KartuFotoContext';
 import { getSiteBackground, getEquipmentBackground } from '../config/backgrounds';
 
 /**
@@ -21,7 +23,8 @@ export default function SiteCategoryList() {
   const decodedBc = decodeURIComponent(buildingCategory);
   const decodedSite = decodeURIComponent(siteName);
   const categories = getCategoriesForSite(decodedSite);
-  const heroPhoto = getSiteBackground(decodedSite, decodedBc);
+  const fotoSite = useFotoKartuUrl([`s:${decodedSite}`, `b:${decodedBc}`]);
+  const heroPhoto = fotoSite || getSiteBackground(decodedSite, decodedBc);
 
   // null = sedang mengecek ke Sheets, true/false = hasil cek.
   const [entryFilled, setEntryFilled] = useState(null);
@@ -84,6 +87,7 @@ export default function SiteCategoryList() {
     <section>
       {breadcrumb}
       <HeroHeader photoUrl={heroPhoto} eyebrow="Checksheet Peralatan" title={decodedSite} />
+      <KelolaKartuButton />
       <div className="grid grid-3 card-grid">
         {categories.map((c) => (
           <Link
@@ -91,7 +95,7 @@ export default function SiteCategoryList() {
             to={`/peralatan/${buildingCategory}/${siteName}/${c.id}`}
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
-            <PhotoCard photoUrl={getEquipmentBackground(c.id) || getEquipmentBackground(c.short_name)}>
+            <PhotoCard photoUrl={getEquipmentBackground(c.id) || getEquipmentBackground(c.short_name)} fotoKeys={[`e:${c.id}`]} side="right">
               <div className="card-title-sm">{c.short_name}</div>
               <div className="muted">{c.items.length} item pemeriksaan</div>
               <div className="badges">
