@@ -36,3 +36,12 @@ export function isAllowedEmail(email) {
   if (!email) return false;
   return ALLOWED_EMAILS.includes(String(email).toLowerCase());
 }
+
+// Admin aplikasi - satu-satunya yang melihat tombol "Kelola Dashboard".
+// (Penjagaan sisi UI; akses data tetap dijaga Google OAuth.)
+export const ADMIN_EMAILS = ['dandy.pujist@gmail.com'];
+
+export function isAdminEmail(email) {
+  if (!email) return false;
+  return ADMIN_EMAILS.includes(String(email).toLowerCase());
+}
