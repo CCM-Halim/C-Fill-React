@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { SITES } from '../config/sites';
 import { getSiteBackground } from '../config/backgrounds';
 import { PhotoCard } from '../components/PhotoCard';
+import KelolaKartuButton from '../components/KelolaKartuButton';
 
 export default function SiteList() {
   const { buildingCategory } = useParams();
@@ -19,6 +20,7 @@ export default function SiteList() {
       <div className="breadcrumb">
         <Link to="/peralatan">Checksheet Peralatan</Link> / {decoded}
       </div>
+      <KelolaKartuButton />
       <div className="toolbar">
         <input
           className="input search-input"
@@ -34,7 +36,7 @@ export default function SiteList() {
             to={`/peralatan/${encodeURIComponent(buildingCategory)}/${encodeURIComponent(s.siteName)}`}
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
-            <PhotoCard photoUrl={getSiteBackground(s.siteName, decoded)}>
+            <PhotoCard photoUrl={getSiteBackground(s.siteName, decoded)} fotoKeys={[`s:${s.siteName}`, `b:${decoded}`]} side="right">
               <div className="card-title-sm">{s.siteName}</div>
               <div className="muted">{s.categoryIds.length} kategori peralatan</div>
             </PhotoCard>

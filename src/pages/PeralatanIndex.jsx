@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { BUILDING_CATEGORIES, SITES } from '../config/sites';
 import { getSiteBackground, getBuildingBackground } from '../config/backgrounds';
 import { PhotoCard } from '../components/PhotoCard';
+import KelolaKartuButton from '../components/KelolaKartuButton';
 
 export default function PeralatanIndex() {
   const [search, setSearch] = useState('');
@@ -24,6 +25,7 @@ export default function PeralatanIndex() {
 
   return (
     <section>
+      <KelolaKartuButton />
       <div className="toolbar">
         <input
           className="input search-input"
@@ -45,7 +47,7 @@ export default function PeralatanIndex() {
                 to={`/peralatan/${encodeURIComponent(s.buildingCategory)}/${encodeURIComponent(s.siteName)}`}
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
-                <PhotoCard photoUrl={getSiteBackground(s.siteName, s.buildingCategory)}>
+                <PhotoCard photoUrl={getSiteBackground(s.siteName, s.buildingCategory)} fotoKeys={[`s:${s.siteName}`, `b:${s.buildingCategory}`]} side="right">
                   <div className="card-title-sm">{s.siteName}</div>
                   <div className="muted">{s.buildingCategory.replace(/^\d+\.\s*/, '')}</div>
                   <div className="badges"><span className="badge">{s.categoryIds.length} kategori</span></div>
@@ -65,7 +67,7 @@ export default function PeralatanIndex() {
               const count = SITES.filter((s) => s.buildingCategory === bc).length;
               return (
                 <Link key={bc} to={`/peralatan/${encodeURIComponent(bc)}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <PhotoCard photoUrl={getBuildingBackground(bc)}>
+                  <PhotoCard photoUrl={getBuildingBackground(bc)} fotoKeys={[`b:${bc}`]} side="right">
                     <div className="card-title-sm">{bc}</div>
                     <div className="muted">{count} site</div>
                   </PhotoCard>
