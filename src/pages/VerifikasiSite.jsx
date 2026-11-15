@@ -32,7 +32,7 @@ export default function VerifikasiSite() {
     setStatus(null);
     getVerificationStatus(decodedBc, decodedSite)
       .then(setStatus)
-      .catch((e) => setStatus({ error: e.message }));
+      .catch((e) => setStatus({ error: /failed to fetch|load failed|networkerror/i.test(String(e.message)) ? 'koneksi ke Google terputus (sudah dicoba beberapa kali). Cek sinyal/VPN/pemblokir iklan di HP, lalu tekan Coba Lagi.' : e.message }));
   }
 
   function openSigningPanel(monthIndex) {
