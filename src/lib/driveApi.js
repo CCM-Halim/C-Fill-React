@@ -19,8 +19,8 @@ const DRIVE_BASE = 'https://www.googleapis.com/drive/v3';
 const UPLOAD_BASE = 'https://www.googleapis.com/upload/drive/v3';
 const DRIVE_SUPPORT_PARAMS = 'supportsAllDrives=true&includeItemsFromAllDrives=true';
 
-async function authHeaders() {
-  const token = await getValidAccessToken();
+async function authHeaders(paksaSegar = false) {
+  const token = await getValidAccessToken({ paksaSegar });
   return { Authorization: 'Bearer ' + token };
 }
 
@@ -32,13 +32,23 @@ function withDriveParams(path) {
 async function driveFetch(path, options = {}) {
   const MAX_ATTEMPTS = 6;
   let lastError;
+  let paksaSegar = false;      // setelah 401: ambil token baru sekali
+  let sudahSegarkan = false;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    const headers = { ...(options.headers || {}), ...(await authHeaders()) };
+    const headers = { ...(options.headers || {}), ...(await authHeaders(paksaSegar)) };
+    paksaSegar = false;
     const res = await fetchUlang(DRIVE_BASE + withDriveParams(path), { ...options, headers });
     if (res.ok) return res.json();
 
     const body = await res.text();
     lastError = new Error('Drive API error ' + res.status + ': ' + body);
+
+    // 401 = token ditolak Google. Coba SEKALI dengan token baru; kalau tetap 401,
+    // beri pesan yang bisa dipahami teknisi (bukan JSON mentah).
+    if (res.status === 401) {
+      if (!sudahSegarkan) { sudahSegarkan = true; paksaSegar = true; attempt--; continue; }
+      throw new Error('Sesi login Google tidak valid. Tekan Keluar lalu login ulang.');
+    }
 
     // Retry utk error server (5xx) ATAU rate-limit (429/403) - keduanya biasanya
     // gangguan sementara, bukan error dari kode kita. Error 4xx lain (permission,

@@ -339,7 +339,10 @@ export function bisaPulihkanSesiDiamDiam() {
  * Mengambil access token yang masih valid. Kalau sudah expired, minta token baru
  * secara silent (tanpa popup, karena user sudah pernah consent sebelumnya).
  */
-export async function getValidAccessToken() {
+export async function getValidAccessToken({ paksaSegar = false } = {}) {
+  // paksaSegar: Google menolak token (401) padahal menurut jam perangkat belum
+  // kedaluwarsa (jam HP meleset / token sudah dicabut) -> buang & minta yang baru.
+  if (paksaSegar) currentToken = null;
   if (isTokenValid(currentToken)) {
     return currentToken.access_token;
   }

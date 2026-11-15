@@ -9,8 +9,8 @@ import { matchTabNameFromCandidates } from './tabNames';
 
 const SHEETS_BASE = 'https://sheets.googleapis.com/v4/spreadsheets';
 
-async function authHeaders() {
-  const token = await getValidAccessToken();
+async function authHeaders(paksaSegar = false) {
+  const token = await getValidAccessToken({ paksaSegar });
   return { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };
 }
 
@@ -31,8 +31,14 @@ async function fetchUlang(url, options = {}) {
 }
 
 async function sheetsFetch(path, options = {}) {
-  const headers = { ...(options.headers || {}), ...(await authHeaders()) };
-  const res = await fetchUlang(SHEETS_BASE + path, { ...options, headers });
+  let headers = { ...(options.headers || {}), ...(await authHeaders()) };
+  let res = await fetchUlang(SHEETS_BASE + path, { ...options, headers });
+  if (res.status === 401) {
+    // Token ditolak Google: coba SEKALI dengan token baru.
+    headers = { ...(options.headers || {}), ...(await authHeaders(true)) };
+    res = await fetchUlang(SHEETS_BASE + path, { ...options, headers });
+    if (res.status === 401) throw new Error('Sesi login Google tidak valid. Tekan Keluar lalu login ulang.');
+  }
   if (!res.ok) {
     const body = await res.text();
     throw new Error('Sheets API error ' + res.status + ': ' + body);
