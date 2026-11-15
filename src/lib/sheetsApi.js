@@ -14,9 +14,25 @@ async function authHeaders() {
   return { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };
 }
 
+// fetch() yang mengulang otomatis kalau koneksi putus sesaat ("Failed to fetch" /
+// "Load failed"). Ditulis langsung di sini (bukan import) supaya modul tetap
+// bisa dimuat apa adanya oleh tes. Respons HTTP apa pun dikembalikan apa adanya.
+async function fetchUlang(url, options = {}) {
+  const PERCOBAAN = 4;
+  for (let i = 1; ; i++) {
+    try {
+      return await fetch(url, options);
+    } catch (err) {
+      const sesaat = /failed to fetch|networkerror|network request failed|load failed|err_(connection|network|internet|timed)/i.test(String(err && err.message));
+      if (!sesaat || i >= PERCOBAAN) throw err;
+      await new Promise((r) => setTimeout(r, 700 * i));
+    }
+  }
+}
+
 async function sheetsFetch(path, options = {}) {
   const headers = { ...(options.headers || {}), ...(await authHeaders()) };
-  const res = await fetch(SHEETS_BASE + path, { ...options, headers });
+  const res = await fetchUlang(SHEETS_BASE + path, { ...options, headers });
   if (!res.ok) {
     const body = await res.text();
     throw new Error('Sheets API error ' + res.status + ': ' + body);
@@ -928,4 +944,24 @@ export async function writeVerificationRow(spreadsheetId, tabName, slotMap, mont
   });
 
   return { row };
+}
+
+/** Ukuran grid tiap tab: { "<judul tab>": { rowCount, columnCount } } - dipakai memotong rentang clear. */
+export async function bacaUkuranTab(spreadsheetId) {
+  const meta = await sheetsFetch(`/${spreadsheetId}?fields=sheets.properties(title,gridProperties)`);
+  const out = {};
+  for (const sh of meta.sheets || []) {
+    const p = sh.properties;
+    out[p.title] = { rowCount: p.gridProperties?.rowCount || 1000, columnCount: p.gridProperties?.columnCount || 26 };
+  }
+  return out;
+}
+
+/** Kosongkan NILAI pada rentang (format, rumus di luar rentang, dan judul tidak tersentuh). */
+export async function kosongkanRentang(spreadsheetId, rentangLengkap) {
+  if (!rentangLengkap.length) return;
+  await sheetsFetch(`/${spreadsheetId}/values:batchClear`, {
+    method: 'POST',
+    body: JSON.stringify({ ranges: rentangLengkap })
+  });
 }

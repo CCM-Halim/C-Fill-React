@@ -13,6 +13,7 @@
  */
 import { getValidAccessToken } from './googleAuth';
 import { nameVariants } from './tabNames';
+import { fetchUlang } from './fetchUlang';
 
 const DRIVE_BASE = 'https://www.googleapis.com/drive/v3';
 const UPLOAD_BASE = 'https://www.googleapis.com/upload/drive/v3';
@@ -33,7 +34,7 @@ async function driveFetch(path, options = {}) {
   let lastError;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     const headers = { ...(options.headers || {}), ...(await authHeaders()) };
-    const res = await fetch(DRIVE_BASE + withDriveParams(path), { ...options, headers });
+    const res = await fetchUlang(DRIVE_BASE + withDriveParams(path), { ...options, headers });
     if (res.ok) return res.json();
 
     const body = await res.text();
@@ -806,3 +807,33 @@ export function extractDriveFileId(urlOrId) {
   return null;
 }
 
+
+/**
+ * Salin file Drive ke folder lain (salinan penuh, termasuk isi & format).
+ * Dipakai fitur "Tutup Tahun" untuk mengarsipkan file sebelum dikosongkan.
+ */
+export async function copyFileToFolder(fileId, folderId, name) {
+  return driveFetch(`/files/${fileId}/copy?fields=id,name`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, parents: [folderId] })
+  });
+}
+
+/** Ganti nama file/folder. */
+export async function renameFile(fileId, nameBaru) {
+  return driveFetch(`/files/${fileId}?fields=id,name`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: nameBaru })
+  });
+}
+
+/** Pindahkan file/folder ke folder lain (ID file tidak berubah). */
+export async function moveFile(fileId, dariFolderId, keFolderId) {
+  return driveFetch(`/files/${fileId}?addParents=${keFolderId}&removeParents=${dariFolderId}&fields=id,parents`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: '{}'
+  });
+}

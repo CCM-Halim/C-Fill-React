@@ -10,6 +10,7 @@ import { CATEGORIES } from '../config/categories';
 import { SITES } from '../config/sites';
 import { INSTRUMENT_SLOT_MAP, resolveInstrumentName } from '../config/instruments';
 import { BULAN_ID as BULAN_JADWAL, pilihFolderTahun, kandidatPersis, kandidatTerbaru, pilihFileJadwal } from './jadwalFolder';
+import { ambilSpreadsheet, cariSpreadsheetBaca, targetSite, targetInstrumen, tahunDariTanggal, tahunVerifikasi } from './tahunFile';
 import { SLOT_MAP_OVERRIDES } from '../config/slotMapOverrides';
 import { logActivity } from './activityLog';
 import { getCurrentUser } from './googleAuth';
@@ -123,13 +124,13 @@ export async function checkMonthAlreadyFilled({ buildingCategory, siteName, cate
   const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
   if (!site) return { hasExisting: false, existingValues: {} };
 
-  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
   // CATATAN: fungsi ini HANYA MEMBACA nilai yang sudah ada, tidak menulis apa
   // pun. Karena itu konversi .xlsx -> Google Sheets TIDAK dijalankan di sini -
   // konversi makan waktu 10-20 detik dan sebelumnya ikut terpicu cuma karena
   // teknisi MEMBUKA form (bukan menyimpan), sehingga terasa menggantung.
   // Konversi dijalankan saat submit - lihat submitChecksheet.
-  const spreadsheetId = await getSiteSpreadsheetId(bcFolderId, site.originalFileName);
+  // Folder/file dicari per TAHUN dari tanggal; kalau file tahun itu belum ada -> null (belum ada isian).
+  const spreadsheetId = await cariSpreadsheetBaca(targetSite(site), tahunDariTanggal(tanggal));
   const override = SLOT_MAP_OVERRIDES[site.originalFileName]?.[categoryId];
   const slotMap = override || category.slotMap;
 
@@ -166,8 +167,7 @@ export async function submitChecksheet({ buildingCategory, siteName, categoryId,
   if (!site) throw new Error('Site tidak ditemukan: ' + siteName);
   if (!category.slotMap) throw new Error(`Kategori "${category.short_name}" belum punya peta slot.`);
 
-  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const { spreadsheetId, duplicateWarning } = await ambilSpreadsheet(targetSite(site), tahunDariTanggal(tanggal));
   const tabName = await resolveTabName(spreadsheetId, tabKandidat(category));
   const override = SLOT_MAP_OVERRIDES[site.originalFileName]?.[categoryId];
   const slotMap = override || category.slotMap;
@@ -201,7 +201,7 @@ export async function submitInstrumentChecksheet({ namaInstrumen, tanggal, petug
   // ditulis pakai '/' dan tersimpan sebagai '_'. Diterjemahkan di sini supaya
   // penulisan aslinya tetap boleh diketik di formulir.
   const originalFileName = resolveInstrumentName(namaInstrumen) + '.xlsx';
-  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(ROOT_INSTRUMEN_FOLDER_ID, originalFileName);
+  const { spreadsheetId, duplicateWarning } = await ambilSpreadsheet(targetInstrumen(namaInstrumen), tahunDariTanggal(tanggal));
   const tabName = await resolveTabName(spreadsheetId, 'Instrumen Telekomunikasi');
 
   const { row } = await writeMonthlySlot(spreadsheetId, tabName, INSTRUMENT_SLOT_MAP, { tanggal, petugas, answers });
@@ -351,8 +351,7 @@ export async function checkEntryExitFilledThisMonth(buildingCategory, siteName, 
   const currentYear = now.getFullYear();
 
   try {
-    const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-    const { spreadsheetId } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+    const { spreadsheetId } = await ambilSpreadsheet(targetSite(site), currentYear);
     const tabName = await resolveTabName(spreadsheetId, ENTRY_EXIT_TAB_NAME);
 
     const gid = await getSheetGid(spreadsheetId, tabName);
@@ -409,8 +408,7 @@ export async function submitEntryExit({ buildingCategory, siteName, tanggal, wak
   const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
   if (!site) throw new Error('Site tidak ditemukan: ' + siteName);
 
-  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const { spreadsheetId, duplicateWarning } = await ambilSpreadsheet(targetSite(site), tahunDariTanggal(tanggal));
   const tabName = await resolveTabName(spreadsheetId, ENTRY_EXIT_TAB_NAME);
 
   let signatureImageUrl = null;
@@ -466,8 +464,7 @@ export async function getVerificationStatus(buildingCategory, siteName) {
   const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
   if (!site) throw new Error('Site tidak ditemukan: ' + siteName);
 
-  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  const { spreadsheetId, duplicateWarning } = await ambilSpreadsheet(targetSite(site), new Date().getFullYear());
   const tabName = await resolveTabName(spreadsheetId, VERIFICATION_TAB_NAME);
 
   const result = [];
@@ -496,8 +493,8 @@ export async function submitVerification({ buildingCategory, siteName, monthInde
   const site = SITES.find((s) => s.buildingCategory === buildingCategory && s.siteName === siteName);
   if (!site) throw new Error('Site tidak ditemukan: ' + siteName);
 
-  const bcFolderId = await getBuildingCategoryFolder(buildingCategory);
-  const { spreadsheetId, duplicateWarning } = await getOrConvertSiteSpreadsheet(bcFolderId, site.originalFileName);
+  // Bulan yang lebih besar dari bulan sekarang = verifikasi susulan untuk tahun lalu.
+  const { spreadsheetId, duplicateWarning } = await ambilSpreadsheet(targetSite(site), tahunVerifikasi(monthIndex));
   const tabName = await resolveTabName(spreadsheetId, VERIFICATION_TAB_NAME);
   const today = new Date().toISOString().slice(0, 10);
   const namaVerifikator = getCurrentUser()?.name || getCurrentUser()?.email || 'Verifikator';
