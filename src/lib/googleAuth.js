@@ -42,6 +42,17 @@ const SCOPES = [
   'https://www.googleapis.com/auth/userinfo.profile'
 ].join(' ');
 
+const PESAN_IZIN_KURANG =
+  'Izin Google Drive/Sheets belum diberikan. Saat login, CENTANG SEMUA izin yang diminta Google ' +
+  '(Drive & Spreadsheet), lalu coba lagi.';
+
+/**
+ * Setelah izin parsial (kotak centang Drive tidak dicentang) Google bisa terus
+ * memakai pilihan lama tanpa menampilkan layar izin lagi. Penanda ini memaksa
+ * layar izin muncul pada login berikutnya.
+ */
+let paksaLayarIzin = false;
+
 const SILENT_TIMEOUT_MS = 8000;      // batas tunggu pembaruan token diam-diam
 const REFRESH_TIMEOUT_MS = 20000;    // batas tunggu pembaruan token saat menyimpan
 
@@ -157,6 +168,23 @@ async function ensureTokenClient() {
           pending.reject(resp.error);
           return;
         }
+        // Layar izin Google punya kotak centang per izin: kalau Drive/Sheets tidak
+        // dicentang, login "berhasil" tapi semua panggilan Drive kena 403.
+        try {
+          const o = window.google.accounts.oauth2;
+          if (typeof o.hasGrantedAllScopes === 'function' &&
+              !o.hasGrantedAllScopes(resp,
+                'https://www.googleapis.com/auth/spreadsheets',
+                'https://www.googleapis.com/auth/drive')) {
+            paksaLayarIzin = true;
+            try { o.revoke(resp.access_token, () => {}); } catch { /* abaikan */ }
+            currentToken = null;
+            currentUser = null;
+            persistSession();
+            pending.reject(PESAN_IZIN_KURANG);
+            return;
+          }
+        } catch { /* pengecekan gagal: lanjut, 403 nanti ditangani di API */ }
         currentToken = {
           access_token: resp.access_token,
           expires_at: Date.now() + (resp.expires_in * 1000) - 60000 // buffer 1 menit
@@ -273,7 +301,8 @@ export async function login() {
     pendingAuth = { resolve, reject };
     try {
       // Di mobile/tablet, pakai prompt='select_account' untuk pastikan popup muncul
-      const prompt = currentUser ? '' : 'select_account';
+      const prompt = paksaLayarIzin ? 'consent' : (currentUser ? '' : 'select_account');
+      paksaLayarIzin = false;
       client.requestAccessToken({ prompt });
     } catch (e) {
       pendingAuth = null;

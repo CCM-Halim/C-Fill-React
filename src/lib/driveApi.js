@@ -50,6 +50,11 @@ async function driveFetch(path, options = {}) {
       throw new Error('Sesi login Google tidak valid. Tekan Keluar lalu login ulang.');
     }
 
+    // 403 karena izin Drive tidak diberikan saat login: bukan gangguan sementara.
+    if (res.status === 403 && /ACCESS_TOKEN_SCOPE_INSUFFICIENT|insufficient authentication scopes/i.test(body)) {
+      throw new Error('Izin Google Drive belum diberikan. Tekan Keluar, login ulang, lalu CENTANG SEMUA izin (Drive & Spreadsheet) di layar Google.');
+    }
+
     // Retry utk error server (5xx) ATAU rate-limit (429/403) - keduanya biasanya
     // gangguan sementara, bukan error dari kode kita. Error 4xx lain (permission,
     // not found, dsb) langsung dilempar tanpa retry karena percobaan ulang tidak

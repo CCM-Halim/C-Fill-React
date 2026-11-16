@@ -41,6 +41,9 @@ async function sheetsFetch(path, options = {}) {
   }
   if (!res.ok) {
     const body = await res.text();
+    if (res.status === 403 && /ACCESS_TOKEN_SCOPE_INSUFFICIENT|insufficient authentication scopes/i.test(body)) {
+      throw new Error('Izin Google Spreadsheet belum diberikan. Tekan Keluar, login ulang, lalu CENTANG SEMUA izin (Drive & Spreadsheet) di layar Google.');
+    }
     throw new Error('Sheets API error ' + res.status + ': ' + body);
   }
   return res.json();
