@@ -12,8 +12,11 @@ export const siteBackgrounds = {
   'K41+607 Karawang Signal Building Communication (202)': '/backgrounds/station-karawang.jpg',
 };
 
+// Foto kategori bangunan tampil di SISI KANAN kartu, memudar halus ke kiri
+// (lihat PhotoCard side="right"). Key = nama kategori bangunan persis seperti di sites.js.
 export const buildingBackgrounds = {
-  // Diisi bertahap begitu foto lain sudah dikurasi. Contoh format:
+  '8. CCTV Throat, Emergency Stairs and Bridge': '/backgrounds/cctv.jpg',
+  // Tambah foto lain di sini, contoh:
   // '1. BTS Communication Room': '/backgrounds/bts-room.jpg',
 };
 
