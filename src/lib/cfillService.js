@@ -635,48 +635,53 @@ export async function removeJadwalKunjunganOverride(bulanIndex, tahun) {
   return { success: true };
 }
 
-export async function getJadwalKunjunganBulanIni() {
-  const now = new Date();
-  let namaBulan = BULAN_ID[now.getMonth()];
-  let tahun = now.getFullYear();
+/**
+ * Cari file jadwal kunjungan MR untuk bulan+tahun tertentu (override admin dulu,
+ * lalu folder bulanan, lalu - kalau diizinkan - bulan terakhir yang ada).
+ * Dipakai Progress Perawatan dan kartu Personil Bertugas (sheet "Shift BIPO"
+ * ada di file yang sama).
+ * Return { target, namaBulan, tahun, catatanFallback } atau { gagal: alasan }.
+ */
+const jadwalFileCache = new Map();
+
+async function temukanFileJadwal(bulanIdx, tahunTarget, { izinkanFallback = true } = {}) {
+  let namaBulan = BULAN_ID[bulanIdx];
+  let tahun = tahunTarget;
   let catatanFallback = null;
 
-  // 1. Cek dulu apakah admin sudah nempel link override buat bulan ini - kalau
-  // ada, pakai LANGSUNG, skip pencarian folder sama sekali (lebih cepat & pasti).
+  // 1. Override admin (link manual) dipakai LANGSUNG, skip pencarian folder.
   const config = await getJadwalConfig();
-  const overrideFileId = config[`${tahun}-${now.getMonth() + 1}`];
+  const overrideFileId = config[`${tahun}-${bulanIdx + 1}`];
 
   let target;
   if (overrideFileId) {
     target = { id: overrideFileId, name: `(link manual admin) — ${namaBulan} ${tahun}` };
   } else {
     if (!JADWAL_KUNJUNGAN_FOLDER_ID) {
-      return { available: false, reason: 'VITE_JADWAL_KUNJUNGAN_FOLDER_ID belum diatur di .env, dan admin belum tempel link manual buat bulan ini.' };
+      return { gagal: 'VITE_JADWAL_KUNJUNGAN_FOLDER_ID belum diatur di .env, dan admin belum tempel link manual buat bulan ini.' };
     }
 
     // Struktur: [Root] / [Bulan, mis. "9. September"] / [file jadwal]. Berlaku
     // untuk tahun berapa pun; kalau ada lapisan folder tahun ("2027") atau
     // tahun tertulis di nama folder, itu ikut dikenali (lihat lib/jadwalFolder.js).
-    // Prioritas: (2) folder bulan berjalan, (3) folder bulan terakhir yang ada.
     const isFolder = (f) => !f.mimeType || f.mimeType === 'application/vnd.google-apps.folder';
     let entries = (await listFilesInFolder(JADWAL_KUNJUNGAN_FOLDER_ID)).filter(isFolder);
     const folderTahun = pilihFolderTahun(entries, tahun);
     if (folderTahun) entries = (await listFilesInFolder(folderTahun.id)).filter(isFolder);
 
-    const bulanIdx = now.getMonth();
     const cobaFolder = async (k) => {
       const files = await listFilesInFolder(k.folder.id);
       return pilihFileJadwal(files, k.tahunHint ?? tahun);
     };
 
-    // (2) folder bulan berjalan
+    // (2) folder bulan yang diminta
     for (const k of kandidatPersis(entries, bulanIdx, tahun)) {
       const f = await cobaFolder(k) || await cobaFolder({ ...k, tahunHint: tahun });
       if (f) { target = f; break; }
     }
 
     // (3) fallback: folder bulan terakhir yang sudah ada
-    if (!target) {
+    if (!target && izinkanFallback) {
       for (const k of kandidatTerbaru(entries, bulanIdx, tahun).slice(0, 4)) {
         const f = await cobaFolder(k);
         if (f) {
@@ -684,7 +689,7 @@ export async function getJadwalKunjunganBulanIni() {
           const th = parseTahunFile(f.name) ?? k.tahunHint;
           namaBulan = BULAN_JADWAL[k.bulan];
           tahun = th;
-          catatanFallback = `Menampilkan jadwal ${namaBulan} ${th} — folder ${BULAN_ID[bulanIdx]} ${now.getFullYear()} belum dibuat di Drive. Otomatis pindah ke bulan baru begitu folder & filenya ada.`;
+          catatanFallback = `Menampilkan jadwal ${namaBulan} ${th} — folder ${BULAN_ID[bulanIdx]} ${tahunTarget} belum dibuat di Drive. Otomatis pindah ke bulan baru begitu folder & filenya ada.`;
           break;
         }
       }
@@ -692,9 +697,18 @@ export async function getJadwalKunjunganBulanIni() {
 
     if (!target) {
       const ada = entries.map((f) => `"${f.name}"`).join(', ') || '(folder kosong)';
-      return { available: false, reason: `Belum ada folder bulanan berisi file jadwal di folder Jadwal Kunjungan (untuk ${BULAN_ID[bulanIdx]} ${now.getFullYear()} maupun bulan sebelumnya). Isi folder: ${ada}. Nama folder harus memuat nama bulan (mis. "11. November"), atau minta admin tempel link lewat Dashboard.` };
+      return { gagal: `Belum ada folder bulanan berisi file jadwal di folder Jadwal Kunjungan (untuk ${BULAN_ID[bulanIdx]} ${tahunTarget}${izinkanFallback ? ' maupun bulan sebelumnya' : ''}). Isi folder: ${ada}. Nama folder harus memuat nama bulan (mis. "11. November"), atau minta admin tempel link lewat Dashboard.` };
     }
   }
+  return { target, namaBulan, tahun, catatanFallback };
+}
+
+export async function getJadwalKunjunganBulanIni() {
+  const now = new Date();
+  const hasilCari = await temukanFileJadwal(now.getMonth(), now.getFullYear());
+  if (hasilCari.gagal) return { available: false, reason: hasilCari.gagal };
+  const { target, namaBulan, tahun, catatanFallback } = hasilCari;
+  const bulanIdx = now.getMonth();
 
   // Nama tab jadwal di sebagian bulan berbeda: "jadwal kunjungan MR New"
   // (Januari & Februari) sementara yang lain "Jadwal Kunjungan MR". Kandidat
@@ -729,6 +743,19 @@ export async function getJadwalKunjunganBulanIni() {
     sheetUrl: `https://docs.google.com/spreadsheets/d/${target.id}/edit`,
     ...summary,
   };
+}
+
+/**
+ * ID spreadsheet jadwal untuk bulan+tahun EXACT (tanpa fallback ke bulan lain) -
+ * dipakai kartu Personil Bertugas, yang tidak boleh menampilkan shift bulan salah.
+ */
+export async function cariSpreadsheetJadwalBulan(bulanIdx, tahun) {
+  const kunci = `${tahun}-${bulanIdx}`;
+  if (jadwalFileCache.has(kunci)) return jadwalFileCache.get(kunci);
+  const hasil = await temukanFileJadwal(bulanIdx, tahun, { izinkanFallback: false });
+  if (hasil.gagal) throw new Error(hasil.gagal);
+  jadwalFileCache.set(kunci, hasil.target.id);
+  return hasil.target.id;
 }
 
 /**

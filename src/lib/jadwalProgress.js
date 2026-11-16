@@ -59,6 +59,7 @@ export function parseJadwalItems(rows) {
       jam: cell(r, 1),          // C
       lokasi,                   // D
       kegiatan: cell(r, 3),     // E
+      detail: cell(r, 4),       // F  Detail Pekerjaan
       pic: cell(r, 5),          // G
       temuan: cell(r, 6),       // H
       status: cell(r, 8),       // J

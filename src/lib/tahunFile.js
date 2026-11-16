@@ -1,22 +1,25 @@
 /**
  * tahunFile.js — struktur folder PER TAHUN untuk file checksheet.
  *
- *   Checksheet/2026/<kategori bangunan>/<file site>
- *   Checksheet/2027/<kategori bangunan>/<file site>      <- dibuat otomatis
- *   Instrumen/2026/<file instrumen>,  Instrumen/2027/...
+ * Struktur di Drive (folder tahun ada DI ATAS Checksheet & Instrumen):
  *
- * Tahun diambil dari TANGGAL checksheet. Saat file tahun itu belum ada (mis.
- * pengisian pertama di Januari 2027), C-Fill otomatis membuatnya: menyalin file
- * tahun sebelumnya, mengosongkan isian bulanannya, lalu memakainya. Data tahun
- * lalu tidak disentuh dan tetap di folder tahunnya.
+ *   <induk>/2026/Checksheet/<kategori bangunan>/<file site>
+ *   <induk>/2026/Instrumen/<file instrumen>
+ *   <induk>/2027/Checksheet/...   <- dibuat otomatis saat tahun berganti
+ *   <induk>/2027/Instrumen/...
  *
- * Kompatibilitas: selama folder "2026" belum ada, tahun <= 2026 memakai tata
- * letak lama (file langsung di bawah folder root). Admin bisa merapikannya lewat
- * "Rapikan Folder 2026" (memindahkan, ID file tidak berubah).
+ * VITE_ROOT_CHECKSHEET_FOLDER_ID / VITE_ROOT_INSTRUMEN_FOLDER_ID tetap menunjuk
+ * folder 2026 (yang induknya bernama "2026"); folder tahun lain dicari/dibuat di
+ * sebelahnya dengan nama yang sama. Tahun diambil dari TANGGAL checksheet. Saat file
+ * tahun itu belum ada, C-Fill membuatnya: menyalin file tahun sebelumnya,
+ * mengosongkan isian bulanannya, lalu memakainya. Data tahun lalu tidak disentuh.
+ *
+ * Kalau induk folder root BUKAN bernama tahun, dipakai tata letak lama:
+ * <root>/<tahun>/<kategori>.
  */
 import {
   getOrCreateSubfolder, listFilesInFolder, findAllSheetsForName, findFileByExactName,
-  getOrConvertSiteSpreadsheet, copyFileToFolder, renameFile, moveFile, trashFile
+  getOrConvertSiteSpreadsheet, copyFileToFolder, renameFile, trashFile, getFileMeta
 } from './driveApi';
 import { bacaUkuranTab, kosongkanRentang } from './sheetsApi';
 import { matchTabNameFromCandidates, nameVariants } from './tabNames';
@@ -47,17 +50,79 @@ export function tahunVerifikasi(monthIndex, sekarang = new Date()) {
 }
 
 const folderCache = new Map();
+const indukCache = new Map();
 
-/** Folder untuk satu tahun di bawah root. buat=false -> null kalau belum ada (jalur baca, tanpa efek samping). */
+/**
+ * Pelajari posisi folder root: kalau induknya bernama tahun ("2026") -> tata letak
+ * "<eyang>/<tahun>/<namaRoot>". Hasil di-cache.
+ */
+async function bacaInduk(rootId) {
+  if (indukCache.has(rootId)) return indukCache.get(rootId);
+  const meta = await getFileMeta(rootId);
+  let info;
+  if (!meta.parents || !meta.parents.length) {
+    info = { mode: 'tak-terbaca', namaRoot: meta.name };       // induk tidak bisa dilihat akun ini
+  } else {
+    const induk = await getFileMeta(meta.parents[0]);
+    if (/^\d{4}$/.test(String(induk.name).trim()) && induk.parents && induk.parents.length) {
+      info = { mode: 'induk-tahun', tahunRoot: Number(induk.name), eyangId: induk.parents[0], namaRoot: meta.name };
+    } else if (/^\d{4}$/.test(String(induk.name).trim())) {
+      info = { mode: 'tak-terbaca', tahunRoot: Number(induk.name), namaRoot: meta.name };
+    } else {
+      info = { mode: 'lama', namaRoot: meta.name };
+    }
+  }
+  indukCache.set(rootId, info);
+  return info;
+}
+
+const PESAN_INDUK = (th) =>
+  `Folder tahun ${th} belum bisa dibuat: akun ini belum punya akses ke folder induk (folder "2026"). ` +
+  'Minta admin membagikan folder "2026" (bukan hanya Checksheet/Instrumen) sebagai Editor.';
+
+/**
+ * Folder "Checksheet" / "Instrumen" untuk satu tahun. buat=false -> null kalau belum ada
+ * (jalur baca, tanpa efek samping).
+ */
+const folderInFlight = new Map();
+
 export async function folderUntukTahun(rootId, tahun, { buat = true } = {}) {
   const key = rootId + '|' + tahun;
   if (folderCache.has(key)) return folderCache.get(key);
-  const f = await findFileByExactName(rootId, String(tahun), FOLDER_MIME);
-  let id = f ? f.id : null;
-  if (!id) {
-    if (tahun <= TAHUN_AWAL) id = rootId;                 // tata letak lama
-    else if (buat) id = await getOrCreateSubfolder(rootId, String(tahun));
-    else return null;
+  // Beberapa file bisa meminta folder tahun yang sama bersamaan -> satu pembuatan saja.
+  const kunciJalan = key + '|' + (buat ? 'b' : 'r');
+  if (!folderInFlight.has(kunciJalan)) {
+    folderInFlight.set(kunciJalan, cariFolderTahun(rootId, tahun, buat, key).finally(() => folderInFlight.delete(kunciJalan)));
+  }
+  return folderInFlight.get(kunciJalan);
+}
+
+async function cariFolderTahun(rootId, tahun, buat, key) {
+  const info = await bacaInduk(rootId);
+  let id = null;
+
+  if (info.mode === 'induk-tahun') {
+    if (tahun === info.tahunRoot) id = rootId;
+    else {
+      let yr = await findFileByExactName(info.eyangId, String(tahun), FOLDER_MIME);
+      if (!yr && buat) yr = { id: await getOrCreateSubfolder(info.eyangId, String(tahun)) };
+      if (!yr) return null;
+      let sub = await findFileByExactName(yr.id, info.namaRoot, FOLDER_MIME);
+      if (!sub && buat) sub = { id: await getOrCreateSubfolder(yr.id, info.namaRoot) };
+      if (!sub) return null;
+      id = sub.id;
+    }
+  } else if (info.mode === 'tak-terbaca') {
+    if (tahun <= (info.tahunRoot ?? TAHUN_AWAL)) id = rootId;
+    else throw new Error(PESAN_INDUK(tahun));
+  } else {                                                      // tata letak lama
+    const f = await findFileByExactName(rootId, String(tahun), FOLDER_MIME);
+    id = f ? f.id : null;
+    if (!id) {
+      if (tahun <= TAHUN_AWAL) id = rootId;
+      else if (buat) id = await getOrCreateSubfolder(rootId, String(tahun));
+      else return null;
+    }
   }
   folderCache.set(key, id);
   return id;
@@ -164,28 +229,4 @@ export async function cariSpreadsheetBaca(target, tahun) {
   if (!folder) return null;
   const found = await findAllSheetsForName(folder, target.namaFile);
   return found.length ? found[0].id : null;
-}
-
-/** Admin: pindahkan struktur lama (file langsung di root) ke folder "2026". ID file tidak berubah. */
-export async function rapikanFolder2026(onLog) {
-  const log = (m) => onLog && onLog(m);
-  folderCache.clear();
-  let dipindah = 0;
-
-  const f2026 = await getOrCreateSubfolder(ROOT_CHECKSHEET, '2026');
-  for (const bc of BUILDING_CATEGORIES) {
-    const ada = await findFileByExactName(ROOT_CHECKSHEET, bc, FOLDER_MIME);
-    if (ada) { await moveFile(ada.id, ROOT_CHECKSHEET, f2026); dipindah++; log(`Dipindah: ${bc}`); }
-  }
-  if (ROOT_INSTRUMEN) {
-    const i2026 = await getOrCreateSubfolder(ROOT_INSTRUMEN, '2026');
-    const nama = new Set(INSTRUMENTS.flatMap((n) => nameVariants(resolveInstrumentName(n) + '.xlsx')));
-    const files = await listFilesInFolder(ROOT_INSTRUMEN);
-    for (const f of files) {
-      if (f.mimeType !== FOLDER_MIME && nama.has(f.name)) { await moveFile(f.id, ROOT_INSTRUMEN, i2026); dipindah++; }
-    }
-    log('Instrumen dipindah ke folder 2026');
-  }
-  folderCache.clear();
-  return { dipindah };
 }

@@ -68,6 +68,11 @@ async function driveFetch(path, options = {}) {
   throw lastError;
 }
 
+/** Nama + folder induk sebuah file/folder (parents kosong kalau akun ini tak punya akses ke induknya). */
+export async function getFileMeta(fileId) {
+  return driveFetch(`/files/${fileId}?fields=id,name,parents`);
+}
+
 /**
  * Cari folder dengan nama tertentu di dalam parentId. Buat baru kalau belum ada.
  */
@@ -736,7 +741,7 @@ export async function uploadFileToFolder(folderId, file, description) {
 export async function listFilesInFolder(folderId) {
   const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
   const list = await driveFetch(
-    `/files?q=${q}&fields=files(id,name,mimeType,webViewLink,modifiedTime,size)&orderBy=modifiedTime desc&corpora=allDrives`
+    `/files?q=${q}&fields=files(id,name,mimeType,webViewLink,modifiedTime,size,thumbnailLink)&orderBy=modifiedTime desc&corpora=allDrives`
   );
   return list.files || [];
 }
