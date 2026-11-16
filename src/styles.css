@@ -527,3 +527,34 @@ a{color:var(--accent);}
   .dash-rencana { grid-area: rencana; }
   .rencana-dua { grid-template-columns: 1fr 1fr; align-items: start; }
 }
+
+/* ---- Sidebar bisa diciutkan (komputer/tablet) ---- */
+.brand-baris { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.sidebar-toggle { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--ink-soft); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.sidebar-toggle:hover { background: var(--border-soft); color: var(--ink); }
+.sidebar { transition: width .18s ease; overflow: hidden; }
+@media (min-width: 861px) {
+  .sidebar.ciut { width: 68px; padding-left: 10px; padding-right: 10px; }
+  .sidebar.ciut .label, .sidebar.ciut .chev { display: none; }
+  .sidebar.ciut .brand-baris { flex-direction: column; gap: 10px; }
+  .sidebar.ciut .brand-mark { padding: 0; }
+  .sidebar.ciut .brand-sub { display: none; }
+  .sidebar.ciut .brand { margin-bottom: 14px; }
+  .sidebar.ciut .nav-item { justify-content: center; padding-left: 0; padding-right: 0; }
+  .sidebar.ciut .btn-block { justify-content: center; padding-left: 0; padding-right: 0; }
+  .sidebar.ciut .user-chip { justify-content: center; padding: 0; }
+  html[data-sidebar="ciut"] .main { max-width: none; }
+}
+@media (max-width: 860px) { .sidebar-toggle { display: none; } }
+
+/* ---- Progress Kerja ringkas ---- */
+.progress-kepala { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.donut-baris { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+.donut-item { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; }
+.donut-ring { width: 76px; height: 76px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.donut-isi { width: 54px; height: 54px; border-radius: 50%; background: var(--surface); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.donut-angka { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; line-height: 1.05; }
+.donut-persen { font-size: 9.5px; color: var(--ink-soft); }
+.donut-label { font-size: 12px; font-weight: 700; color: var(--ink-soft); text-align: center; }
+.donut-tautan { display: flex; flex-direction: column; align-items: center; gap: 0; font-size: 11px; line-height: 1.35; }
+@media (max-width: 420px) { .donut-baris { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 14px; } }
