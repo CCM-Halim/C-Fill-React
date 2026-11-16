@@ -477,3 +477,53 @@ a{color:var(--accent);}
 /* Numeric/data emphasis (dates, measurements, ids) */
 .mono{font-family:'IBM Plex Mono',monospace;}
 .app-loading-blank{min-height:100vh;background:var(--bg);}
+
+/* ---- Kartu Personil Bertugas (Dashboard): ganti tiap 5 detik, warna latar mengikuti shift ---- */
+.personil-card { position: relative; overflow: hidden; transition: background-color .4s; --shift-bar: rgba(0,0,0,.35); }
+.personil-card.shift-pagi  { background: #cfe9b4; border-color: #92d050; }   /* hijau */
+.personil-card.shift-siang { background: #fff3a6; border-color: #f2d60d; }   /* kuning */
+.personil-card.shift-malam { background: #bfe3f7; border-color: #36a9e1; }   /* biru */
+.personil-kepala { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.personil-sub { font-size: 12.5px; color: rgba(0,0,0,.62); }
+.personil-hitung { font-weight: 700; font-size: 13px; background: rgba(255,255,255,.65); border-radius: 999px; padding: 3px 10px; }
+.personil-dua { display: grid; grid-template-columns: 1fr 1.25fr; gap: 12px; margin-top: 14px; animation: personil-masuk .45s ease; }
+.personil-kotak { background: rgba(255,255,255,.82); border: 1px solid rgba(0,0,0,.12); border-radius: 12px; min-width: 0; }
+.personil-data { padding: 14px; display: flex; flex-direction: column; justify-content: center; }
+.personil-label { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: rgba(0,0,0,.5); margin-top: 10px; }
+.personil-label:first-child { margin-top: 0; }
+.personil-nama-besar { font-weight: 700; font-size: 22px; line-height: 1.15; overflow-wrap: anywhere; }
+.personil-nilai { font-weight: 600; font-size: 15px; overflow-wrap: anywhere; }
+.personil-nilai a { color: inherit; }
+.personil-kartu { display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 150px; padding: 6px; }
+.personil-kartu img { width: 100%; height: 100%; max-height: 260px; object-fit: contain; display: block; border-radius: 8px; }
+.personil-kosong { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.personil-inisial { width: 56px; height: 56px; border-radius: 50%; background: #256D5C; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.personil-titik { display: flex; justify-content: center; gap: 7px; margin-top: 12px; }
+.personil-titik button { width: 9px; height: 9px; border-radius: 50%; border: none; padding: 0; background: rgba(0,0,0,.25); cursor: pointer; }
+.personil-titik button.aktif { background: rgba(0,0,0,.7); transform: scale(1.25); }
+.personil-waktu { position: absolute; left: 0; bottom: 0; height: 3px; background: rgba(0,0,0,.35); width: 0; animation-name: personil-bar; animation-timing-function: linear; animation-fill-mode: forwards; }
+@keyframes personil-bar { to { width: 100%; } }
+@keyframes personil-masuk { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .personil-dua { animation: none; } .personil-waktu { display: none; } }
+@media (max-width: 520px) { .personil-dua { grid-template-columns: 1fr; } }
+
+/* ---- Tata letak Dashboard: komputer & tablet (sidebar tampil) ---- */
+.dash-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; }
+.dash-grid > .dash-cell { min-width: 0; display: flex; flex-direction: column; }
+.dash-grid > .dash-cell > .card { margin-bottom: 0 !important; flex: 1; }
+.rencana-dua { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.rencana-hari { border: 1px solid var(--border-soft, #e6e3da); border-radius: 12px; padding: 12px; min-width: 0; }
+.rencana-hari.hijau { border-color: #7cb342; background: rgba(124, 179, 66, .07); }
+.rencana-hari.abu { border-color: #9e9e9e; background: rgba(158, 158, 158, .07); }
+.rencana-judul { font-weight: 700; }
+.rencana-item { border-top: 1px solid var(--border-soft, #e6e3da); padding: 8px 0; }
+.rencana-item:first-of-type { border-top: none; }
+@media (min-width: 861px) {
+  /* biru | ungu  /  merah | kuning (hari ini + besok berdampingan) */
+  .dash-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: "progress personil" "tren rencana"; align-items: stretch; }
+  .dash-progress { grid-area: progress; }
+  .dash-personil { grid-area: personil; }
+  .dash-tren { grid-area: tren; }
+  .dash-rencana { grid-area: rencana; }
+  .rencana-dua { grid-template-columns: 1fr 1fr; align-items: start; }
+}
