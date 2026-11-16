@@ -4,6 +4,8 @@ import { useAuth } from '../components/AuthContext';
 import { getJadwalKunjunganBulanIni, getAllLogGangguan } from '../lib/cfillService';
 import ProgressKerjaCard from '../components/ProgressKerjaCard';
 import TemuanGangguanCard from '../components/TemuanGangguanCard';
+import PersonilBertugasCard from '../components/PersonilBertugasCard';
+import RencanaKerjaCard from '../components/RencanaKerjaCard';
 import TrenTemuanCard from '../components/TrenTemuanCard';
 import KelolaDashboardModal from '../components/KelolaDashboardModal';
 import { isAdminEmail } from '../config/access';
@@ -56,21 +58,30 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {jadwal === null && !jadwalError && (
-        <div className="card" style={{ marginBottom: 16 }}><div className="muted">Memuat jadwal kunjungan bulan ini...</div></div>
-      )}
-      {jadwalError && (
-        <div className="card" style={{ marginBottom: 16 }}><div className="notice-box">Gagal memuat jadwal: {jadwalError}</div></div>
-      )}
-      {jadwal && !jadwal.available && (
-        <div className="card" style={{ marginBottom: 16 }}><div className="notice-box">📋 {jadwal.reason}</div></div>
-      )}
+      {/* Komputer/tablet: biru (progress) | ungu (smartcard) ; merah (grafik gangguan) | kuning (rencana kerja).
+          Potret/ponsel: progress, smartcard, rencana kerja, tren, lalu daftar gangguan. */}
+      <div className="dash-grid">
+        <div className="dash-cell dash-progress">
+          {jadwal === null && !jadwalError && (
+            <div className="card"><div className="muted">Memuat jadwal kunjungan bulan ini...</div></div>
+          )}
+          {jadwalError && (
+            <div className="card"><div className="notice-box">Gagal memuat jadwal: {jadwalError}</div></div>
+          )}
+          {jadwal && !jadwal.available && (
+            <div className="card"><div className="notice-box">📋 {jadwal.reason}</div></div>
+          )}
+          {jadwal && jadwal.available && (
+            <ProgressKerjaCard jadwal={jadwal} onOpenPeriod={setPeriodModal} />
+          )}
+        </div>
 
-      {jadwal && jadwal.available && (
-        <ProgressKerjaCard jadwal={jadwal} onOpenPeriod={setPeriodModal} />
-      )}
+        <div className="dash-cell dash-personil"><PersonilBertugasCard /></div>
 
-      <TrenTemuanCard log={log} />
+        <div className="dash-cell dash-rencana"><RencanaKerjaCard /></div>
+
+        <div className="dash-cell dash-tren"><TrenTemuanCard log={log} /></div>
+      </div>
 
       <TemuanGangguanCard
         log={log}
