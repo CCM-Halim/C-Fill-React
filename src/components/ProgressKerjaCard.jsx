@@ -25,23 +25,15 @@ export function PeriodDonut({ label, total, finished, planTotal, onClickFinished
   const planMismatch = Number.isFinite(planTotal) && planTotal !== total;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, minWidth: 96 }}>
-      <div style={{
-        width: 96, height: 96, borderRadius: '50%', background: bg,
-        display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative'
-      }}>
-        <div style={{
-          width: 68, height: 68, borderRadius: '50%', background: 'var(--surface)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
-        }}>
-          <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 18, lineHeight: 1.05 }}>
-            {finished}/{total}
-          </div>
-          <div style={{ fontSize: 10, color: 'var(--ink-soft)' }}>{pct}%</div>
+    <div className="donut-item">
+      <div className="donut-ring" style={{ background: bg }}>
+        <div className="donut-isi">
+          <div className="donut-angka">{finished}/{total}</div>
+          <div className="donut-persen">{pct}%</div>
         </div>
       </div>
-      <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--ink-soft)' }}>{label}</div>
-      <div style={{ display: 'flex', gap: 6, fontSize: 10.5 }}>
+      <div className="donut-label">{label}</div>
+      <div className="donut-tautan">
         <span className="link-like" onClick={onClickFinished} style={{ color: 'var(--accent-strong)' }}>
           {finished} selesai
         </span>
@@ -59,29 +51,32 @@ export function PeriodDonut({ label, total, finished, planTotal, onClickFinished
 }
 
 /**
- * Kartu "Progress Kerja <Bulan> <Tahun>" - angka di donut & daftar rencana/
- * realisasi DIAMBIL DARI BARIS JADWAL SEBENARNYA (lihat lib/jadwalProgress.js),
- * sehingga nilainya sama dengan yang ada di spreadsheet.
- *
- * Dipisah jadi komponen sendiri (bukan inline di Dashboard) supaya bisa
- * di-render & diperiksa tanpa browser: lihat scripts/verify-dashboard-render.mjs.
+ * Kartu "Progress Kerja <Bulan> <Tahun>" - angka di donut diambil dari baris jadwal
+ * sebenarnya (lib/jadwalProgress.js). Versi ringkas: satu baris donut, tanpa daftar
+ * bullet/penjelasan panjang (penjelasan ada di tooltip ⓘ dan di halaman Panduan).
  */
 export default function ProgressKerjaCard({ jadwal, onOpenPeriod }) {
   if (!jadwal || !jadwal.available) return null;
+  const persen = jadwal.total > 0 ? Math.round((jadwal.finishedCount / jadwal.total) * 100) : 0;
 
   return (
-    <div className="card" style={{ marginBottom: 16 }}>
-      <div className="card-title">Progress Kerja {jadwal.bulan} {jadwal.tahun}</div>
+    <div className="card progress-card">
+      <div className="progress-kepala">
+        <div className="card-title" style={{ marginBottom: 0 }}>Progress Kerja {jadwal.bulan} {jadwal.tahun}</div>
+        <a href={jadwal.sheetUrl} target="_blank" rel="noreferrer" className="link-like" style={{ fontSize: 12.5, whiteSpace: 'nowrap' }}
+           title={'Sumber: ' + jadwal.fileName}>
+          Buka sheet ↗
+        </a>
+      </div>
       {jadwal.catatanFallback && (
-        <div className="notice-box" style={{ fontSize: 12, margin: '4px 0 10px' }}>
-          🕘 {jadwal.catatanFallback}
-        </div>
+        <div className="notice-box" style={{ fontSize: 12, margin: '8px 0 0' }}>🕘 {jadwal.catatanFallback}</div>
       )}
-      <div className="muted" style={{ marginBottom: 6 }}>
-        Dari: {jadwal.fileName} · {jadwal.finishedCount} selesai, {jadwal.notYetCount} belum dari {jadwal.total} pekerjaan terjadwal
+      <div className="muted" style={{ margin: '4px 0 0' }}
+           title="Rencana = jumlah baris berlabel periode (1M/3M/6M/1Y) di kolom Kegiatan; realisasi = baris dengan Status Kegiatan 'Finish'.">
+        <b>{jadwal.finishedCount}</b> selesai · <b>{jadwal.notYetCount}</b> belum dari {jadwal.total} pekerjaan ({persen}%) ⓘ
       </div>
 
-      <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', margin: '14px 0 10px', justifyContent: 'flex-start' }}>
+      <div className="donut-baris">
         {PERIODS.map((p) => (
           <PeriodDonut
             key={p}
@@ -99,29 +94,15 @@ export default function ProgressKerjaCard({ jadwal, onOpenPeriod }) {
         ))}
       </div>
 
-      <div style={{ fontSize: 12, color: 'var(--ink-soft)', marginBottom: 12 }}>
-        {PERIODS.map((p) => (
-          <div key={p} style={{ marginTop: 2 }}>
-            • {PERIOD_LABEL[p]}: rencana {jadwal.periodBreakdown[p].total} / realisasi {jadwal.periodBreakdown[p].finished}
-          </div>
-        ))}
-        <div style={{ marginTop: 6, fontSize: 11 }}>
-          Rencana dihitung dari tag periode di kolom Kegiatan (1M/3M/6M/1Y); realisasi = baris yang
-          kolom Status Kegiatan-nya berisi "Finish".
-        </div>
-      </div>
-
       {jadwal.unlabeledRows > 0 && (
-        <div className="notice-box" style={{ fontSize: 11.5, marginBottom: 12 }}>
-          ⚠️ {jadwal.unlabeledRows} baris jadwal belum punya tag periode di kolom Kegiatan (mis. pekerjaan
-          TL atau "Pendampingan Perawatan AC"). Baris seperti itu tidak masuk hitungan periode mana pun —
-          isi tag-nya di sheet kalau memang termasuk salah satu periode.
-        </div>
+        <details className="notice-box" style={{ fontSize: 11.5, marginTop: 10 }}>
+          <summary style={{ cursor: 'pointer' }}>⚠️ {jadwal.unlabeledRows} baris jadwal belum bertag periode</summary>
+          <div style={{ marginTop: 6 }}>
+            Baris tanpa tag di kolom Kegiatan (1M/3M/6M/1Y), mis. pekerjaan TL atau "Pendampingan Perawatan AC",
+            tidak masuk hitungan periode mana pun. Isi tag-nya di sheet kalau memang termasuk salah satu periode.
+          </div>
+        </details>
       )}
-
-      <a href={jadwal.sheetUrl} target="_blank" rel="noreferrer" className="link-like" style={{ display: 'inline-block', fontSize: 13 }}>
-        Buka jadwal lengkap di Google Sheets →
-      </a>
     </div>
   );
 }

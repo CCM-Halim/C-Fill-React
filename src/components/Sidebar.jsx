@@ -13,6 +13,12 @@ const IconWrench = () => (
 const IconClock = () => (
   <svg {...svgProps}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
 );
+const IconPanel = ({ ciut }) => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <rect x="3" y="4" width="18" height="16" rx="2.5" /><path d="M9 4v16" />
+    <path d={ciut ? 'M14 9l3 3-3 3' : 'M17 9l-3 3 3 3'} />
+  </svg>
+);
 const IconChevron = ({ className }) => (
   <svg className={className} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
 );
@@ -47,6 +53,10 @@ const FOREMAN_NAV_ITEM = { to: '/verifikasi', end: false, icon: IconCheckShield,
 const cocok = (path, to) => path === to || path.startsWith(to + '/');
 const grupAktif = (grup, path) => grup.children.some((c) => cocok(path, c.to));
 
+const KUNCI_CIUT = 'cfill_sidebar_ciut';
+function bacaCiut() { try { return localStorage.getItem(KUNCI_CIUT) === '1'; } catch { return false; } }
+function simpanCiut(v) { try { localStorage.setItem(KUNCI_CIUT, v ? '1' : '0'); } catch { /* abaikan */ } }
+
 export default function Sidebar() {
   const { user, logout, isForeman, foremanRole } = useAuth();
   const { pathname } = useLocation();
@@ -62,6 +72,13 @@ export default function Sidebar() {
   });
   // Bottom nav HP: hanya 1 kotak pilihan yang terbuka pada satu waktu.
   const [sheet, setSheet] = useState(null);
+
+  // Minimize sidebar (komputer/tablet): tinggal ikon, area kerja lebih lebar. Diingat per perangkat.
+  const [ciut, setCiut] = useState(bacaCiut);
+  useEffect(() => {
+    document.documentElement.dataset.sidebar = ciut ? 'ciut' : 'penuh';
+    simpanCiut(ciut);
+  }, [ciut]);
 
   useEffect(() => {
     setSheet(null);
@@ -89,17 +106,23 @@ export default function Sidebar() {
         </button>
       </header>
 
-      <aside className="sidebar">
+      <aside className={'sidebar' + (ciut ? ' ciut' : '')}>
         <div className="brand">
-          <div className="brand-mark"><IconBolt /> C‑Fill <span className="brand-version">{APP_VERSION}</span></div>
-          <div className="brand-sub">Communication Fillment</div>
+          <div className="brand-baris">
+            <div className="brand-mark"><IconBolt /><span className="label"> C‑Fill </span><span className="brand-version label">{APP_VERSION}</span></div>
+            <button type="button" className="sidebar-toggle" onClick={() => setCiut((v) => !v)}
+              aria-label={ciut ? 'Perlebar menu' : 'Ciutkan menu'} title={ciut ? 'Perlebar menu' : 'Ciutkan menu'}>
+              <IconPanel ciut={ciut} />
+            </button>
+          </div>
+          <div className="brand-sub label">Communication Fillment</div>
         </div>
         <nav className="nav">
           {menu.map((m) => {
             const Icon = m.icon;
             if (!m.children) {
               return (
-                <NavLink key={m.to} to={m.to} end={m.end} className={({ isActive }) => 'nav-item' + (isActive ? ' active' : '')}>
+                <NavLink key={m.to} to={m.to} end={m.end} title={ciut ? m.label : undefined} className={({ isActive }) => 'nav-item' + (isActive ? ' active' : '')}>
                   <Icon /><span className="label">{m.label}</span>
                 </NavLink>
               );
@@ -112,12 +135,17 @@ export default function Sidebar() {
                   type="button"
                   className={'nav-item nav-group-btn' + (aktif ? ' has-active' : '')}
                   aria-expanded={buka}
-                  onClick={() => setTerbuka((p) => ({ ...p, [m.key]: !p[m.key] }))}
+                  title={ciut ? m.label : undefined}
+                  onClick={() => {
+                    // Saat sidebar diciutkan, ikon grup memperlebar sidebar lalu membuka grupnya.
+                    if (ciut) { setCiut(false); setTerbuka((p) => ({ ...p, [m.key]: true })); return; }
+                    setTerbuka((p) => ({ ...p, [m.key]: !p[m.key] }));
+                  }}
                 >
                   <Icon /><span className="label">{m.label}</span>
                   <IconChevron className="chev" />
                 </button>
-                {buka && (
+                {buka && !ciut && (
                   <div className="nav-sub">
                     {m.children.map(({ to, icon: CIcon, label }) => (
                       <NavLink key={to} to={to} className={({ isActive }) => 'nav-item nav-sub-item' + (isActive || cocok(pathname, to) ? ' active' : '')}>
@@ -133,11 +161,11 @@ export default function Sidebar() {
         <div className="sidebar-footer">
           <div className="user-chip">
             <span className="user-avatar">{initial}</span>
-            <span className="user-email">{user?.email}</span>
+            <span className="user-email label">{user?.email}</span>
           </div>
-          {isForeman ? <div className="badge" style={{ marginBottom: 4 }}>{foremanRole || 'Foreman'}</div> : null}
-          <button className="btn btn-ghost btn-block" onClick={logout}><IconLogout /> Keluar</button>
-          <div className="brand-copyright">{COPYRIGHT_LINE}</div>
+          {isForeman ? <div className="badge label" style={{ marginBottom: 4 }}>{foremanRole || 'Foreman'}</div> : null}
+          <button className="btn btn-ghost btn-block" onClick={logout} title={ciut ? 'Keluar' : undefined}><IconLogout /><span className="label"> Keluar</span></button>
+          <div className="brand-copyright label">{COPYRIGHT_LINE}</div>
         </div>
       </aside>
 
