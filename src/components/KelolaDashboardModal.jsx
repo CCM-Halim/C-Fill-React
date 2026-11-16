@@ -4,7 +4,6 @@ import {
   setJadwalKunjunganOverride,
   removeJadwalKunjunganOverride
 } from '../lib/cfillService';
-import { rapikanFolder2026 } from '../lib/tahunFile';
 
 const BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
@@ -22,7 +21,6 @@ export default function KelolaDashboardModal({ onClose, onSaved }) {
   const [error, setError] = useState(null);
   const [ok, setOk] = useState(null);
   const [daftar, setDaftar] = useState(null);
-  const [rapikBusy, setRapikBusy] = useState(false);
 
   const muat = () => listJadwalKunjunganOverrides().then(setDaftar).catch(() => setDaftar([]));
   useEffect(() => { muat(); }, []);
@@ -103,18 +101,6 @@ export default function KelolaDashboardModal({ onClose, onSaved }) {
             <button className="btn btn-ghost btn-small" disabled={busy} onClick={() => hapus(o)}>Hapus</button>
           </div>
         ))}
-
-        <div style={{ marginTop: 18, fontWeight: 700, fontSize: 13 }}>Folder per tahun</div>
-        <div className="muted" style={{ fontSize: 12, marginBottom: 8 }}>
-          Checksheet tahun baru otomatis dibuat di folder tahunnya (2027, 2028, …) dari file tahun sebelumnya.
-          Untuk merapikan file 2026 yang masih di folder utama ke folder “2026”, tekan tombol di bawah (cukup sekali, ID file tidak berubah).
-        </div>
-        <button className="btn btn-secondary" style={{ width: '100%' }} disabled={rapikBusy} onClick={async () => {
-          if (!window.confirm('Pindahkan folder kategori bangunan & file instrumen ke dalam folder “2026”? Pastikan tidak ada teknisi yang sedang mengisi.')) return;
-          setRapikBusy(true); setError(null); setOk(null);
-          try { const r = await rapikanFolder2026(); setOk(`Selesai: ${r.dipindah} folder/file dipindah ke folder 2026.`); }
-          catch (e) { setError(e.message); } finally { setRapikBusy(false); }
-        }}>{rapikBusy ? 'Memindahkan…' : '🗂️ Rapikan Folder 2026'}</button>
 
         <button className="btn btn-ghost" style={{ marginTop: 16, width: '100%' }} onClick={onClose}>Tutup</button>
       </div>
