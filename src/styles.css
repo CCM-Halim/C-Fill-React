@@ -496,7 +496,8 @@ a{color:var(--accent);}
 .personil-nilai a { color: inherit; }
 .personil-kartu { display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 150px; padding: 6px; }
 .personil-kartu { position: relative; }
-.personil-kartu canvas { width: 100%; height: 100%; max-height: 260px; object-fit: contain; display: block; border-radius: 8px; }
+.kartu-bingkai { position: relative; overflow: hidden; border-radius: 8px; margin: 0 auto; }
+.kartu-bingkai img { position: absolute; top: 50%; left: 50%; height: auto; max-width: none; display: block; }
 .personil-putar { position: absolute; right: 8px; bottom: 8px; width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(0,0,0,.2); background: rgba(255,255,255,.9); font-size: 16px; line-height: 1; cursor: pointer; }
 .personil-kosong { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .personil-inisial { width: 56px; height: 56px; border-radius: 50%; background: #256D5C; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
@@ -560,3 +561,12 @@ a{color:var(--accent);}
 .donut-label { font-size: 12px; font-weight: 700; color: var(--ink-soft); text-align: center; }
 .donut-tautan { display: flex; flex-direction: column; align-items: center; gap: 0; font-size: 11px; line-height: 1.35; }
 @media (max-width: 420px) { .donut-baris { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 14px; } }
+
+/* ---- Monitor lebar / layar penuh: Dashboard tanpa batas lebar & tanpa ruang kosong di sisi ---- */
+html[data-halaman="dashboard"] .main { max-width: none; }
+@media (min-width: 861px) {
+  html[data-halaman="dashboard"] .main { padding-left: 24px; padding-right: 24px; }
+  html[data-layar="penuh"] .sidebar { display: none; }
+  html[data-layar="penuh"] .main { padding: 18px 22px; }
+}
+@media (max-width: 860px) { .dash-layar-penuh { display: none; } }
