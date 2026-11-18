@@ -2,53 +2,51 @@ import React, { useEffect, useRef, useState } from 'react';
 import { getPersonilBertugas } from '../lib/personilBertugas';
 import { SHIFT_LIST, shiftSekarang, normNama } from '../lib/shiftBipo';
 import { useKartuFoto } from './KartuFotoContext';
-import { KUNCI_ROTASI, rotasiEfektif, putarBerikutnya, ukuranKanvas } from '../lib/kartuRotasi';
+import { KUNCI_ROTASI, rotasiEfektif, putarBerikutnya } from '../lib/kartuRotasi';
 
 const HARI = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 const BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 const GANTI_MS = 5000;
 
 /**
- * Gambar smartcard selalu landscape & tegak: gambar potret otomatis diputar (lihat
- * lib/kartuRotasi.js) lalu digambar ke kanvas. Admin bisa memutar per orang (tombol ↻).
+ * Gambar smartcard selalu landscape & tegak. Gambar potret otomatis diputar (lihat
+ * lib/kartuRotasi.js) dengan CSS transform — bukan kanvas — supaya aman di Safari.
+ * Admin bisa memutar per orang (tombol ↻).
  */
+const TINGGI_MAKS = 260;
+
 function GambarKartu({ p, onGagal }) {
   const { config, isAdmin, simpanRotasi } = useKartuFoto();
-  const kanvas = useRef(null);
-  const [img, setImg] = useState(null);
+  const [ukuran, setUkuran] = useState(null);     // { w, h } ukuran asli gambar
+  const imgRef = useRef(null);
   const key = KUNCI_ROTASI + normNama(p.nama);
-
+  // Gambar dari cache bisa sudah selesai dimuat sebelum handler onLoad terpasang.
   useEffect(() => {
-    let batal = false;
-    setImg(null);
-    const im = new Image();
-    im.referrerPolicy = 'no-referrer';
-    im.onload = () => { if (!batal) setImg(im); };
-    im.onerror = () => { if (!batal) onGagal(); };
-    im.src = p.fotoUrl;
-    return () => { batal = true; };
-  }, [p.fotoUrl]);   // eslint-disable-line react-hooks/exhaustive-deps
+    const im = imgRef.current;
+    if (im && im.complete && im.naturalWidth) setUkuran({ w: im.naturalWidth, h: im.naturalHeight });
+  }, []);
 
-  const w = img?.naturalWidth || 0, h = img?.naturalHeight || 0;
-  const sudut = img ? rotasiEfektif(config[key], w, h) : 0;
-
-  useEffect(() => {
-    if (!img || !kanvas.current) return;
-    const { w: cw, h: ch, skala } = ukuranKanvas(w, h, sudut);
-    const c = kanvas.current;
-    c.width = cw; c.height = ch;
-    const ctx = c.getContext('2d');
-    ctx.save();
-    ctx.translate(cw / 2, ch / 2);
-    ctx.rotate((sudut * Math.PI) / 180);
-    ctx.drawImage(img, -(w * skala) / 2, -(h * skala) / 2, w * skala, h * skala);
-    ctx.restore();
-  }, [img, sudut, w, h]);
+  const sudut = ukuran ? rotasiEfektif(config[key], ukuran.w, ukuran.h) : 0;
+  const tukar = sudut % 180 !== 0;
+  // Rasio kotak tampilan (setelah diputar) = lebar/tinggi
+  const rasio = ukuran ? (tukar ? ukuran.h / ukuran.w : ukuran.w / ukuran.h) : 1.6;
+  // Gambar diputar di dalam kotak: kalau tertukar, lebar gambar = tinggi kotak = (1/rasio) x lebar kotak.
+  const lebarGambar = tukar ? (100 / rasio) + '%' : '100%';
 
   return (
     <>
-      <canvas ref={kanvas} role="img" aria-label={'Smartcard ' + p.nama} />
-      {isAdmin && img && (
+      <div className="kartu-bingkai" style={{ aspectRatio: String(rasio), width: `min(100%, ${Math.round(TINGGI_MAKS * rasio)}px)` }}>
+        <img
+          ref={imgRef}
+          src={p.fotoUrl}
+          alt={'Smartcard ' + p.nama}
+          referrerPolicy="no-referrer"
+          onLoad={(e) => setUkuran({ w: e.currentTarget.naturalWidth || 1, h: e.currentTarget.naturalHeight || 1 })}
+          onError={onGagal}
+          style={{ width: lebarGambar, transform: `translate(-50%, -50%) rotate(${sudut}deg)`, visibility: ukuran ? 'visible' : 'hidden' }}
+        />
+      </div>
+      {isAdmin && ukuran && (
         <button type="button" className="personil-putar" title="Putar smartcard 90° (admin)"
           onClick={() => simpanRotasi(key, putarBerikutnya(sudut))}>↻</button>
       )}
@@ -59,7 +57,7 @@ function GambarKartu({ p, onGagal }) {
 function Smartcard({ p }) {
   const [gagal, setGagal] = useState(false);
   useEffect(() => setGagal(false), [p.fotoUrl]);
-  if (p.fotoUrl && !gagal) return <GambarKartu p={p} onGagal={() => setGagal(true)} />;
+  if (p.fotoUrl && !gagal) return <GambarKartu key={p.fotoUrl} p={p} onGagal={() => setGagal(true)} />;
   return (
     <div className="personil-kosong">
       <div className="personil-inisial">{p.nama.trim().slice(0, 2).toUpperCase()}</div>
