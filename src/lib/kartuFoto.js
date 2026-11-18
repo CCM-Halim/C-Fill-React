@@ -65,7 +65,7 @@ export async function bacaKartuFotoConfig() {
   }
 }
 
-async function tulisConfig(config) {
+export async function tulisConfig(config) {
   const id = await getConfigId(true);
   await writeFileContentAsText(id, JSON.stringify(config, null, 1));
 }
