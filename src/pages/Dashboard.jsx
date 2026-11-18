@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext';
 import { getJadwalKunjunganBulanIni, getAllLogGangguan } from '../lib/cfillService';
 import ProgressKerjaCard from '../components/ProgressKerjaCard';
 import TemuanGangguanCard from '../components/TemuanGangguanCard';
 import PersonilBertugasCard from '../components/PersonilBertugasCard';
+import ErrorBoundary from '../components/ErrorBoundary';
 import RencanaKerjaCard from '../components/RencanaKerjaCard';
 import TrenTemuanCard from '../components/TrenTemuanCard';
 import KelolaDashboardModal from '../components/KelolaDashboardModal';
 import { isAdminEmail } from '../config/access';
+import { hitungSkala } from '../lib/skalaLayar';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -25,6 +27,50 @@ export default function Dashboard() {
 
   const [periodModal, setPeriodModal] = useState(null); // { label, status, items }
   const [gangguanModal, setGangguanModal] = useState(null); // detail 1 kejadian
+
+  // Monitor lebar: Dashboard memakai lebar penuh (tanpa batas 1180px) dan isinya diperbesar
+  // proporsional supaya terbaca dari jauh. Layar penuh (F11-style) menyembunyikan sidebar.
+  const bungkus = useRef(null);
+  const [skala, setSkala] = useState(1);
+  const [layarPenuh, setLayarPenuh] = useState(false);
+  const bisaLayarPenuh = typeof document !== 'undefined' && !!document.fullscreenEnabled;
+
+  useEffect(() => {
+    document.documentElement.dataset.halaman = 'dashboard';
+    return () => { delete document.documentElement.dataset.halaman; };
+  }, []);
+
+  useEffect(() => {
+    const induk = bungkus.current?.parentElement;
+    if (!induk) return undefined;
+    const ukur = () => {
+      const cs = getComputedStyle(induk);
+      const lebar = induk.clientWidth - parseFloat(cs.paddingLeft || 0) - parseFloat(cs.paddingRight || 0);
+      setSkala(hitungSkala(lebar, window.innerWidth));
+    };
+    ukur();
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(ukur) : null;
+    if (ro) ro.observe(induk);
+    window.addEventListener('resize', ukur);
+    return () => { if (ro) ro.disconnect(); window.removeEventListener('resize', ukur); };
+  }, []);
+
+  useEffect(() => {
+    const ganti = () => {
+      const aktif = !!document.fullscreenElement;
+      setLayarPenuh(aktif);
+      document.documentElement.dataset.layar = aktif ? 'penuh' : '';
+    };
+    document.addEventListener('fullscreenchange', ganti);
+    return () => { document.removeEventListener('fullscreenchange', ganti); document.documentElement.dataset.layar = ''; };
+  }, []);
+
+  const alihLayarPenuh = () => {
+    try {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen();
+    } catch { /* browser menolak — abaikan */ }
+  };
 
   const muatJadwal = () => {
     setJadwal(null); setJadwalError(null);
@@ -43,18 +89,27 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <section>
+    <>
+    <section ref={bungkus} style={skala > 1 ? { zoom: skala } : undefined}>
       <div className="card" style={{ marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
           <div style={{ minWidth: 0 }}>
             <div className="card-title">Halo, {user?.name?.split(' ')[0] || 'Teknisi'} 👋</div>
             <div className="muted" style={{ overflowWrap: 'anywhere' }}>{user?.email}</div>
           </div>
-          {isAdmin && (
-            <button className="btn btn-secondary btn-small" style={{ flex: '0 0 auto', whiteSpace: 'nowrap' }} onClick={() => setKelolaOpen(true)}>
-              ⚙️ Kelola Dashboard
-            </button>
-          )}
+          <div style={{ display: 'flex', gap: 8, flex: '0 0 auto', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+            {bisaLayarPenuh && (
+              <button className="btn btn-secondary btn-small dash-layar-penuh" style={{ whiteSpace: 'nowrap' }} onClick={alihLayarPenuh}
+                title="Tampilan layar penuh untuk monitor (tekan Esc untuk keluar)">
+                {layarPenuh ? '✕ Keluar layar penuh' : '⛶ Layar penuh'}
+              </button>
+            )}
+            {isAdmin && (
+              <button className="btn btn-secondary btn-small" style={{ whiteSpace: 'nowrap' }} onClick={() => setKelolaOpen(true)}>
+                ⚙️ Kelola Dashboard
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -76,9 +131,9 @@ export default function Dashboard() {
           )}
         </div>
 
-        <div className="dash-cell dash-personil"><PersonilBertugasCard /></div>
+        <div className="dash-cell dash-personil"><ErrorBoundary kecil nama="Personil bertugas"><PersonilBertugasCard /></ErrorBoundary></div>
 
-        <div className="dash-cell dash-rencana"><RencanaKerjaCard /></div>
+        <div className="dash-cell dash-rencana"><ErrorBoundary kecil nama="Rencana kerja"><RencanaKerjaCard /></ErrorBoundary></div>
 
         <div className="dash-cell dash-tren"><TrenTemuanCard log={log} /></div>
       </div>
@@ -98,6 +153,8 @@ export default function Dashboard() {
           <button className="btn btn-secondary" onClick={() => navigate('/dokumentasi')}>Upload Dokumentasi</button>
         </div>
       </div>
+
+    </section>
 
       {kelolaOpen && <KelolaDashboardModal onClose={() => setKelolaOpen(false)} onSaved={muatJadwal} />}
 
@@ -162,6 +219,6 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-    </section>
+    </>
   );
 }
