@@ -570,3 +570,28 @@ html[data-halaman="dashboard"] .main { max-width: none; }
   html[data-layar="penuh"] .main { padding: 18px 22px; }
 }
 @media (max-width: 860px) { .dash-layar-penuh { display: none; } }
+
+/* ---- Kartu Rencana Kerja: tinggi box TETAP, isi bergantian otomatis, font besar ---- */
+.rencana-hari { display: flex; flex-direction: column; height: 400px; overflow: hidden; padding: 14px 16px; }
+.rencana-kepala { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+.rencana-judul { font-weight: 800; font-size: 26px; line-height: 1.1; }
+.rencana-tgl { font-size: 16px; color: var(--muted, #6b6b66); margin-top: 2px; }
+.rencana-hitung { font-size: 16px; font-weight: 700; color: var(--muted, #6b6b66); }
+.rencana-isi { flex: 1; min-height: 0; overflow: hidden; }
+.rencana-kosong { font-size: 18px; padding-top: 12px; }
+.rencana-item { border-top: none; padding: 0; animation: rencana-masuk .35s ease; }
+@keyframes rencana-masuk { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.rencana-baris1 { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.rencana-lokasi { font-weight: 800; font-size: 28px; line-height: 1.15; overflow-wrap: anywhere; }
+.rencana-lanj { font-weight: 600; font-size: 16px; color: var(--muted, #6b6b66); }
+.rencana-hari .badge { font-size: 15px; padding: 4px 12px; flex-shrink: 0; }
+.rencana-meta { font-size: 17px; margin-top: 4px; color: var(--muted, #55554f); line-height: 1.3; }
+.rencana-detail { font-size: 17px; margin-top: 2px; }
+.alarm-kotak { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: #FCE9E8; border: 1px solid #EBB9B6; font-size: 17px; line-height: 1.3; color: #5A1F1D; }
+.alarm-judul { font-weight: 800; font-size: 19px; color: #B4302F; margin-bottom: 4px; }
+.alarm-baris { padding: 3px 0; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.alarm-umur { color: #8A4B49; font-weight: 600; }
+.rencana-titik { display: flex; justify-content: center; gap: 8px; padding-top: 8px; flex-wrap: wrap; }
+.rencana-titik button { width: 12px; height: 12px; border-radius: 50%; border: none; padding: 0; background: rgba(0,0,0,.2); cursor: pointer; }
+.rencana-titik button.aktif { background: #256D5C; width: 26px; border-radius: 6px; }
+@media (max-width: 860px) { .rencana-hari { height: 380px; } .rencana-lokasi { font-size: 24px; } }
