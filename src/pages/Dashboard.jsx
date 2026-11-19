@@ -133,7 +133,7 @@ export default function Dashboard() {
 
         <div className="dash-cell dash-personil"><ErrorBoundary kecil nama="Personil bertugas"><PersonilBertugasCard /></ErrorBoundary></div>
 
-        <div className="dash-cell dash-rencana"><ErrorBoundary kecil nama="Rencana kerja"><RencanaKerjaCard /></ErrorBoundary></div>
+        <div className="dash-cell dash-rencana"><ErrorBoundary kecil nama="Rencana kerja"><RencanaKerjaCard log={log} /></ErrorBoundary></div>
 
         <div className="dash-cell dash-tren"><TrenTemuanCard log={log} /></div>
       </div>
